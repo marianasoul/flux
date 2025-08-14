@@ -1,0 +1,73 @@
+O Sistema de Controle do Semestre é um web app projetado para estudantes de medicina. Ele visa centralizar e otimizar a gestão acadêmica, oferecendo uma visão clara do progresso e das pendências. O sistema combina um cronograma fixo de aulas com uma agenda dinâmica de estudos, ajudando o estudante a planejar, executar e acompanhar suas atividades de forma eficiente.
+
+2. Público-Alvo
+Estudantes de medicina, de todos os anos da graduação, que buscam uma maneira organizada de acompanhar seu desempenho e gerenciar a alta carga de estudos, provas e atividades.
+
+3. Problema
+A falta de um sistema integrado para gerenciar o cronograma fixo de aulas e a agenda dinâmica de estudos resulta em desorganização e ineficiência. Estudantes perdem tempo tentando conciliar horários de aula, prazos de tarefas e revisões, o que leva à procrastinação e ao acúmulo de conteúdo, aumentando o estresse e a dificuldade de aprendizado.
+
+4. Solução - MVP (Produto Mínimo Viável) com Novas Funcionalidades
+O MVP será um painel de controle centralizado que integra as funcionalidades essenciais para um gerenciamento acadêmico completo, incorporando as novas sugestões.
+
+5. Funcionalidades do MVP (Atualizadas)
+O MVP terá as seguintes funcionalidades principais:
+
+Módulo 1: Cronograma Semanal Fixo de Aulas
+O estudante poderá adicionar seu cronograma semanal fixo de aulas.
+
+Para cada aula, será possível inserir:
+
+Nome da disciplina (ex: Morfofuncional, TBL).
+
+Tipo de atividade (ex: Aula expositiva, Laboratório, SBE, TBL).
+
+Horário e dias da semana.
+
+O cronograma será exibido em um calendário semanal visual, permitindo que o estudante veja sua grade de aulas rapidamente.
+
+Módulo 2: Agenda Dinâmica de Estudos e Tarefas
+O estudante poderá adicionar tarefas, leituras e revisões.
+
+Cada item da agenda terá os seguintes campos:
+
+Título (ex: "Revisar Sistema Cardiovascular").
+
+Disciplina associada.
+
+Prazo final.
+
+Status: Pendente, Em Andamento, Concluído.
+
+A agenda será exibida em uma lista de tarefas, permitindo ao estudante gerenciar suas prioridades diárias.
+
+Módulo 3: Planejamento de Estudo e Integração de Conteúdos
+O estudante poderá vincular tarefas de estudo diretamente a uma aula ou tipo de aula específica do cronograma.
+
+Ex: após uma "Aula de Anatomia do Coração", o sistema pode sugerir (ou o estudante pode adicionar) a tarefa "Revisar slides da aula" e "Ler capítulo do livro de anatomia".
+
+Este módulo ajudará a criar um fluxo de estudo contínuo, garantindo que o conteúdo seja revisado no momento certo.
+
+Módulo 4: Status e Progresso
+Um dashboard centralizado mostrará o status geral do semestre.
+
+Indicadores de pendências: Uma área no dashboard destacará todas as tarefas com status "Pendente" ou "Em Andamento".
+
+Gráfico de progresso: Uma representação visual simples do percentual de tarefas concluídas por disciplina ou por semana.
+
+Um resumo visual mostrará o que está pendente, em andamento e concluído.
+
+Módulo 5: Acompanhamento de Notas e Média
+O estudante poderá adicionar notas de avaliações (provas, trabalhos) para cada disciplina.
+
+O sistema calculará automaticamente a média parcial e a média geral do semestre, fornecendo uma visão clara do desempenho acadêmico.
+
+6. Métricas de Sucesso
+Taxa de Adoção: Quantos estudantes se cadastram no sistema.
+
+Retenção de Usuários: Percentual de usuários que retornam ao sistema semanalmente.
+
+Engajamento: Quantidade de tarefas e eventos adicionados por usuário.
+
+Conclusão de Tarefas: Percentual de tarefas marcadas como "Concluído".
+
+Feedback Qualitativo: Coleta de depoimentos sobre como o sistema ajudou na organização e redução de estresse.
