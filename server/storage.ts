@@ -158,6 +158,102 @@ export class MemStorage implements IStorage {
     ];
 
     classes.forEach(c => this.classes.set(c.id, c));
+
+    // Create sample tasks
+    const tasks: Task[] = [
+      {
+        id: randomUUID(),
+        title: "Revisar Sistema Cardiovascular",
+        description: "Estudar anatomia e fisiologia do coração e vasos sanguíneos",
+        subjectId: anatomia.id,
+        classId: null,
+        status: "Em Andamento",
+        dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+        updatedAt: new Date(),
+      },
+      {
+        id: randomUUID(),
+        title: "Relatório de Laboratório - Histologia",
+        description: "Completar relatório sobre observações microscópicas",
+        subjectId: anatomia.id,
+        classId: null,
+        status: "Pendente",
+        dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
+        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+        updatedAt: new Date(),
+      },
+      {
+        id: randomUUID(),
+        title: "Estudar Farmacocinética",
+        description: "Revisar absorção, distribuição, metabolismo e excreção de fármacos",
+        subjectId: farmacologia.id,
+        classId: null,
+        status: "Pendente",
+        dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day from now
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: randomUUID(),
+        title: "Preparar Apresentação TBL",
+        description: "Preparar caso clínico para discussão em equipe",
+        subjectId: fisiologia.id,
+        classId: null,
+        status: "Concluído",
+        dueDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+        createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+        updatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+      },
+    ];
+
+    tasks.forEach(t => this.tasks.set(t.id, t));
+
+    // Create sample grades
+    const grades: Grade[] = [
+      {
+        id: randomUUID(),
+        subjectId: anatomia.id,
+        examName: "Prova P1 - Anatomia Geral",
+        score: "8.5",
+        maxScore: "10.0",
+        weight: "40.0",
+        examDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
+        createdAt: new Date(),
+      },
+      {
+        id: randomUUID(),
+        subjectId: fisiologia.id,
+        examName: "Trabalho - Sistema Respiratório",
+        score: "9.2",
+        maxScore: "10.0",
+        weight: "30.0",
+        examDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 2 weeks ago
+        createdAt: new Date(),
+      },
+      {
+        id: randomUUID(),
+        subjectId: farmacologia.id,
+        examName: "Quiz - Farmacologia Básica",
+        score: "7.8",
+        maxScore: "10.0",
+        weight: "20.0",
+        examDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+        createdAt: new Date(),
+      },
+      {
+        id: randomUUID(),
+        subjectId: patologia.id,
+        examName: "Seminário - Inflamação",
+        score: "9.5",
+        maxScore: "10.0",
+        weight: "35.0",
+        examDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+        createdAt: new Date(),
+      },
+    ];
+
+    grades.forEach(g => this.grades.set(g.id, g));
   }
 
   // Subjects
