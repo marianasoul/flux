@@ -1,4 +1,4 @@
-import { type Subject, type Class, type Task, type Grade, type InsertSubject, type InsertClass, type InsertTask, type InsertGrade, type ClassWithSubject, type TaskWithSubject, type GradeWithSubject, type SubjectWithStats } from "@shared/schema";
+import { type Subject, type Class, type Task, type Grade, type StudyPlan, type InsertSubject, type InsertClass, type InsertTask, type InsertGrade, type InsertStudyPlan, type ClassWithSubject, type TaskWithSubject, type GradeWithSubject, type SubjectWithStats } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -38,6 +38,11 @@ export interface IStorage {
   getRecentGrades(limit: number): Promise<GradeWithSubject[]>;
   calculateSubjectAverage(subjectId: string): Promise<number | null>;
   calculateOverallAverage(): Promise<number | null>;
+  
+  // Study Plans
+  getStudyPlans(): Promise<StudyPlan[]>;
+  getStudyPlan(classId: string): Promise<StudyPlan | undefined>;
+  createOrUpdateStudyPlan(classId: string, plan: Partial<InsertStudyPlan>): Promise<StudyPlan>;
 }
 
 export class MemStorage implements IStorage {
@@ -45,6 +50,7 @@ export class MemStorage implements IStorage {
   private classes: Map<string, Class> = new Map();
   private tasks: Map<string, Task> = new Map();
   private grades: Map<string, Grade> = new Map();
+  private studyPlans: Map<string, StudyPlan> = new Map();
 
   constructor() {
     this.initializeSampleData();
@@ -540,6 +546,43 @@ export class MemStorage implements IStorage {
 
     const sum = validAverages.reduce((acc, avg) => acc + avg, 0);
     return Math.round((sum / validAverages.length) * 100) / 100;
+  }
+
+  // Study Plans
+  async getStudyPlans(): Promise<StudyPlan[]> {
+    return Array.from(this.studyPlans.values());
+  }
+
+  async getStudyPlan(classId: string): Promise<StudyPlan | undefined> {
+    return Array.from(this.studyPlans.values()).find(p => p.classId === classId);
+  }
+
+  async createOrUpdateStudyPlan(classId: string, planData: Partial<InsertStudyPlan>): Promise<StudyPlan> {
+    const existingPlan = await this.getStudyPlan(classId);
+    
+    if (existingPlan) {
+      const updated = { 
+        ...existingPlan, 
+        ...planData, 
+        updatedAt: new Date() 
+      };
+      this.studyPlans.set(existingPlan.id, updated);
+      return updated;
+    } else {
+      const id = randomUUID();
+      const newPlan: StudyPlan = {
+        id,
+        classId,
+        preStudy: planData.preStudy || null,
+        postStudy: planData.postStudy || null,
+        resources: planData.resources || null,
+        notes: planData.notes || null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      this.studyPlans.set(id, newPlan);
+      return newPlan;
+    }
   }
 }
 

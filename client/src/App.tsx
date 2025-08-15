@@ -9,6 +9,8 @@ import Cronograma from "@/pages/cronograma";
 import Tarefas from "@/pages/tarefas";
 import Disciplinas from "@/pages/disciplinas";
 import Notas from "@/pages/notas";
+import Planejamento from "@/pages/planejamento";
+import Agenda from "@/pages/agenda";
 
 function Router() {
   return (
@@ -19,6 +21,8 @@ function Router() {
       <Route path="/tarefas" component={Tarefas} />
       <Route path="/disciplinas" component={Disciplinas} />
       <Route path="/notas" component={Notas} />
+      <Route path="/planejamento" component={Planejamento} />
+      <Route path="/agenda" component={Agenda} />
       <Route component={NotFound} />
     </Switch>
   );

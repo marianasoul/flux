@@ -12,6 +12,9 @@ The application features a modern React-based frontend with a clean, medical-the
 - **Enhanced Sample Data**: Added realistic medical education data including tasks, grades, and academic evaluations
 - **Navigation System**: Implemented working navigation between all sections with proper routing
 - **Interactive Features**: Added task status updates, grade filtering, and subject management capabilities
+- **New Study Features**: Added Planejamento page for pre/post-class study planning with expandable class cards
+- **Agenda Integration**: Created Agenda page with daily/weekly views showing classes and tasks in calendar format
+- **Study Plans System**: Implemented color-coded study sections (pre-study, post-study, resources, notes)
 
 ## User Preferences
 

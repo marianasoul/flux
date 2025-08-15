@@ -55,6 +55,18 @@ export const grades = pgTable("grades", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Study Plans table
+export const studyPlans = pgTable("study_plans", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  classId: varchar("class_id").notNull().references(() => classes.id, { onDelete: 'cascade' }),
+  preStudy: text("pre_study"),
+  postStudy: text("post_study"),
+  resources: text("resources"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertSubjectSchema = createInsertSchema(subjects).omit({
   id: true,
@@ -77,16 +89,24 @@ export const insertGradeSchema = createInsertSchema(grades).omit({
   createdAt: true,
 });
 
+export const insertStudyPlanSchema = createInsertSchema(studyPlans).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type InsertSubject = z.infer<typeof insertSubjectSchema>;
 export type InsertClass = z.infer<typeof insertClassSchema>;
 export type InsertTask = z.infer<typeof insertTaskSchema>;
 export type InsertGrade = z.infer<typeof insertGradeSchema>;
+export type InsertStudyPlan = z.infer<typeof insertStudyPlanSchema>;
 
 export type Subject = typeof subjects.$inferSelect;
 export type Class = typeof classes.$inferSelect;
 export type Task = typeof tasks.$inferSelect;
 export type Grade = typeof grades.$inferSelect;
+export type StudyPlan = typeof studyPlans.$inferSelect;
 
 // Extended types for API responses
 export type ClassWithSubject = Class & {

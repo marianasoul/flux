@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Calendar, BarChart3, CheckSquare, GraduationCap, BookOpen, UserCircle } from "lucide-react";
+import { Calendar, BarChart3, CheckSquare, GraduationCap, BookOpen, UserCircle, Brain, CalendarDays } from "lucide-react";
 
 const navigationItems = [
   {
@@ -13,6 +13,18 @@ const navigationItems = [
     name: "Cronograma",
     href: "/cronograma",
     icon: Calendar,
+    current: false,
+  },
+  {
+    name: "Agenda",
+    href: "/agenda",
+    icon: CalendarDays,
+    current: false,
+  },
+  {
+    name: "Planejamento",
+    href: "/planejamento",
+    icon: Brain,
     current: false,
   },
   {

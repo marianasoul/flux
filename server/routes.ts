@@ -311,6 +311,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Study Plans endpoints
+  app.get('/api/study-plans', async (req, res) => {
+    try {
+      const studyPlans = await storage.getStudyPlans();
+      res.json(studyPlans);
+    } catch (error) {
+      console.error('Error fetching study plans:', error);
+      res.status(500).json({ error: 'Failed to fetch study plans' });
+    }
+  });
+
+  app.post('/api/study-plans/:classId', async (req, res) => {
+    try {
+      const { classId } = req.params;
+      const studyPlan = await storage.createOrUpdateStudyPlan(classId, req.body);
+      res.status(201).json(studyPlan);
+    } catch (error) {
+      console.error('Error creating/updating study plan:', error);
+      res.status(500).json({ error: 'Failed to save study plan' });
+    }
+  });
+
   // Dashboard stats
   app.get("/api/dashboard/stats", async (req, res) => {
     try {
