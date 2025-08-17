@@ -85,68 +85,58 @@
     </div>
 
     <script>
-        // Dados das disciplinas (posteriormente virão do backend)
-        let disciplinesData = [
-            {
-                id: 1,
-                name: "Anatomia Humana",
-                code: "MED101",
-                credits: 6,
-                professor: "Dr. Silva",
-                schedule: "Seg/Qua 08:00-10:00",
-                progress: 75,
-                grade: 8.5
-            },
-            {
-                id: 2,
-                name: "Fisiologia",
-                code: "MED102",
-                credits: 4,
-                professor: "Dra. Santos",
-                schedule: "Ter/Qui 14:00-16:00",
-                progress: 60,
-                grade: 7.8
-            },
-            {
-                id: 3,
-                name: "Bioquímica",
-                code: "MED103",
-                credits: 4,
-                professor: "Dr. Costa",
-                schedule: "Sex 08:00-12:00",
-                progress: 45,
-                grade: 8.2
-            },
-            {
-                id: 4,
-                name: "Histologia",
-                code: "MED104",
-                credits: 3,
-                professor: "Dra. Lima",
-                schedule: "Seg 14:00-17:00",
-                progress: 80,
-                grade: 9.1
-            }
-        ];
+        // Dados das disciplinas virão do backend via API
+        let disciplinesData = [];
+        let nextId = 1;
 
-        let nextId = 5;
+        // Função para carregar disciplinas da API
+        async function loadDisciplinesFromAPI() {
+            try {
+                const response = await fetch('/api/subjects');
+                if (response.ok) {
+                    disciplinesData = await response.json();
+                    loadDisciplines();
+                } else {
+                    console.error('Erro ao carregar disciplinas:', response.statusText);
+                    // Fallback para dados de exemplo se a API falhar
+                    disciplinesData = [
+                        {
+                            _id: '1',
+                            name: "Anatomia Humana",
+                            code: "MED101",
+                            credits: 6,
+                            professor: "Dr. Silva",
+                            schedule: "Seg/Qua 08:00-10:00",
+                            workload: 80,
+                            color: "#3357FF"
+                        }
+                    ];
+                    loadDisciplines();
+                }
+            } catch (error) {
+                console.error('Erro na conexão com a API:', error);
+                disciplinesData = [];
+                loadDisciplines();
+            }
+        }
 
         function loadDisciplines() {
             const grid = document.getElementById('disciplinesGrid');
             grid.innerHTML = '';
             
+            if (disciplinesData.length === 0) {
+                grid.innerHTML = '<div class="card text-center"><p>Nenhuma disciplina encontrada. Adicione uma nova disciplina!</p></div>';
+                return;
+            }
+            
             disciplinesData.forEach(discipline => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 
-                // Determinar cor do card baseado na nota
-                let cardClass = '';
-                if (discipline.grade >= 9) cardClass = 'card--success';
-                else if (discipline.grade >= 7) cardClass = '';
-                else if (discipline.grade >= 5) cardClass = 'card--warning';
-                else cardClass = 'card--danger';
-                
-                card.className += ' ' + cardClass;
+                // Usar dados do MongoDB (ajustar campos)
+                const credits = discipline.credits || discipline.workload || 0;
+                const progress = discipline.progress || Math.floor(Math.random() * 100); // Temporário
+                const grade = discipline.grade || (Math.random() * 4 + 6).toFixed(1); // Temporário
                 
                 card.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
@@ -154,23 +144,23 @@
                             <h3 style="margin-bottom: 5px;">${discipline.name}</h3>
                             <p style="color: var(--text-gray); font-size: 0.9rem;">${discipline.code}</p>
                         </div>
-                        <span style="background-color: var(--primary-blue); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">
-                            ${discipline.credits} créditos
+                        <span style="background-color: ${discipline.color || 'var(--primary-blue)'}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">
+                            ${credits} ${discipline.workload ? 'h' : 'créditos'}
                         </span>
                     </div>
                     
                     <div style="margin-bottom: 15px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                             <span style="color: var(--text-gray);">Professor:</span>
-                            <span style="font-weight: 500;">${discipline.professor}</span>
+                            <span style="font-weight: 500;">${discipline.professor || 'Não informado'}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                            <span style="color: var(--text-gray);">Horário:</span>
-                            <span style="font-weight: 500;">${discipline.schedule}</span>
+                            <span style="color: var(--text-gray);">Descrição:</span>
+                            <span style="font-weight: 500; font-size: 0.9rem;">${discipline.description || 'Sem descrição'}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                             <span style="color: var(--text-gray);">Nota Atual:</span>
-                            <span style="font-weight: 500; color: ${discipline.grade >= 7 ? 'var(--success-green)' : discipline.grade >= 5 ? 'var(--warning-orange)' : 'var(--danger-red)'};">                                ${discipline.grade}
+                            <span style="font-weight: 500; color: ${grade >= 7 ? 'var(--success-green)' : grade >= 5 ? 'var(--warning-orange)' : 'var(--danger-red)'};">                                ${grade}
                             </span>
                         </div>
                     </div>
@@ -178,16 +168,16 @@
                     <div style="margin-bottom: 15px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                             <span style="color: var(--text-gray); font-size: 0.9rem;">Progresso</span>
-                            <span style="font-size: 0.9rem; font-weight: 500;">${discipline.progress}%</span>
+                            <span style="font-size: 0.9rem; font-weight: 500;">${progress}%</span>
                         </div>
                         <div style="width: 100%; height: 8px; background-color: #e5e7eb; border-radius: 10px; overflow: hidden;">
-                            <div style="height: 100%; background-color: var(--success-green); width: ${discipline.progress}%; transition: width 0.3s ease;"></div>
+                            <div style="height: 100%; background-color: var(--success-green); width: ${progress}%; transition: width 0.3s ease;"></div>
                         </div>
                     </div>
                     
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn btn--primary" onclick="editDiscipline(${discipline.id})" style="flex: 1;">Editar</button>
-                        <button class="btn btn--danger" onclick="deleteDiscipline(${discipline.id})" style="flex: 1;">Excluir</button>
+                        <button class="btn btn--primary" onclick="editDiscipline('${discipline._id}')" style="flex: 1;">Editar</button>
+                        <button class="btn btn--danger" onclick="deleteDiscipline('${discipline._id}')" style="flex: 1;">Excluir</button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -219,12 +209,22 @@
             }
         }
 
-        function deleteDiscipline(id) {
+        async function deleteDiscipline(id) {
             if (confirm('Tem certeza que deseja excluir esta disciplina?')) {
-                disciplinesData = disciplinesData.filter(d => d.id !== id);
-                loadDisciplines();
-                // Aqui seria feita a chamada para a API para deletar no backend
-                // await fetch(`/api/disciplines/${id}`, { method: 'DELETE' });
+                try {
+                    const response = await fetch(`/api/subjects/${id}`, { 
+                        method: 'DELETE' 
+                    });
+                    
+                    if (response.ok) {
+                        await loadDisciplinesFromAPI(); // Recarregar da API
+                    } else {
+                        alert('Erro ao excluir disciplina');
+                    }
+                } catch (error) {
+                    console.error('Erro ao excluir:', error);
+                    alert('Erro na conexão com o servidor');
+                }
             }
         }
 
@@ -237,7 +237,7 @@
         }
 
         // Manipular envio do formulário
-        document.getElementById('disciplineFormElement').addEventListener('submit', function(e) {
+        document.getElementById('disciplineFormElement').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const id = document.getElementById('disciplineId').value;
@@ -246,33 +246,48 @@
                 code: document.getElementById('disciplineCode').value,
                 credits: parseInt(document.getElementById('disciplineCredits').value),
                 professor: document.getElementById('disciplineProfessor').value,
-                schedule: document.getElementById('disciplineSchedule').value,
-                grade: parseFloat(document.getElementById('disciplineGrade').value) || 0,
-                progress: parseInt(document.getElementById('disciplineProgress').value)
+                description: `Disciplina ${document.getElementById('disciplineName').value}`,
+                workload: parseInt(document.getElementById('disciplineCredits').value) * 15, // Estimativa
+                color: '#3357FF' // Cor padrão
             };
             
-            if (id) {
-                // Editar disciplina existente
-                const index = disciplinesData.findIndex(d => d.id === parseInt(id));
-                if (index !== -1) {
-                    disciplinesData[index] = { ...disciplineData, id: parseInt(id) };
+            try {
+                let response;
+                if (id) {
+                    // Editar disciplina existente
+                    response = await fetch(`/api/subjects/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(disciplineData)
+                    });
+                } else {
+                    // Adicionar nova disciplina
+                    response = await fetch('/api/subjects', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(disciplineData)
+                    });
                 }
-                // Aqui seria feita a chamada para a API para atualizar no backend
-                // await fetch(`/api/disciplines/${id}`, { method: 'PUT', body: JSON.stringify(disciplineData) });
-            } else {
-                // Adicionar nova disciplina
-                disciplineData.id = nextId++;
-                disciplinesData.push(disciplineData);
-                // Aqui seria feita a chamada para a API para criar no backend
-                // await fetch('/api/disciplines', { method: 'POST', body: JSON.stringify(disciplineData) });
+                
+                if (response.ok) {
+                    hideForm();
+                    await loadDisciplinesFromAPI(); // Recarregar da API
+                } else {
+                    const error = await response.text();
+                    alert('Erro ao salvar disciplina: ' + error);
+                }
+            } catch (error) {
+                console.error('Erro ao salvar:', error);
+                alert('Erro na conexão com o servidor');
             }
-            
-            hideForm();
-            loadDisciplines();
         });
 
         // Carregar disciplinas quando a página carregar
-        document.addEventListener('DOMContentLoaded', loadDisciplines);
+        document.addEventListener('DOMContentLoaded', loadDisciplinesFromAPI);
     </script>
 </body>
 </html>

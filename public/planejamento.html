@@ -693,3 +693,52 @@
     </script>
 </body>
 </html>
+
+        // Carregar tarefas da API
+        async function loadTasks() {
+            try {
+                const response = await fetch('/api/tasks');
+                if (response.ok) {
+                    const apiTasks = await response.json();
+                    // Converter formato da API para formato esperado
+                    tasks = apiTasks.map(task => ({
+                        id: task._id,
+                        title: task.title,
+                        date: task.dueDate,
+                        dueDate: task.dueDate,
+                        status: task.status || 'pending',
+                        priority: task.priority || 'medium',
+                        completed: task.completed || false
+                    }));
+                } else {
+                    console.log('API não disponível, usando dados estáticos');
+                    tasks = staticTasks;
+                }
+            } catch (error) {
+                console.log('Erro ao carregar tarefas da API:', error);
+                tasks = staticTasks;
+            }
+            updateTaskLists();
+            updateStatistics();
+        }
+
+        // Carregar aulas da API
+        async function loadLessons() {
+            try {
+                const response = await fetch('/api/lessons');
+                if (response.ok) {
+                    const apiLessons = await response.json();
+                    lessons = apiLessons.map(lesson => ({
+                        id: lesson._id,
+                        title: lesson.title,
+                        date: lesson.date,
+                        subject: lesson.subject,
+                        type: lesson.type || 'Aula'
+                    }));
+                }
+            } catch (error) {
+                console.log('Erro ao carregar aulas da API:', error);
+                lessons = [];
+            }
+            generateCalendar();
+        }

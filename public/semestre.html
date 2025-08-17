@@ -243,87 +243,94 @@
             events: [15, 18, 20, 22] // Dias com eventos em novembro
         };
 
-        function loadSubjects() {
-            const container = document.getElementById('disciplinas-list');
-            container.innerHTML = '';
+        // Carregar disciplinas da API
+        async function loadSubjects() {
+            try {
+                const response = await fetch('/api/subjects');
+                if (response.ok) {
+                    const subjects = await response.json();
+                    const container = document.getElementById('disciplinas-list');
+                    container.innerHTML = '';
 
-            semesterData.subjects.forEach(subject => {
-                const item = document.createElement('div');
-                item.className = 'info-item';
-                item.innerHTML = `
-                    <span class="info-label">${subject.name}:</span>
-                    <span class="info-value">${subject.grade}</span>
-                `;
-                container.appendChild(item);
-            });
-        }
+                    if (subjects.length === 0) {
+                        container.innerHTML = '<div class="info-item"><span>Nenhuma disciplina encontrada</span></div>';
+                        return;
+                    }
 
-        function loadEvaluations() {
-            const container = document.getElementById('avaliacoes-list');
-            container.innerHTML = '';
-
-            semesterData.evaluations.forEach(evaluation => {
-                const item = document.createElement('div');
-                item.className = 'info-item';
-                item.innerHTML = `
-                    <span class="info-label">${evaluation.subject} - ${evaluation.type}:</span>
-                    <span class="info-value">${evaluation.date}</span>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function generateCalendar() {
-            const calendar = document.getElementById('calendar-grid');
-            calendar.innerHTML = '';
-
-            // Cabeçalhos dos dias da semana
-            const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-            weekDays.forEach(day => {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day calendar-header';
-                dayElement.textContent = day;
-                calendar.appendChild(dayElement);
-            });
-
-            // Dias vazios no início do mês (novembro 2024 começa numa sexta)
-            for (let i = 0; i < 5; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day';
-                calendar.appendChild(emptyDay);
-            }
-
-            // Dias do mês
-            for (let day = 1; day <= 30; day++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.textContent = day;
-
-                if (semesterData.events.includes(day)) {
-                    dayElement.classList.add('calendar-event');
-                    dayElement.title = 'Avaliação agendada';
+                    subjects.forEach(subject => {
+                        const grade = (Math.random() * 2 + 7).toFixed(1); // Nota temporária
+                        const item = document.createElement('div');
+                        item.className = 'info-item';
+                        item.innerHTML = `
+                            <span class="info-label">${subject.name}:</span>
+                            <span class="info-value">${grade}</span>
+                        `;
+                        container.appendChild(item);
+                    });
+                } else {
+                    throw new Error('API não disponível');
                 }
-
-                if (day === new Date().getDate() && new Date().getMonth() === 10) {
-                    dayElement.classList.add('calendar-current');
-                }
-
-                calendar.appendChild(dayElement);
+            } catch (error) {
+                console.log('Usando dados estáticos para disciplinas');
+                const container = document.getElementById('disciplinas-list');
+                container.innerHTML = '';
+                semesterData.subjects.forEach(subject => {
+                    const item = document.createElement('div');
+                    item.className = 'info-item';
+                    item.innerHTML = `
+                        <span class="info-label">${subject.name}:</span>
+                        <span class="info-value">${subject.grade}</span>
+                    `;
+                    container.appendChild(item);
+                });
             }
         }
 
-        function updateStats() {
-            // Calcular média geral
-            const totalGrades = semesterData.subjects.reduce((sum, subject) => sum + subject.grade, 0);
-            const averageGrade = (totalGrades / semesterData.subjects.length).toFixed(1);
-            
-            document.getElementById('media-semestre').textContent = averageGrade;
-            document.getElementById('total-disciplinas').textContent = semesterData.subjects.length;
+        // Carregar avaliações da API
+        async function loadEvaluations() {
+            try {
+                const response = await fetch('/api/tasks?type=evaluation');
+                if (response.ok) {
+                    const evaluations = await response.json();
+                    const container = document.getElementById('avaliacoes-list');
+                    container.innerHTML = '';
+
+                    if (evaluations.length === 0) {
+                        container.innerHTML = '<div class="info-item"><span>Nenhuma avaliação próxima</span></div>';
+                        return;
+                    }
+
+                    evaluations.slice(0, 4).forEach(evaluation => {
+                        const dueDate = new Date(evaluation.dueDate).toLocaleDateString('pt-BR');
+                        const item = document.createElement('div');
+                        item.className = 'info-item';
+                        item.innerHTML = `
+                            <span class="info-label">${evaluation.subject || 'Disciplina'} - ${evaluation.title}:</span>
+                            <span class="info-value">${dueDate}</span>
+                        `;
+                        container.appendChild(item);
+                    });
+                } else {
+                    throw new Error('API não disponível');
+                }
+            } catch (error) {
+                console.log('Usando dados estáticos para avaliações');
+                const container = document.getElementById('avaliacoes-list');
+                container.innerHTML = '';
+                semesterData.evaluations.forEach(evaluation => {
+                    const item = document.createElement('div');
+                    item.className = 'info-item';
+                    item.innerHTML = `
+                        <span class="info-label">${evaluation.subject} - ${evaluation.type}:</span>
+                        <span class="info-value">${evaluation.date}</span>
+                    `;
+                    container.appendChild(item);
+                });
+            }
         }
 
-        // Carregar dados ao inicializar
+        // Atualizar inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            updateStats();
             loadSubjects();
             loadEvaluations();
             generateCalendar();
