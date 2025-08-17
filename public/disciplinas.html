@@ -1,6 +1,79 @@
-<a href="/">Dashboard</a>
-<a href="/cronograma.html">Cronograma</a>
-<a href="/agenda.html">Agenda</a>
-<a href="/disciplinas.html" style="background: #667eea; color: white;">Disciplinas</a>
-<a href="/professores.html">Professores</a>
-<a href="/semestre.html">Semestre</a>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedStudios - Disciplinas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav a:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <nav class="nav">
+                <a href="/">Dashboard</a>
+                <a href="/cronograma.html">Cronograma</a>
+                <a href="/agenda.html">Agenda</a>
+                <a href="/disciplinas.html" style="background: #667eea; color: white;">Disciplinas</a>
+                <a href="/professores.html">Professores</a>
+                <a href="/semestre.html">Semestre</a>
+                <a href="/planejamento.html">Planejamento</a>
+                <a href="/progresso.html">Progresso</a>
+            </nav>
+        </div>
+        <div class="content">
+            <h1>Disciplinas</h1>
+            <p>Gerencie suas disciplinas e matérias do curso.</p>
+        </div>
+    </div>
+</body>
+</html>
