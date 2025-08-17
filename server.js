@@ -1,26 +1,23 @@
-<<<<<<< HEAD
-// No início do arquivo
-require('dotenv').config();
-
-// Usar as variáveis
-const PORT = process.env.PORT || 5000;
-const NODE_ENV = process.env.NODE_ENV || 'development';
-=======
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+// Configurar dotenv
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Middleware para processar JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir arquivos estáticos
+// Servir arquivos estáticos da pasta public
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Dados simulados para teste
@@ -73,7 +70,7 @@ const grades = [
   { id: 3, subjectId: 2, title: 'Prova 1', score: 7.5, maxScore: 10, date: '2023-10-22' },
 ];
 
-// Dados de exemplo para progresso
+// Dados de progresso
 const progressData = {
   overview: {
     totalSubjects: 8,
@@ -188,20 +185,21 @@ const schedule = [
   }
 ];
 
-// Rotas para disciplinas
+// APIs REST
+
+// Disciplinas
 app.get('/api/subjects', (req, res) => {
   res.json(subjects);
 });
 
 app.post('/api/subjects', (req, res) => {
-  const { name, code, description, workload, color } = req.body;
   const newSubject = {
     id: subjects.length + 1,
-    name,
-    code,
-    description,
-    workload: parseInt(workload),
-    color
+    name: req.body.name,
+    code: req.body.code,
+    description: req.body.description,
+    workload: req.body.workload,
+    color: req.body.color
   };
   subjects.push(newSubject);
   res.status(201).json(newSubject);
@@ -209,42 +207,38 @@ app.post('/api/subjects', (req, res) => {
 
 app.put('/api/subjects/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const { name, code, description, workload, color } = req.body;
-  
-  const index = subjects.findIndex(s => s.id === id);
-  if (index === -1) {
-    return res.status(404).json({ message: 'Disciplina não encontrada' });
+  const subjectIndex = subjects.findIndex(s => s.id === id);
+  if (subjectIndex !== -1) {
+    subjects[subjectIndex] = { ...subjects[subjectIndex], ...req.body };
+    res.json(subjects[subjectIndex]);
+  } else {
+    res.status(404).json({ error: 'Disciplina não encontrada' });
   }
-  
-  subjects[index] = { ...subjects[index], name, code, description, workload: parseInt(workload), color };
-  res.json(subjects[index]);
 });
 
 app.delete('/api/subjects/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const index = subjects.findIndex(s => s.id === id);
-  
-  if (index === -1) {
-    return res.status(404).json({ message: 'Disciplina não encontrada' });
+  const subjectIndex = subjects.findIndex(s => s.id === id);
+  if (subjectIndex !== -1) {
+    subjects.splice(subjectIndex, 1);
+    res.status(204).send();
+  } else {
+    res.status(404).json({ error: 'Disciplina não encontrada' });
   }
-  
-  subjects.splice(index, 1);
-  res.status(204).send();
 });
 
-// APIs para Professores
+// Professores
 app.get('/api/professors', (req, res) => {
   res.json(professors);
 });
 
 app.post('/api/professors', (req, res) => {
-  const { name, department, email, phone } = req.body;
   const newProfessor = {
     id: professors.length + 1,
-    name,
-    department,
-    email,
-    phone
+    name: req.body.name,
+    department: req.body.department,
+    email: req.body.email,
+    phone: req.body.phone
   };
   professors.push(newProfessor);
   res.status(201).json(newProfessor);
@@ -252,86 +246,71 @@ app.post('/api/professors', (req, res) => {
 
 app.put('/api/professors/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const { name, department, email, phone } = req.body;
-  
-  const index = professors.findIndex(p => p.id === id);
-  if (index === -1) {
-    return res.status(404).json({ message: 'Professor não encontrado' });
+  const professorIndex = professors.findIndex(p => p.id === id);
+  if (professorIndex !== -1) {
+    professors[professorIndex] = { ...professors[professorIndex], ...req.body };
+    res.json(professors[professorIndex]);
+  } else {
+    res.status(404).json({ error: 'Professor não encontrado' });
   }
-  
-  professors[index] = { ...professors[index], name, department, email, phone };
-  res.json(professors[index]);
 });
 
 app.delete('/api/professors/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const index = professors.findIndex(p => p.id === id);
-  
-  if (index === -1) {
-    return res.status(404).json({ message: 'Professor não encontrado' });
+  const professorIndex = professors.findIndex(p => p.id === id);
+  if (professorIndex !== -1) {
+    professors.splice(professorIndex, 1);
+    res.status(204).send();
+  } else {
+    res.status(404).json({ error: 'Professor não encontrado' });
   }
-  
-  professors.splice(index, 1);
-  res.status(204).send();
 });
 
-// APIs para Semestre
+// Semestre
 app.get('/api/semester', (req, res) => {
   res.json(currentSemester);
 });
 
 app.put('/api/semester', (req, res) => {
-  const { name, period, startDate, endDate } = req.body;
-  
-  currentSemester.name = name;
-  currentSemester.period = period;
-  currentSemester.startDate = startDate;
-  currentSemester.endDate = endDate;
-  
+  Object.assign(currentSemester, req.body);
   res.json(currentSemester);
 });
 
-// API para estatísticas do dashboard
+// Dashboard stats
 app.get('/api/dashboard/stats', (req, res) => {
   const stats = subjects.map(subject => {
-    const subjectLessons = lessons.filter(l => l.subjectId === subject.id);
-    const subjectTasks = tasks.filter(t => t.subjectId === subject.id);
-    const subjectGrades = grades.filter(g => g.subjectId === subject.id);
+    const subjectTasks = tasks.filter(task => task.subjectId === subject.id);
+    const subjectGrades = grades.filter(grade => grade.subjectId === subject.id);
     
-    const completedTasks = subjectTasks.filter(t => t.completed).length;
-    const pendingTasks = subjectTasks.length - completedTasks;
-    
+    const completedTasks = subjectTasks.filter(task => task.completed).length;
+    const pendingTasks = subjectTasks.filter(task => !task.completed).length;
     const averageGrade = subjectGrades.length > 0 
-      ? subjectGrades.reduce((sum, grade) => sum + grade.score, 0) / subjectGrades.length 
-      : 0;
+      ? (subjectGrades.reduce((sum, grade) => sum + grade.score, 0) / subjectGrades.length).toFixed(1)
+      : '0.0';
     
     return {
-      id: subject.id,
-      name: subject.name,
-      color: subject.color,
-      lessonsCount: subjectLessons.length,
+      subject: subject.name,
       completedTasks,
       pendingTasks,
-      averageGrade: averageGrade.toFixed(1)
+      averageGrade
     };
   });
   
   res.json(stats);
 });
 
-// Rotas para aulas
+// Aulas
 app.get('/api/lessons', (req, res) => {
   res.json(lessons);
 });
 
 app.post('/api/lessons', (req, res) => {
-  const { subjectId, title, description, date } = req.body;
   const newLesson = {
     id: lessons.length + 1,
-    subjectId: parseInt(subjectId),
-    title,
-    description,
-    date
+    subjectId: req.body.subjectId,
+    title: req.body.title,
+    description: req.body.description,
+    date: req.body.date
   };
   lessons.push(newLesson);
   res.status(201).json(newLesson);
@@ -339,49 +318,39 @@ app.post('/api/lessons', (req, res) => {
 
 app.put('/api/lessons/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const { subjectId, title, description, date } = req.body;
-  
-  const index = lessons.findIndex(l => l.id === id);
-  if (index === -1) {
-    return res.status(404).json({ message: 'Aula não encontrada' });
+  const lessonIndex = lessons.findIndex(l => l.id === id);
+  if (lessonIndex !== -1) {
+    lessons[lessonIndex] = { ...lessons[lessonIndex], ...req.body };
+    res.json(lessons[lessonIndex]);
+  } else {
+    res.status(404).json({ error: 'Aula não encontrada' });
   }
-  
-  lessons[index] = { 
-    ...lessons[index], 
-    subjectId: parseInt(subjectId), 
-    title, 
-    description, 
-    date 
-  };
-  res.json(lessons[index]);
 });
 
 app.delete('/api/lessons/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const index = lessons.findIndex(l => l.id === id);
-  
-  if (index === -1) {
-    return res.status(404).json({ message: 'Aula não encontrada' });
+  const lessonIndex = lessons.findIndex(l => l.id === id);
+  if (lessonIndex !== -1) {
+    lessons.splice(lessonIndex, 1);
+    res.status(204).send();
+  } else {
+    res.status(404).json({ error: 'Aula não encontrada' });
   }
-  
-  lessons.splice(index, 1);
-  res.status(204).send();
 });
 
-// Rotas para tarefas
+// Tarefas
 app.get('/api/tasks', (req, res) => {
   res.json(tasks);
 });
 
 app.post('/api/tasks', (req, res) => {
-  const { subjectId, title, description, dueDate, completed } = req.body;
   const newTask = {
     id: tasks.length + 1,
-    subjectId: parseInt(subjectId),
-    title,
-    description,
-    dueDate,
-    completed: completed === 'true' || completed === true
+    subjectId: req.body.subjectId,
+    title: req.body.title,
+    description: req.body.description,
+    dueDate: req.body.dueDate,
+    completed: false
   };
   tasks.push(newTask);
   res.status(201).json(newTask);
@@ -389,50 +358,39 @@ app.post('/api/tasks', (req, res) => {
 
 app.put('/api/tasks/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const { subjectId, title, description, dueDate, completed } = req.body;
-  
-  const index = tasks.findIndex(t => t.id === id);
-  if (index === -1) {
-    return res.status(404).json({ message: 'Tarefa não encontrada' });
+  const taskIndex = tasks.findIndex(t => t.id === id);
+  if (taskIndex !== -1) {
+    tasks[taskIndex] = { ...tasks[taskIndex], ...req.body };
+    res.json(tasks[taskIndex]);
+  } else {
+    res.status(404).json({ error: 'Tarefa não encontrada' });
   }
-  
-  tasks[index] = { 
-    ...tasks[index], 
-    subjectId: parseInt(subjectId), 
-    title, 
-    description, 
-    dueDate,
-    completed: completed === 'true' || completed === true
-  };
-  res.json(tasks[index]);
 });
 
 app.delete('/api/tasks/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const index = tasks.findIndex(t => t.id === id);
-  
-  if (index === -1) {
-    return res.status(404).json({ message: 'Tarefa não encontrada' });
+  const taskIndex = tasks.findIndex(t => t.id === id);
+  if (taskIndex !== -1) {
+    tasks.splice(taskIndex, 1);
+    res.status(204).send();
+  } else {
+    res.status(404).json({ error: 'Tarefa não encontrada' });
   }
-  
-  tasks.splice(index, 1);
-  res.status(204).send();
 });
 
-// Rotas para notas
+// Notas
 app.get('/api/grades', (req, res) => {
   res.json(grades);
 });
 
 app.post('/api/grades', (req, res) => {
-  const { subjectId, title, score, maxScore, date } = req.body;
   const newGrade = {
     id: grades.length + 1,
-    subjectId: parseInt(subjectId),
-    title,
-    score: parseFloat(score),
-    maxScore: parseFloat(maxScore),
-    date
+    subjectId: req.body.subjectId,
+    title: req.body.title,
+    score: req.body.score,
+    maxScore: req.body.maxScore,
+    date: req.body.date
   };
   grades.push(newGrade);
   res.status(201).json(newGrade);
@@ -440,59 +398,44 @@ app.post('/api/grades', (req, res) => {
 
 app.put('/api/grades/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const { subjectId, title, score, maxScore, date } = req.body;
-  
-  const index = grades.findIndex(g => g.id === id);
-  if (index === -1) {
-    return res.status(404).json({ message: 'Nota não encontrada' });
+  const gradeIndex = grades.findIndex(g => g.id === id);
+  if (gradeIndex !== -1) {
+    grades[gradeIndex] = { ...grades[gradeIndex], ...req.body };
+    res.json(grades[gradeIndex]);
+  } else {
+    res.status(404).json({ error: 'Nota não encontrada' });
   }
-  
-  grades[index] = { 
-    ...grades[index], 
-    subjectId: parseInt(subjectId), 
-    title, 
-    score: parseFloat(score), 
-    maxScore: parseFloat(maxScore), 
-    date 
-  };
-  res.json(grades[index]);
 });
 
 app.delete('/api/grades/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const index = grades.findIndex(g => g.id === id);
-  
-  if (index === -1) {
-    return res.status(404).json({ message: 'Nota não encontrada' });
+  const gradeIndex = grades.findIndex(g => g.id === id);
+  if (gradeIndex !== -1) {
+    grades.splice(gradeIndex, 1);
+    res.status(204).send();
+  } else {
+    res.status(404).json({ error: 'Nota não encontrada' });
   }
-  
-  grades.splice(index, 1);
-  res.status(204).send();
 });
 
-// Rotas para progresso
+// Progresso
 app.get('/api/progress', (req, res) => {
   res.json(progressData);
 });
 
-// Rotas para agenda
+// Agenda
 app.get('/api/agenda', (req, res) => {
   res.json(agenda);
 });
 
 app.post('/api/agenda', (req, res) => {
-  const { title, description, date, time, type, subject, dueDate, priority, status } = req.body;
   const newItem = {
     id: agenda.length + 1,
-    title,
-    description,
-    date: date || dueDate,
-    time,
-    type: type || 'task',
-    subject,
-    dueDate,
-    priority: priority || 'medium',
-    status: status || 'pending',
+    title: req.body.title,
+    description: req.body.description,
+    date: req.body.date,
+    time: req.body.time,
+    type: req.body.type || 'study',
     completed: false
   };
   agenda.push(newItem);
@@ -501,204 +444,127 @@ app.post('/api/agenda', (req, res) => {
 
 app.put('/api/agenda/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const { title, description, date, time, type, completed, subject, dueDate, priority, status } = req.body;
-  
-  const index = agenda.findIndex(item => item.id === id);
-  if (index === -1) {
-    return res.status(404).json({ message: 'Item não encontrado' });
+  const itemIndex = agenda.findIndex(item => item.id === id);
+  if (itemIndex !== -1) {
+    agenda[itemIndex] = { ...agenda[itemIndex], ...req.body };
+    res.json(agenda[itemIndex]);
+  } else {
+    res.status(404).json({ error: 'Item da agenda não encontrado' });
   }
-  
-  agenda[index] = { 
-    ...agenda[index], 
-    title: title || agenda[index].title,
-    description: description || agenda[index].description,
-    date: date || agenda[index].date,
-    time: time || agenda[index].time,
-    type: type || agenda[index].type,
-    subject: subject || agenda[index].subject,
-    dueDate: dueDate || agenda[index].dueDate,
-    priority: priority || agenda[index].priority,
-    status: status || agenda[index].status,
-    completed: completed !== undefined ? (completed === 'true' || completed === true) : agenda[index].completed
-  };
-  res.json(agenda[index]);
 });
 
 app.patch('/api/agenda/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const updates = req.body;
-  
-  const index = agenda.findIndex(item => item.id === id);
-  if (index === -1) {
-    return res.status(404).json({ message: 'Item não encontrado' });
+  const itemIndex = agenda.findIndex(item => item.id === id);
+  if (itemIndex !== -1) {
+    if (req.body.hasOwnProperty('completed')) {
+      agenda[itemIndex].completed = req.body.completed;
+    }
+    res.json(agenda[itemIndex]);
+  } else {
+    res.status(404).json({ error: 'Item da agenda não encontrado' });
   }
-  
-  agenda[index] = { 
-    ...agenda[index], 
-    ...updates
-  };
-  res.json(agenda[index]);
 });
 
 app.delete('/api/agenda/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const index = agenda.findIndex(item => item.id === id);
-  
-  if (index === -1) {
-    return res.status(404).json({ message: 'Item não encontrado' });
+  const itemIndex = agenda.findIndex(item => item.id === id);
+  if (itemIndex !== -1) {
+    agenda.splice(itemIndex, 1);
+    res.status(204).send();
+  } else {
+    res.status(404).json({ error: 'Item da agenda não encontrado' });
   }
-  
-  agenda.splice(index, 1);
-  res.status(204).send();
 });
 
-// Rotas para cronograma
+// Cronograma
 app.get('/api/schedule', (req, res) => {
   res.json(schedule);
 });
 
-// Rotas para cronograma (nova API)
 app.get('/api/cronograma', (req, res) => {
-  res.json(lessons);
+  res.json(schedule);
 });
 
 app.post('/api/cronograma', (req, res) => {
-  const { subject, professor, dayOfWeek, startTime, endTime, room } = req.body;
-  
-  const subjectData = subjects.find(s => s.id === parseInt(subject));
-  const professorData = professors.find(p => p.id === parseInt(professor));
-  
-  if (!subjectData || !professorData) {
-    return res.status(400).json({ error: 'Disciplina ou professor não encontrado' });
-  }
-  
-  const newLesson = {
-    id: lessons.length + 1,
-    subject: parseInt(subject),
-    professor: parseInt(professor),
-    dayOfWeek,
-    startTime,
-    endTime,
-    room
+  const newScheduleItem = {
+    id: schedule.length + 1,
+    day: req.body.day,
+    time: req.body.time,
+    subject: req.body.subject,
+    type: req.body.type,
+    location: req.body.location,
+    professor: req.body.professor,
+    color: req.body.color,
+    subjectId: req.body.subjectId,
+    professorId: req.body.professorId
   };
-  
-  lessons.push(newLesson);
-  res.status(201).json(newLesson);
+  schedule.push(newScheduleItem);
+  res.status(201).json(newScheduleItem);
 });
 
 app.put('/api/cronograma/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const { subject, professor, dayOfWeek, startTime, endTime, room } = req.body;
-  
-  const lessonIndex = lessons.findIndex(l => l.id === id);
-  if (lessonIndex === -1) {
-    return res.status(404).json({ error: 'Aula não encontrada' });
+  const scheduleIndex = schedule.findIndex(s => s.id === id);
+  if (scheduleIndex !== -1) {
+    schedule[scheduleIndex] = { ...schedule[scheduleIndex], ...req.body };
+    res.json(schedule[scheduleIndex]);
+  } else {
+    res.status(404).json({ error: 'Item do cronograma não encontrado' });
   }
-  
-  const subjectData = subjects.find(s => s.id === parseInt(subject));
-  const professorData = professors.find(p => p.id === parseInt(professor));
-  
-  if (!subjectData || !professorData) {
-    return res.status(400).json({ error: 'Disciplina ou professor não encontrado' });
-  }
-  
-  lessons[lessonIndex] = {
-    ...lessons[lessonIndex],
-    subject: parseInt(subject),
-    professor: parseInt(professor),
-    dayOfWeek,
-    startTime,
-    endTime,
-    room
-  };
-  
-  res.json(lessons[lessonIndex]);
 });
 
 app.delete('/api/cronograma/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const index = lessons.findIndex(l => l.id === id);
-  
-  if (index === -1) {
-    return res.status(404).json({ error: 'Aula não encontrada' });
+  const scheduleIndex = schedule.findIndex(s => s.id === id);
+  if (scheduleIndex !== -1) {
+    schedule.splice(scheduleIndex, 1);
+    res.status(204).send();
+  } else {
+    res.status(404).json({ error: 'Item do cronograma não encontrado' });
   }
-  
-  lessons.splice(index, 1);
-  res.status(204).send();
 });
 
 app.post('/api/schedule', (req, res) => {
-  const { subjectId, professorId, day, time, type, location } = req.body;
-  
-  const subject = subjects.find(s => s.id === parseInt(subjectId));
-  const professor = professors.find(p => p.id === parseInt(professorId));
-  
-  if (!subject || !professor) {
-    return res.status(400).json({ error: 'Disciplina ou professor não encontrado' });
-  }
-  
-  const newClass = {
+  const newScheduleItem = {
     id: schedule.length + 1,
-    day,
-    time,
-    subject: subject.name,
-    type,
-    location,
-    professor: professor.name,
-    color: subject.color,
-    subjectId: subject.id,
-    professorId: professor.id
+    day: req.body.day,
+    time: req.body.time,
+    subject: req.body.subject,
+    type: req.body.type,
+    location: req.body.location,
+    professor: req.body.professor,
+    color: req.body.color,
+    subjectId: req.body.subjectId,
+    professorId: req.body.professorId
   };
-  
-  schedule.push(newClass);
-  res.status(201).json(newClass);
+  schedule.push(newScheduleItem);
+  res.status(201).json(newScheduleItem);
 });
 
 app.put('/api/schedule/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const { subjectId, professorId, day, time, type, location } = req.body;
-  
-  const classIndex = schedule.findIndex(c => c.id === id);
-  if (classIndex === -1) {
-    return res.status(404).json({ error: 'Aula não encontrada' });
+  const scheduleIndex = schedule.findIndex(s => s.id === id);
+  if (scheduleIndex !== -1) {
+    schedule[scheduleIndex] = { ...schedule[scheduleIndex], ...req.body };
+    res.json(schedule[scheduleIndex]);
+  } else {
+    res.status(404).json({ error: 'Item do cronograma não encontrado' });
   }
-  
-  const subject = subjects.find(s => s.id === parseInt(subjectId));
-  const professor = professors.find(p => p.id === parseInt(professorId));
-  
-  if (!subject || !professor) {
-    return res.status(400).json({ error: 'Disciplina ou professor não encontrado' });
-  }
-  
-  schedule[classIndex] = {
-    ...schedule[classIndex],
-    day,
-    time,
-    subject: subject.name,
-    type,
-    location,
-    professor: professor.name,
-    color: subject.color,
-    subjectId: subject.id,
-    professorId: professor.id
-  };
-  
-  res.json(schedule[classIndex]);
 });
 
 app.delete('/api/schedule/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const index = schedule.findIndex(c => c.id === id);
-  
-  if (index === -1) {
-    return res.status(404).json({ error: 'Aula não encontrada' });
+  const scheduleIndex = schedule.findIndex(s => s.id === id);
+  if (scheduleIndex !== -1) {
+    schedule.splice(scheduleIndex, 1);
+    res.status(204).send();
+  } else {
+    res.status(404).json({ error: 'Item do cronograma não encontrado' });
   }
-  
-  schedule.splice(index, 1);
-  res.status(204).send();
 });
 
-// Rotas para páginas HTML
+// Rotas para servir páginas HTML
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -732,7 +598,6 @@ app.get('/semestre', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-  console.log(`Acesse: http://localhost:${PORT}`);
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`📱 Acesse: http://localhost:${PORT}`);
 });
->>>>>>> 02c01ce496c0f5b9685167d6d44ea2a49dc642e1
