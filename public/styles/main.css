@@ -1,0 +1,258 @@
+/* ===== VARIÁVEIS CSS - PALETA DE CORES ===== */
+:root {
+  /* Cores principais */
+  --primary-bg: #ffffff;
+  --primary-blue: #3b82f6;    /* Ações primárias */
+  --success-green: #10b981;   /* Sucesso/Conclusão */
+  --warning-orange: #f59e0b;  /* Prioridade/Urgência */
+  --danger-red: #ef4444;      /* Urgência/Erro */
+  --secondary-purple: #8b5cf6; /* Navegação secundária */
+  
+  /* Cores de texto */
+  --text-dark: #1f2937;
+  --text-gray: #6b7280;
+  --text-light: #9ca3af;
+  
+  /* Sombras e bordas */
+  --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 8px 16px rgba(0, 0, 0, 0.15);
+  --border-radius: 10px;
+}
+
+/* ===== RESET E BASE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--primary-bg);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+/* ===== SISTEMA DE CARDS ===== */
+.card {
+  background-color: var(--primary-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-light);
+  padding: 20px;
+  margin: 15px 0;
+  border-left: 4px solid var(--primary-blue);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+/* Variações de cards por tipo */
+.card--success {
+  border-left-color: var(--success-green);
+}
+
+.card--warning {
+  border-left-color: var(--warning-orange);
+}
+
+.card--danger {
+  border-left-color: var(--danger-red);
+}
+
+.card--purple {
+  border-left-color: var(--secondary-purple);
+}
+
+/* ===== CONTAINER E LAYOUT ===== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--primary-bg);
+}
+
+.header {
+  background-color: var(--primary-bg);
+  padding: 20px 0;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  color: var(--primary-blue);
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* ===== NAVEGAÇÃO ===== */
+.nav {
+  background-color: var(--primary-bg);
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 20px;
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--text-gray);
+  padding: 10px 20px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  background-color: #f3f4f6;
+  color: var(--primary-blue);
+}
+
+.nav a.active {
+  background-color: var(--primary-blue);
+  color: white;
+}
+
+/* ===== BOTÕES ===== */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn--primary {
+  background-color: var(--primary-blue);
+  color: white;
+}
+
+.btn--primary:hover {
+  background-color: #2563eb;
+}
+
+.btn--success {
+  background-color: var(--success-green);
+  color: white;
+}
+
+.btn--success:hover {
+  background-color: #059669;
+}
+
+.btn--warning {
+  background-color: var(--warning-orange);
+  color: white;
+}
+
+.btn--warning:hover {
+  background-color: #d97706;
+}
+
+.btn--danger {
+  background-color: var(--danger-red);
+  color: white;
+}
+
+.btn--danger:hover {
+  background-color: #dc2626;
+}
+
+/* ===== FORMULÁRIOS ===== */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ===== GRID SYSTEM ===== */
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid--4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* ===== UTILITÁRIOS ===== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-30 { margin-bottom: 30px; }
+
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mt-30 { margin-top: 30px; }
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .grid--2,
+  .grid--3,
+  .grid--4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+}

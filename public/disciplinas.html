@@ -4,310 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedStudios - Disciplinas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .nav a {
-            color: white;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-        }
-        
-        .nav a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .nav a.active {
-            background: linear-gradient(45deg, #ff6b6b, #ffa500);
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-        }
-        
-        .page-title {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .page-title h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-        }
-        
-        .page-title p {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 300;
-        }
-        
-        .disciplines-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-        
-        .discipline-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .discipline-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #ff6b6b, #ffa500, #4ecdc4, #45b7d1);
-        }
-        
-        .discipline-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-            background: rgba(255, 255, 255, 0.15);
-        }
-        
-        .discipline-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-        
-        .discipline-name {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 5px;
-        }
-        
-        .discipline-code {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 400;
-        }
-        
-        .discipline-credits {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        
-        .discipline-info {
-            margin-bottom: 20px;
-        }
-        
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-        
-        .info-label {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 400;
-        }
-        
-        .info-value {
-            color: white;
-            font-weight: 500;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4ecdc4, #44a08d);
-            border-radius: 10px;
-            transition: width 0.3s ease;
-        }
-        
-        .discipline-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .add-discipline {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 2px dashed rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .add-discipline:hover {
-            border-color: rgba(255, 255, 255, 0.5);
-            background: rgba(255, 255, 255, 0.15);
-        }
-        
-        .add-icon {
-            font-size: 3rem;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 15px;
-        }
-        
-        .add-text {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .page-title h1 {
-                font-size: 2.5rem;
-            }
-            
-            .disciplines-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .nav {
-                justify-content: center;
-            }
-            
-            .nav a {
-                padding: 10px 16px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <nav class="nav">
-                <a href="/">🏠 Dashboard</a>
-                <a href="/cronograma.html">📅 Cronograma</a>
-                <a href="/agenda.html">📋 Agenda</a>
-                <a href="/disciplinas.html" class="active">📚 Disciplinas</a>
-                <a href="/professores.html">👨‍🏫 Professores</a>
-                <a href="/semestre.html">🎓 Semestre</a>
-                <a href="/planejamento.html">📊 Planejamento</a>
-                <a href="/progresso.html">📈 Progresso</a>
-            </nav>
+            <h1>MedStudios</h1>
         </div>
-        
-        <div class="page-title">
-            <h1>📚 Disciplinas</h1>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="/">🏠 Início</a></li>
+                <li><a href="/cronograma.html">📅 Cronograma</a></li>
+                <li><a href="/agenda.html">📝 Agenda</a></li>
+                <li><a href="/planejamento.html">📚 Planejamento</a></li>
+                <li><a href="/progresso.html">📊 Progresso</a></li>
+                <li><a href="/disciplinas.html" class="active">📖 Disciplinas</a></li>
+                <li><a href="/professores.html">👨‍🏫 Professores</a></li>
+                <li><a href="/semestre.html">🗓️ Semestre</a></li>
+            </ul>
+        </nav>
+
+        <div class="card text-center mb-30">
+            <h2>📖 Disciplinas</h2>
             <p>Gerencie suas disciplinas e acompanhe seu progresso acadêmico</p>
         </div>
-        
-        <div class="disciplines-grid" id="disciplinesGrid">
+
+        <!-- Botão Adicionar -->
+        <div class="mb-20">
+            <button class="btn btn--primary" onclick="showAddForm()">+ Adicionar Nova Disciplina</button>
+        </div>
+
+        <!-- Formulário de Adicionar/Editar -->
+        <div id="disciplineForm" class="card mb-30" style="display: none;">
+            <h3 id="formTitle">Adicionar Nova Disciplina</h3>
+            <form id="disciplineFormElement">
+                <input type="hidden" id="disciplineId">
+                <div class="grid grid--2">
+                    <div class="form-group">
+                        <label for="disciplineName">Nome da Disciplina</label>
+                        <input type="text" id="disciplineName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="disciplineCode">Código</label>
+                        <input type="text" id="disciplineCode" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="disciplineCredits">Créditos</label>
+                        <input type="number" id="disciplineCredits" min="1" max="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="disciplineProfessor">Professor</label>
+                        <input type="text" id="disciplineProfessor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="disciplineSchedule">Horário</label>
+                        <input type="text" id="disciplineSchedule" placeholder="Ex: Seg/Qua 08:00-10:00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="disciplineGrade">Nota Atual</label>
+                        <input type="number" id="disciplineGrade" min="0" max="10" step="0.1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="disciplineProgress">Progresso (%)</label>
+                    <input type="range" id="disciplineProgress" min="0" max="100" value="0" oninput="updateProgressValue(this.value)">
+                    <span id="progressValue">0%</span>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn btn--primary">Salvar</button>
+                    <button type="button" class="btn btn--secondary" onclick="hideForm()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Lista de Disciplinas -->
+        <div class="grid grid--2" id="disciplinesGrid">
             <!-- Disciplinas serão carregadas dinamicamente -->
         </div>
-        
-        <div class="add-discipline" onclick="addNewDiscipline()">
-            <div class="add-icon">+</div>
-            <div class="add-text">Adicionar Nova Disciplina</div>
-        </div>
     </div>
-    
+
     <script>
         // Dados das disciplinas (posteriormente virão do backend)
-        const disciplinesData = [
+        let disciplinesData = [
             {
                 id: 1,
                 name: "Anatomia Humana",
@@ -349,54 +128,149 @@
                 grade: 9.1
             }
         ];
-        
+
+        let nextId = 5;
+
         function loadDisciplines() {
             const grid = document.getElementById('disciplinesGrid');
+            grid.innerHTML = '';
             
             disciplinesData.forEach(discipline => {
                 const card = document.createElement('div');
-                card.className = 'discipline-card';
+                card.className = 'card';
+                
+                // Determinar cor do card baseado na nota
+                let cardClass = '';
+                if (discipline.grade >= 9) cardClass = 'card--success';
+                else if (discipline.grade >= 7) cardClass = '';
+                else if (discipline.grade >= 5) cardClass = 'card--warning';
+                else cardClass = 'card--danger';
+                
+                card.className += ' ' + cardClass;
+                
                 card.innerHTML = `
-                    <div class="discipline-header">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
                         <div>
-                            <div class="discipline-name">${discipline.name}</div>
-                            <div class="discipline-code">${discipline.code}</div>
+                            <h3 style="margin-bottom: 5px;">${discipline.name}</h3>
+                            <p style="color: var(--text-gray); font-size: 0.9rem;">${discipline.code}</p>
                         </div>
-                        <div class="discipline-credits">${discipline.credits} créditos</div>
+                        <span style="background-color: var(--primary-blue); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">
+                            ${discipline.credits} créditos
+                        </span>
                     </div>
                     
-                    <div class="discipline-info">
-                        <div class="info-item">
-                            <span class="info-label">Professor:</span>
-                            <span class="info-value">${discipline.professor}</span>
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="color: var(--text-gray);">Professor:</span>
+                            <span style="font-weight: 500;">${discipline.professor}</span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Horário:</span>
-                            <span class="info-value">${discipline.schedule}</span>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="color: var(--text-gray);">Horário:</span>
+                            <span style="font-weight: 500;">${discipline.schedule}</span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Nota Atual:</span>
-                            <span class="info-value">${discipline.grade}</span>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="color: var(--text-gray);">Nota Atual:</span>
+                            <span style="font-weight: 500; color: ${discipline.grade >= 7 ? 'var(--success-green)' : discipline.grade >= 5 ? 'var(--warning-orange)' : 'var(--danger-red)'};">                                ${discipline.grade}
+                            </span>
                         </div>
                     </div>
                     
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${discipline.progress}%"></div>
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="color: var(--text-gray); font-size: 0.9rem;">Progresso</span>
+                            <span style="font-size: 0.9rem; font-weight: 500;">${discipline.progress}%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background-color: #e5e7eb; border-radius: 10px; overflow: hidden;">
+                            <div style="height: 100%; background-color: var(--success-green); width: ${discipline.progress}%; transition: width 0.3s ease;"></div>
+                        </div>
                     </div>
                     
-                    <div class="discipline-actions">
-                        <a href="#" class="btn btn-primary">Ver Detalhes</a>
-                        <a href="#" class="btn btn-secondary">Editar</a>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn--primary" onclick="editDiscipline(${discipline.id})" style="flex: 1;">Editar</button>
+                        <button class="btn btn--danger" onclick="deleteDiscipline(${discipline.id})" style="flex: 1;">Excluir</button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         }
-        
-        function addNewDiscipline() {
-            alert('Funcionalidade de adicionar disciplina será implementada em breve!');
+
+        function showAddForm() {
+            document.getElementById('formTitle').textContent = 'Adicionar Nova Disciplina';
+            document.getElementById('disciplineFormElement').reset();
+            document.getElementById('disciplineId').value = '';
+            document.getElementById('disciplineForm').style.display = 'block';
+            updateProgressValue(0);
         }
-        
+
+        function editDiscipline(id) {
+            const discipline = disciplinesData.find(d => d.id === id);
+            if (discipline) {
+                document.getElementById('formTitle').textContent = 'Editar Disciplina';
+                document.getElementById('disciplineId').value = discipline.id;
+                document.getElementById('disciplineName').value = discipline.name;
+                document.getElementById('disciplineCode').value = discipline.code;
+                document.getElementById('disciplineCredits').value = discipline.credits;
+                document.getElementById('disciplineProfessor').value = discipline.professor;
+                document.getElementById('disciplineSchedule').value = discipline.schedule;
+                document.getElementById('disciplineGrade').value = discipline.grade;
+                document.getElementById('disciplineProgress').value = discipline.progress;
+                updateProgressValue(discipline.progress);
+                document.getElementById('disciplineForm').style.display = 'block';
+            }
+        }
+
+        function deleteDiscipline(id) {
+            if (confirm('Tem certeza que deseja excluir esta disciplina?')) {
+                disciplinesData = disciplinesData.filter(d => d.id !== id);
+                loadDisciplines();
+                // Aqui seria feita a chamada para a API para deletar no backend
+                // await fetch(`/api/disciplines/${id}`, { method: 'DELETE' });
+            }
+        }
+
+        function hideForm() {
+            document.getElementById('disciplineForm').style.display = 'none';
+        }
+
+        function updateProgressValue(value) {
+            document.getElementById('progressValue').textContent = value + '%';
+        }
+
+        // Manipular envio do formulário
+        document.getElementById('disciplineFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('disciplineId').value;
+            const disciplineData = {
+                name: document.getElementById('disciplineName').value,
+                code: document.getElementById('disciplineCode').value,
+                credits: parseInt(document.getElementById('disciplineCredits').value),
+                professor: document.getElementById('disciplineProfessor').value,
+                schedule: document.getElementById('disciplineSchedule').value,
+                grade: parseFloat(document.getElementById('disciplineGrade').value) || 0,
+                progress: parseInt(document.getElementById('disciplineProgress').value)
+            };
+            
+            if (id) {
+                // Editar disciplina existente
+                const index = disciplinesData.findIndex(d => d.id === parseInt(id));
+                if (index !== -1) {
+                    disciplinesData[index] = { ...disciplineData, id: parseInt(id) };
+                }
+                // Aqui seria feita a chamada para a API para atualizar no backend
+                // await fetch(`/api/disciplines/${id}`, { method: 'PUT', body: JSON.stringify(disciplineData) });
+            } else {
+                // Adicionar nova disciplina
+                disciplineData.id = nextId++;
+                disciplinesData.push(disciplineData);
+                // Aqui seria feita a chamada para a API para criar no backend
+                // await fetch('/api/disciplines', { method: 'POST', body: JSON.stringify(disciplineData) });
+            }
+            
+            hideForm();
+            loadDisciplines();
+        });
+
         // Carregar disciplinas quando a página carregar
         document.addEventListener('DOMContentLoaded', loadDisciplines);
     </script>

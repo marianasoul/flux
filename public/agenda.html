@@ -4,76 +4,416 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedStudios - Agenda</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .nav a {
-            color: #667eea;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        .nav a:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-2px);
-        }
-        .content {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <nav class="nav">
-                <a href="/">Dashboard</a>
-                <a href="/cronograma.html">Cronograma</a>
-                <a href="/agenda.html" style="background: #667eea; color: white;">Agenda</a>
-                <a href="/disciplinas.html">Disciplinas</a>
-                <a href="/professores.html">Professores</a>
-                <a href="/semestre.html">Semestre</a>
-                <a href="/planejamento.html">Planejamento</a>
-                <a href="/progresso.html">Progresso</a>
-            </nav>
+        <!-- Navegação -->
+        <nav class="nav">
+            <a href="/">🏠 Dashboard</a>
+            <a href="/cronograma.html">📅 Cronograma</a>
+            <a href="/agenda.html" class="active">📋 Agenda</a>
+            <a href="/disciplinas.html">📚 Disciplinas</a>
+            <a href="/professores.html">👨‍🏫 Professores</a>
+            <a href="/semestre.html">🎓 Semestre</a>
+            <a href="/planejamento.html">📊 Planejamento</a>
+            <a href="/progresso.html">📈 Progresso</a>
+        </nav>
+
+        <!-- Card de Título -->
+        <div class="card">
+            <h1 class="text-center">📋 Agenda de Tarefas</h1>
+            <p class="text-center text-muted">Organize e acompanhe suas tarefas e compromissos</p>
         </div>
-        <div class="content">
-            <h1>Agenda de Tarefas</h1>
-            <p>Gerencie suas tarefas e compromissos acadêmicos.</p>
+
+        <!-- Botão Adicionar Tarefa -->
+        <div class="mb-3">
+            <button class="btn btn-primary" onclick="showAddForm()">+ Adicionar Tarefa</button>
+        </div>
+
+        <!-- Formulário de Adicionar/Editar Tarefa -->
+        <div id="tarefaForm" class="card" style="display: none;">
+            <h3 id="formTitle">Adicionar Tarefa</h3>
+            <form id="tarefaFormElement">
+                <input type="hidden" id="tarefaId">
+                
+                <div class="form-group">
+                    <label for="tarefaTitulo">Título da Tarefa:</label>
+                    <input type="text" id="tarefaTitulo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tarefaDescricao">Descrição:</label>
+                    <textarea id="tarefaDescricao" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tarefaDisciplina">Disciplina:</label>
+                    <select id="tarefaDisciplina" required>
+                        <option value="">Selecione uma disciplina</option>
+                        <option value="Anatomia Humana">Anatomia Humana</option>
+                        <option value="Fisiologia">Fisiologia</option>
+                        <option value="Bioquímica">Bioquímica</option>
+                        <option value="Histologia">Histologia</option>
+                        <option value="Embriologia">Embriologia</option>
+                        <option value="Genética">Genética</option>
+                        <option value="Geral">Geral</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tarefaTipo">Tipo de Tarefa:</label>
+                    <select id="tarefaTipo" required>
+                        <option value="">Selecione o tipo</option>
+                        <option value="Estudo">Estudo</option>
+                        <option value="Prova">Prova</option>
+                        <option value="Trabalho">Trabalho</option>
+                        <option value="Seminário">Seminário</option>
+                        <option value="Relatório">Relatório</option>
+                        <option value="Pesquisa">Pesquisa</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tarefaDataVencimento">Data de Vencimento:</label>
+                    <input type="date" id="tarefaDataVencimento" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tarefaPrioridade">Prioridade:</label>
+                    <select id="tarefaPrioridade" required>
+                        <option value="">Selecione a prioridade</option>
+                        <option value="Baixa">Baixa</option>
+                        <option value="Média">Média</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Urgente">Urgente</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tarefaStatus">Status:</label>
+                    <select id="tarefaStatus" required>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Concluída">Concluída</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideForm()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="grid-4">
+            <div class="card card-success">
+                <h3 id="totalTarefas">12</h3>
+                <p>Total de Tarefas</p>
+            </div>
+            <div class="card card-warning">
+                <h3 id="tarefasPendentes">8</h3>
+                <p>Pendentes</p>
+            </div>
+            <div class="card card-danger">
+                <h3 id="tarefasUrgentes">3</h3>
+                <p>Urgentes</p>
+            </div>
+            <div class="card card-purple">
+                <h3 id="tarefasConcluidas">4</h3>
+                <p>Concluídas</p>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card">
+            <h3>Filtros</h3>
+            <div class="grid-4">
+                <select id="filtroStatus" onchange="filtrarTarefas()">
+                    <option value="">Todos os Status</option>
+                    <option value="Pendente">Pendente</option>
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Concluída">Concluída</option>
+                </select>
+                <select id="filtroPrioridade" onchange="filtrarTarefas()">
+                    <option value="">Todas as Prioridades</option>
+                    <option value="Baixa">Baixa</option>
+                    <option value="Média">Média</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Urgente">Urgente</option>
+                </select>
+                <select id="filtroDisciplina" onchange="filtrarTarefas()">
+                    <option value="">Todas as Disciplinas</option>
+                    <option value="Anatomia Humana">Anatomia Humana</option>
+                    <option value="Fisiologia">Fisiologia</option>
+                    <option value="Bioquímica">Bioquímica</option>
+                    <option value="Histologia">Histologia</option>
+                    <option value="Embriologia">Embriologia</option>
+                    <option value="Genética">Genética</option>
+                    <option value="Geral">Geral</option>
+                </select>
+                <button class="btn btn-secondary" onclick="limparFiltros()">Limpar Filtros</button>
+            </div>
+        </div>
+
+        <!-- Lista de Tarefas -->
+        <div class="grid-2" id="tarefasGrid">
+            <!-- Tarefas serão carregadas dinamicamente -->
         </div>
     </div>
+
+    <script>
+        // Dados das tarefas
+        let tarefasData = [
+            {
+                id: 1,
+                titulo: "Estudar Sistema Cardiovascular",
+                descricao: "Revisar anatomia e fisiologia do coração",
+                disciplina: "Anatomia Humana",
+                tipo: "Estudo",
+                dataVencimento: "2024-01-25",
+                prioridade: "Alta",
+                status: "Pendente"
+            },
+            {
+                id: 2,
+                titulo: "Prova de Fisiologia",
+                descricao: "Prova sobre sistema respiratório",
+                disciplina: "Fisiologia",
+                tipo: "Prova",
+                dataVencimento: "2024-01-30",
+                prioridade: "Urgente",
+                status: "Pendente"
+            },
+            {
+                id: 3,
+                titulo: "Relatório de Laboratório",
+                descricao: "Relatório sobre experimento de bioquímica",
+                disciplina: "Bioquímica",
+                tipo: "Relatório",
+                dataVencimento: "2024-01-28",
+                prioridade: "Média",
+                status: "Em Andamento"
+            },
+            {
+                id: 4,
+                titulo: "Seminário sobre Genética",
+                descricao: "Apresentação sobre hereditariedade",
+                disciplina: "Genética",
+                tipo: "Seminário",
+                dataVencimento: "2024-02-05",
+                prioridade: "Alta",
+                status: "Pendente"
+            }
+        ];
+
+        let editingTarefaId = null;
+        let tarefasFiltradas = [...tarefasData];
+
+        // Função para carregar tarefas
+        function loadTarefas() {
+            const grid = document.getElementById('tarefasGrid');
+            grid.innerHTML = '';
+            
+            tarefasFiltradas.forEach(tarefa => {
+                const card = document.createElement('div');
+                card.className = `card card-${getPrioridadeClass(tarefa.prioridade)}`;
+                
+                const dataFormatada = new Date(tarefa.dataVencimento).toLocaleDateString('pt-BR');
+                const diasRestantes = Math.ceil((new Date(tarefa.dataVencimento) - new Date()) / (1000 * 60 * 60 * 24));
+                
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <h4 style="color: var(--text-color); margin: 0;">${tarefa.titulo}</h4>
+                        <span class="badge badge-${getStatusClass(tarefa.status)}">${tarefa.status}</span>
+                    </div>
+                    
+                    <p style="margin: 0.5rem 0; color: var(--text-muted); font-size: 0.9rem;">${tarefa.descricao}</p>
+                    
+                    <div style="margin: 1rem 0;">
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Disciplina:</strong> ${tarefa.disciplina}</p>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Tipo:</strong> ${tarefa.tipo}</p>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Vencimento:</strong> ${dataFormatada}</p>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Prioridade:</strong> ${tarefa.prioridade}</p>
+                        ${diasRestantes >= 0 ? 
+                            `<p style="margin: 0.25rem 0; font-size: 0.9rem; color: ${diasRestantes <= 3 ? 'var(--danger-color)' : 'var(--text-muted)'}"><strong>Dias restantes:</strong> ${diasRestantes}</p>` :
+                            `<p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--danger-color)"><strong>Atrasada por:</strong> ${Math.abs(diasRestantes)} dias</p>`
+                        }
+                    </div>
+                    
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="editTarefa(${tarefa.id})" style="flex: 1;">Editar</button>
+                        <button class="btn btn-success" onclick="toggleStatus(${tarefa.id})" style="flex: 1;">
+                            ${tarefa.status === 'Concluída' ? 'Reabrir' : 'Concluir'}
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteTarefa(${tarefa.id})" style="flex: 1;">Excluir</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            updateStats();
+        }
+
+        // Funções auxiliares para classes CSS
+        function getPrioridadeClass(prioridade) {
+            switch(prioridade) {
+                case 'Urgente': return 'danger';
+                case 'Alta': return 'warning';
+                case 'Média': return 'purple';
+                default: return '';
+            }
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'Concluída': return 'success';
+                case 'Em Andamento': return 'warning';
+                default: return 'secondary';
+            }
+        }
+
+        // Função para atualizar estatísticas
+        function updateStats() {
+            document.getElementById('totalTarefas').textContent = tarefasData.length;
+            document.getElementById('tarefasPendentes').textContent = tarefasData.filter(t => t.status === 'Pendente').length;
+            document.getElementById('tarefasUrgentes').textContent = tarefasData.filter(t => t.prioridade === 'Urgente').length;
+            document.getElementById('tarefasConcluidas').textContent = tarefasData.filter(t => t.status === 'Concluída').length;
+        }
+
+        // Função para filtrar tarefas
+        function filtrarTarefas() {
+            const filtroStatus = document.getElementById('filtroStatus').value;
+            const filtroPrioridade = document.getElementById('filtroPrioridade').value;
+            const filtroDisciplina = document.getElementById('filtroDisciplina').value;
+            
+            tarefasFiltradas = tarefasData.filter(tarefa => {
+                return (!filtroStatus || tarefa.status === filtroStatus) &&
+                       (!filtroPrioridade || tarefa.prioridade === filtroPrioridade) &&
+                       (!filtroDisciplina || tarefa.disciplina === filtroDisciplina);
+            });
+            
+            loadTarefas();
+        }
+
+        // Função para limpar filtros
+        function limparFiltros() {
+            document.getElementById('filtroStatus').value = '';
+            document.getElementById('filtroPrioridade').value = '';
+            document.getElementById('filtroDisciplina').value = '';
+            tarefasFiltradas = [...tarefasData];
+            loadTarefas();
+        }
+
+        // Função para mostrar formulário
+        function showAddForm() {
+            editingTarefaId = null;
+            document.getElementById('formTitle').textContent = 'Adicionar Tarefa';
+            document.getElementById('tarefaFormElement').reset();
+            document.getElementById('tarefaStatus').value = 'Pendente';
+            document.getElementById('tarefaForm').style.display = 'block';
+        }
+
+        // Função para esconder formulário
+        function hideForm() {
+            document.getElementById('tarefaForm').style.display = 'none';
+            editingTarefaId = null;
+        }
+
+        // Função para editar tarefa
+        function editTarefa(id) {
+            const tarefa = tarefasData.find(t => t.id === id);
+            if (tarefa) {
+                editingTarefaId = id;
+                document.getElementById('formTitle').textContent = 'Editar Tarefa';
+                document.getElementById('tarefaId').value = tarefa.id;
+                document.getElementById('tarefaTitulo').value = tarefa.titulo;
+                document.getElementById('tarefaDescricao').value = tarefa.descricao;
+                document.getElementById('tarefaDisciplina').value = tarefa.disciplina;
+                document.getElementById('tarefaTipo').value = tarefa.tipo;
+                document.getElementById('tarefaDataVencimento').value = tarefa.dataVencimento;
+                document.getElementById('tarefaPrioridade').value = tarefa.prioridade;
+                document.getElementById('tarefaStatus').value = tarefa.status;
+                document.getElementById('tarefaForm').style.display = 'block';
+            }
+        }
+
+        // Função para alternar status
+        function toggleStatus(id) {
+            const tarefa = tarefasData.find(t => t.id === id);
+            if (tarefa) {
+                tarefa.status = tarefa.status === 'Concluída' ? 'Pendente' : 'Concluída';
+                filtrarTarefas();
+            }
+        }
+
+        // Função para excluir tarefa
+        function deleteTarefa(id) {
+            if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
+                tarefasData = tarefasData.filter(t => t.id !== id);
+                filtrarTarefas();
+            }
+        }
+
+        // Manipular envio do formulário
+        document.getElementById('tarefaFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                titulo: document.getElementById('tarefaTitulo').value,
+                descricao: document.getElementById('tarefaDescricao').value,
+                disciplina: document.getElementById('tarefaDisciplina').value,
+                tipo: document.getElementById('tarefaTipo').value,
+                dataVencimento: document.getElementById('tarefaDataVencimento').value,
+                prioridade: document.getElementById('tarefaPrioridade').value,
+                status: document.getElementById('tarefaStatus').value
+            };
+            
+            if (editingTarefaId) {
+                const index = tarefasData.findIndex(t => t.id === editingTarefaId);
+                if (index !== -1) {
+                    tarefasData[index] = { ...tarefasData[index], ...formData };
+                }
+            } else {
+                const newId = Math.max(...tarefasData.map(t => t.id)) + 1;
+                tarefasData.push({ id: newId, ...formData });
+            }
+            
+            filtrarTarefas();
+            hideForm();
+        });
+
+        // Carregar dados quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTarefas();
+        });
+    </script>
+
+    <style>
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-success {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .badge-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .badge-secondary {
+            background: var(--text-muted);
+            color: white;
+        }
+    </style>
 </body>
 </html>

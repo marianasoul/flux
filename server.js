@@ -2,9 +2,19 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import connectDB from './config/database.js';
+
+// Importar rotas
+import subjectsRouter from './routes/subjects.js';
+import professorsRouter from './routes/professors.js';
+import lessonsRouter from './routes/lessons.js';
+import tasksRouter from './routes/tasks.js';
 
 // Configurar dotenv
 dotenv.config();
+
+// Conectar ao banco de dados
+connectDB();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

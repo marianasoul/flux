@@ -4,83 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planejamento - MedStudios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 15px;
+        .planning-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 4px solid var(--primary-color);
         }
 
-        .nav a {
-            color: #667eea;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            font-weight: 500;
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
         }
 
-        .nav a:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .content {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
         .planning-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 20px;
-            margin-top: 30px;
+            margin-bottom: 30px;
         }
 
         .planning-card {
             background: white;
             padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid #667eea;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .planning-card.priority-high {
+            border-left-color: var(--danger-color);
+        }
+
+        .planning-card.priority-medium {
+            border-left-color: var(--warning-color);
+        }
+
+        .planning-card.priority-low {
+            border-left-color: var(--success-color);
         }
 
         .planning-card h3 {
-            color: #667eea;
+            color: var(--text-primary);
             margin-bottom: 15px;
-            font-size: 1.3em;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
         .planning-card ul {
@@ -89,8 +75,8 @@
         }
 
         .planning-card li {
-            padding: 8px 0;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -100,23 +86,11 @@
             border-bottom: none;
         }
 
-        .priority-high {
-            border-left-color: #e74c3c;
-        }
-
-        .priority-medium {
-            border-left-color: #f39c12;
-        }
-
-        .priority-low {
-            border-left-color: #27ae60;
-        }
-
         .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
-            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
 
         .status-pending {
@@ -142,31 +116,33 @@
         }
 
         .action-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 20px;
+            padding: 15px 20px;
             border: none;
-            border-radius: 15px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 500;
             transition: all 0.3s ease;
             text-decoration: none;
             text-align: center;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3);
         }
 
         .calendar-view {
             background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .calendar-header {
@@ -177,19 +153,25 @@
         }
 
         .calendar-nav {
-            background: #667eea;
+            background: var(--primary-color);
             color: white;
             border: none;
             padding: 8px 12px;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav:hover {
+            background: var(--secondary-color);
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 1px;
-            background: #e1e5e9;
+            background: var(--border-color);
             border-radius: 8px;
             overflow: hidden;
         }
@@ -200,26 +182,28 @@
             text-align: center;
             min-height: 60px;
             position: relative;
+            font-size: 0.9rem;
         }
 
         .calendar-day.other-month {
-            background: #f8f9fa;
-            color: #6c757d;
+            background: var(--background-secondary);
+            color: var(--text-secondary);
         }
 
         .calendar-day.today {
-            background: #667eea;
+            background: var(--primary-color);
             color: white;
+            font-weight: 600;
         }
 
         .calendar-day.has-events {
-            background: #e8f2ff;
+            background: #e8f4fd;
         }
 
         .event-dot {
             width: 6px;
             height: 6px;
-            background: #667eea;
+            background: var(--primary-color);
             border-radius: 50%;
             position: absolute;
             bottom: 5px;
@@ -227,16 +211,37 @@
             transform: translateX(-50%);
         }
 
+        .goal-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+
+        .goal-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .goal-checkbox.checked {
+            background: var(--primary-color);
+        }
+
+        .goal-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            .nav {
-                flex-direction: column;
-                text-align: center;
-            }
-
             .planning-grid {
                 grid-template-columns: 1fr;
             }
@@ -245,79 +250,136 @@
                 grid-template-columns: 1fr;
             }
 
+            .planning-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             .calendar-day {
-                padding: 10px 2px;
-                font-size: 0.9em;
+                padding: 8px 2px;
+                font-size: 0.8rem;
+                min-height: 45px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <nav class="nav">
-                <a href="/">Dashboard</a>
-                <a href="/cronograma.html">Cronograma</a>
-                <a href="/agenda.html">Agenda</a>
+        <!-- Navigation -->
+        <nav class="nav-bar">
+            <div class="nav-brand">
+                <h2>MedStudios</h2>
+            </div>
+            <div class="nav-links">
+                <a href="/index.html">Dashboard</a>
                 <a href="/disciplinas.html">Disciplinas</a>
                 <a href="/professores.html">Professores</a>
+                <a href="/cronograma.html">Cronograma</a>
+                <a href="/agenda.html">Agenda</a>
+                <a href="/planejamento.html" class="active">Planejamento</a>
+                <a href="/progresso.html">Progresso</a>
                 <a href="/semestre.html">Semestre</a>
-                <a href="/planejamento.html" style="background: #667eea; color: white;">Planejamento</a>
-            </nav>
+            </div>
+        </nav>
+
+        <!-- Title Card -->
+        <div class="card">
+            <div class="card-header">
+                <h1>📋 Planejamento Acadêmico</h1>
+                <p>Organize suas metas e acompanhe seu progresso acadêmico</p>
+            </div>
         </div>
 
-        <div class="content">
-            <h1>Planejamento Acadêmico</h1>
-            
-            <div class="quick-actions">
-                <a href="/agenda.html" class="action-btn">📝 Nova Tarefa</a>
-                <a href="/cronograma.html" class="action-btn">📅 Adicionar Aula</a>
-                <a href="/disciplinas.html" class="action-btn">📚 Gerenciar Disciplinas</a>
-                <a href="/professores.html" class="action-btn">👨‍🏫 Gerenciar Professores</a>
+        <!-- Statistics -->
+        <div class="planning-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="urgentCount">0</div>
+                <div class="stat-label">Tarefas Urgentes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="upcomingCount">0</div>
+                <div class="stat-label">Próximas Entregas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="weeklyProgress">0%</div>
+                <div class="stat-label">Progresso Semanal</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="goalsCompleted">0/4</div>
+                <div class="stat-label">Metas Concluídas</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <a href="/agenda.html" class="action-btn">
+                📝 Nova Tarefa
+            </a>
+            <a href="/cronograma.html" class="action-btn">
+                📅 Adicionar Aula
+            </a>
+            <a href="/disciplinas.html" class="action-btn">
+                📚 Gerenciar Disciplinas
+            </a>
+            <a href="/professores.html" class="action-btn">
+                👨‍🏫 Gerenciar Professores
+            </a>
+        </div>
+
+        <!-- Planning Grid -->
+        <div class="planning-grid">
+            <div class="planning-card priority-high">
+                <h3>🔥 Tarefas Urgentes</h3>
+                <ul id="urgentTasks">
+                    <li>Carregando...</li>
+                </ul>
             </div>
 
-            <div class="planning-grid">
-                <div class="planning-card priority-high">
-                    <h3>🔥 Tarefas Urgentes</h3>
-                    <ul id="urgentTasks">
-                        <li>Carregando...</li>
-                    </ul>
-                </div>
-
-                <div class="planning-card priority-medium">
-                    <h3>📋 Próximas Entregas</h3>
-                    <ul id="upcomingTasks">
-                        <li>Carregando...</li>
-                    </ul>
-                </div>
-
-                <div class="planning-card priority-low">
-                    <h3>📊 Progresso Semanal</h3>
-                    <ul id="weeklyProgress">
-                        <li>Carregando...</li>
-                    </ul>
-                </div>
-
-                <div class="planning-card">
-                    <h3>🎯 Metas do Semestre</h3>
-                    <ul id="semesterGoals">
-                        <li>Manter média acima de 8.0</li>
-                        <li>Concluir todas as disciplinas</li>
-                        <li>Participar de projetos de pesquisa</li>
-                        <li>Desenvolver habilidades práticas</li>
-                    </ul>
-                </div>
+            <div class="planning-card priority-medium">
+                <h3>📋 Próximas Entregas</h3>
+                <ul id="upcomingTasks">
+                    <li>Carregando...</li>
+                </ul>
             </div>
 
-            <div class="calendar-view">
-                <div class="calendar-header">
-                    <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
-                    <h3 id="currentMonth">Carregando...</h3>
-                    <button class="calendar-nav" onclick="changeMonth(1)">›</button>
-                </div>
-                <div class="calendar-grid" id="calendarGrid">
-                    <!-- Calendar will be generated here -->
-                </div>
+            <div class="planning-card priority-low">
+                <h3>📊 Progresso Semanal</h3>
+                <ul id="weeklyProgressList">
+                    <li>Carregando...</li>
+                </ul>
+            </div>
+
+            <div class="planning-card">
+                <h3>🎯 Metas do Semestre</h3>
+                <ul id="semesterGoals">
+                    <li class="goal-item">
+                        <div class="goal-checkbox" onclick="toggleGoal(0)"></div>
+                        <span>Manter média acima de 8.0</span>
+                    </li>
+                    <li class="goal-item">
+                        <div class="goal-checkbox" onclick="toggleGoal(1)"></div>
+                        <span>Concluir todas as disciplinas</span>
+                    </li>
+                    <li class="goal-item">
+                        <div class="goal-checkbox" onclick="toggleGoal(2)"></div>
+                        <span>Participar de projetos de pesquisa</span>
+                    </li>
+                    <li class="goal-item">
+                        <div class="goal-checkbox" onclick="toggleGoal(3)"></div>
+                        <span>Desenvolver habilidades práticas</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Calendar View -->
+        <div class="calendar-view">
+            <div class="calendar-header">
+                <button class="calendar-nav" onclick="changeMonth(-1)">‹ Anterior</button>
+                <h3 id="currentMonth">Carregando...</h3>
+                <button class="calendar-nav" onclick="changeMonth(1)">Próximo ›</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar will be generated here -->
             </div>
         </div>
     </div>
@@ -326,34 +388,161 @@
         let currentDate = new Date();
         let tasks = [];
         let lessons = [];
+        let goals = [false, false, false, false]; // Estado das metas
+
+        // Dados estáticos para demonstração
+        const staticTasks = [
+            {
+                id: 1,
+                title: 'Relatório de Anatomia',
+                date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+                dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+                status: 'pending',
+                priority: 'high',
+                completed: false
+            },
+            {
+                id: 2,
+                title: 'Estudo para Prova de Fisiologia',
+                date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+                dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+                status: 'in_progress',
+                priority: 'medium',
+                completed: false
+            },
+            {
+                id: 3,
+                title: 'Seminário de Histologia',
+                date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+                dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+                status: 'pending',
+                priority: 'medium',
+                completed: false
+            },
+            {
+                id: 4,
+                title: 'Exercícios de Bioquímica',
+                date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                status: 'completed',
+                priority: 'low',
+                completed: true
+            }
+        ];
 
         // Carregar dados ao inicializar
         document.addEventListener('DOMContentLoaded', function() {
             loadTasks();
             loadLessons();
             generateCalendar();
+            loadGoals();
         });
 
         // Carregar tarefas
         async function loadTasks() {
             try {
+                // Tentar carregar do servidor
                 const response = await fetch('/api/agenda');
-                tasks = await response.json();
-                updateTaskLists();
+                if (response.ok) {
+                    tasks = await response.json();
+                } else {
+                    throw new Error('Servidor não disponível');
+                }
             } catch (error) {
-                console.error('Erro ao carregar tarefas:', error);
+                console.log('Usando dados estáticos para tarefas');
+                tasks = staticTasks;
             }
+            updateTaskLists();
+            updateStatistics();
         }
 
         // Carregar aulas
         async function loadLessons() {
             try {
                 const response = await fetch('/api/cronograma');
-                lessons = await response.json();
-                generateCalendar();
+                if (response.ok) {
+                    lessons = await response.json();
+                }
             } catch (error) {
-                console.error('Erro ao carregar aulas:', error);
+                console.log('Usando dados estáticos para aulas');
+                lessons = [];
             }
+            generateCalendar();
+        }
+
+        // Carregar metas
+        function loadGoals() {
+            const savedGoals = localStorage.getItem('semesterGoals');
+            if (savedGoals) {
+                goals = JSON.parse(savedGoals);
+                updateGoalsDisplay();
+            }
+            updateStatistics();
+        }
+
+        // Alternar meta
+        function toggleGoal(index) {
+            goals[index] = !goals[index];
+            localStorage.setItem('semesterGoals', JSON.stringify(goals));
+            updateGoalsDisplay();
+            updateStatistics();
+        }
+
+        // Atualizar exibição das metas
+        function updateGoalsDisplay() {
+            const checkboxes = document.querySelectorAll('.goal-checkbox');
+            checkboxes.forEach((checkbox, index) => {
+                if (goals[index]) {
+                    checkbox.classList.add('checked');
+                } else {
+                    checkbox.classList.remove('checked');
+                }
+            });
+        }
+
+        // Atualizar estatísticas
+        function updateStatistics() {
+            const now = new Date();
+            const threeDays = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
+            const oneWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+            // Tarefas urgentes
+            const urgentTasks = tasks.filter(task => {
+                if (task.completed) return false;
+                const dueDate = new Date(task.dueDate || task.date);
+                return dueDate <= threeDays;
+            });
+
+            // Próximas entregas
+            const upcomingTasks = tasks.filter(task => {
+                if (task.completed) return false;
+                const dueDate = new Date(task.dueDate || task.date);
+                return dueDate > now && dueDate <= oneWeek;
+            });
+
+            // Progresso semanal
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay());
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            
+            const weeklyTasks = tasks.filter(task => {
+                const taskDate = new Date(task.date);
+                return taskDate >= weekStart && taskDate <= weekEnd;
+            });
+
+            const completedWeekly = weeklyTasks.filter(task => task.completed).length;
+            const totalWeekly = weeklyTasks.length;
+            const weeklyPercentage = totalWeekly > 0 ? Math.round((completedWeekly / totalWeekly) * 100) : 0;
+
+            // Metas concluídas
+            const completedGoals = goals.filter(goal => goal).length;
+
+            // Atualizar interface
+            document.getElementById('urgentCount').textContent = urgentTasks.length;
+            document.getElementById('upcomingCount').textContent = upcomingTasks.length;
+            document.getElementById('weeklyProgress').textContent = weeklyPercentage + '%';
+            document.getElementById('goalsCompleted').textContent = `${completedGoals}/4`;
         }
 
         // Atualizar listas de tarefas
@@ -377,12 +566,13 @@
             });
 
             // Progresso semanal
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay());
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            
             const weeklyTasks = tasks.filter(task => {
                 const taskDate = new Date(task.date);
-                const weekStart = new Date(now);
-                weekStart.setDate(now.getDate() - now.getDay());
-                const weekEnd = new Date(weekStart);
-                weekEnd.setDate(weekStart.getDate() + 6);
                 return taskDate >= weekStart && taskDate <= weekEnd;
             });
 
@@ -393,7 +583,7 @@
             updateTaskList('urgentTasks', urgentTasks, 'Nenhuma tarefa urgente');
             updateTaskList('upcomingTasks', upcomingTasks, 'Nenhuma entrega próxima');
             
-            document.getElementById('weeklyProgress').innerHTML = `
+            document.getElementById('weeklyProgressList').innerHTML = `
                 <li>
                     <span>Tarefas concluídas esta semana</span>
                     <span class="status-badge status-completed">${completedWeekly}/${totalWeekly}</span>
@@ -452,7 +642,8 @@
                 const dayHeader = document.createElement('div');
                 dayHeader.className = 'calendar-day';
                 dayHeader.style.fontWeight = 'bold';
-                dayHeader.style.background = '#f8f9fa';
+                dayHeader.style.background = 'var(--background-secondary)';
+                dayHeader.style.color = 'var(--text-secondary)';
                 dayHeader.textContent = day;
                 calendarGrid.appendChild(dayHeader);
             });
