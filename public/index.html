@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedStudios - Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .header {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 1rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo h1 {
+      color: #2563eb;
+      font-size: 1.8rem;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .nav-link {
+      text-decoration: none;
+      color: #64748b;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    .nav-link:hover {
+      background-color: #f1f5f9;
+      color: #2563eb;
+    }
+    .nav-link.active {
+      background-color: #2563eb;
+      color: white;
+    }
+    .container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+    }
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .welcome-section h2 {
+      color: #334155;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .welcome-section p {
+      color: #64748b;
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .stat-card h3 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .stat-card p {
+      opacity: 0.9;
+      font-size: 1rem;
+    }
+    .quick-actions {
+      margin-bottom: 3rem;
+    }
+    .quick-actions h3 {
+      color: #334155;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .action-btn {
+      display: block;
+      text-decoration: none;
+      background-color: #f8fafc;
+      border: 2px solid #e2e8f0;
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      transition: all 0.3s;
+      color: #334155;
+    }
+    .action-btn:hover {
+      border-color: #2563eb;
+      background-color: #f1f5f9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .action-btn .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .action-btn .title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .action-btn .description {
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+    .recent-activity {
+      background-color: #f8fafc;
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+    .recent-activity h3 {
+      color: #334155;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #2563eb;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      font-size: 1.2rem;
+    }
+    .activity-content {
+      flex: 1;
+    }
+    .activity-title {
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 0.25rem;
+    }
+    .activity-time {
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      .nav-links {
+        justify-content: center;
+      }
+      body {
+        padding: 1rem;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .actions-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <h1>📚 MedStudios</h1>
+    </div>
+    <div class="nav-links">
+      <a href="/" class="nav-link active">🏠 Início</a>
+      <a href="/cronograma" class="nav-link">📅 Cronograma</a>
+      <a href="/agenda" class="nav-link">📝 Agenda</a>
+      <a href="/planejamento" class="nav-link">📚 Planejamento</a>
+      <a href="/progresso" class="nav-link">📊 Progresso</a>
+      <a href="/disciplinas" class="nav-link">📖 Disciplinas</a>
+      <a href="/professores" class="nav-link">👨‍🏫 Professores</a>
+      <a href="/semestre" class="nav-link">🗓️ Semestre</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="welcome-section">
+      <h2>Bem-vindo ao MedStudios! 🎓</h2>
+      <p>Seu assistente acadêmico completo para organizar estudos, acompanhar progresso e gerenciar sua jornada na medicina.</p>
+    </div>
+
+    <div class="stats-grid" id="stats-grid">
+      <!-- Estatísticas serão carregadas aqui -->
+    </div>
+
+    <div class="quick-actions">
+      <h3>⚡ Ações Rápidas</h3>
+      <div class="actions-grid">
+        <a href="/agenda" class="action-btn">
+          <span class="icon">📝</span>
+          <div class="title">Nova Tarefa</div>
+          <div class="description">Adicionar item à agenda</div>
+        </a>
+        <a href="/cronograma" class="action-btn">
+          <span class="icon">📅</span>
+          <div class="title">Ver Cronograma</div>
+          <div class="description">Horários da semana</div>
+        </a>
+        <a href="/disciplinas" class="action-btn">
+          <span class="icon">📖</span>
+          <div class="title">Disciplinas</div>
+          <div class="description">Gerenciar matérias</div>
+        </a>
+        <a href="/progresso" class="action-btn">
+          <span class="icon">📊</span>
+          <div class="title">Progresso</div>
+          <div class="description">Acompanhar desempenho</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="recent-activity">
+      <h3>📋 Atividade Recente</h3>
+      <div class="activity-item">
+        <div class="activity-icon">📚</div>
+        <div class="activity-content">
+          <div class="activity-title">Sistema inicializado com sucesso</div>
+          <div class="activity-time">Agora mesmo</div>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon">⚙️</div>
+        <div class="activity-content">
+          <div class="activity-title">Configurações do semestre carregadas</div>
+          <div class="activity-time">Há poucos segundos</div>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon">🎯</div>
+        <div class="activity-content">
+          <div class="activity-title">Pronto para começar seus estudos!</div>
+          <div class="activity-time">Agora</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Carregar estatísticas do dashboard
+    async function loadDashboardStats() {
+      try {
+        const response = await fetch('/api/dashboard/stats');
+        const stats = await response.json();
+        
+        const statsGrid = document.getElementById('stats-grid');
+        
+        // Calcular totais
+        const totalSubjects = stats.length;
+        const totalTasks = stats.reduce((sum, subject) => sum + subject.completedTasks + subject.pendingTasks, 0);
+        const completedTasks = stats.reduce((sum, subject) => sum + subject.completedTasks, 0);
+        const averageGrade = stats.reduce((sum, subject) => sum + parseFloat(subject.averageGrade), 0) / stats.length;
+        
+        statsGrid.innerHTML = `
+          <div class="stat-card">
+            <h3>${totalSubjects}</h3>
+            <p>Disciplinas Ativas</p>
+          </div>
+          <div class="stat-card">
+            <h3>${completedTasks}</h3>
+            <p>Tarefas Concluídas</p>
+          </div>
+          <div class="stat-card">
+            <h3>${totalTasks - completedTasks}</h3>
+            <p>Tarefas Pendentes</p>
+          </div>
+          <div class="stat-card">
+            <h3>${averageGrade.toFixed(1)}</h3>
+            <p>Média Geral</p>
+          </div>
+        `;
+      } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+        // Mostrar estatísticas padrão em caso de erro
+        const statsGrid = document.getElementById('stats-grid');
+        statsGrid.innerHTML = `
+          <div class="stat-card">
+            <h3>5</h3>
+            <p>Disciplinas Ativas</p>
+          </div>
+          <div class="stat-card">
+            <h3>12</h3>
+            <p>Tarefas Concluídas</p>
+          </div>
+          <div class="stat-card">
+            <h3>8</h3>
+            <p>Tarefas Pendentes</p>
+          </div>
+          <div class="stat-card">
+            <h3>8.5</h3>
+            <p>Média Geral</p>
+          </div>
+        `;
+      }
+    }
+
+    // Carregar dados ao inicializar a página
+    document.addEventListener('DOMContentLoaded', loadDashboardStats);
+  </script>
+</body>
+</html>

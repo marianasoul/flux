@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 interface SubjectModalProps {
   isOpen: boolean;
   onClose: () => void;
+  subject?: InsertSubject & { id?: string } | null;
 }
 
 const subjectColors = [
@@ -37,6 +38,12 @@ export default function SubjectModal({ isOpen, onClose }: SubjectModalProps) {
       color: "#2563EB",
       semester: 6,
     },
+    values: {
+      name: (typeof subject?.name === 'string' ? subject.name : ""),
+      code: subject?.code || "",
+      color: subject?.color || "#2563EB",
+      semester: subject?.semester || 6,
+    }
   });
 
   const createSubjectMutation = useMutation({
@@ -63,8 +70,60 @@ export default function SubjectModal({ isOpen, onClose }: SubjectModalProps) {
     },
   });
 
+  const updateSubjectMutation = useMutation({
+    mutationFn: async (data: InsertSubject & { id: string }) => {
+      await apiRequest("PUT", `/api/subjects/${data.id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/subjects'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/subjects/stats'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dashboard/stats'] });
+      toast({
+        title: "Sucesso",
+        description: "Disciplina atualizada com sucesso!",
+      });
+      form.reset();
+      onClose();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao atualizar disciplina",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteSubjectMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/subjects/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/subjects'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/subjects/stats'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dashboard/stats'] });
+      toast({
+        title: "Sucesso",
+        description: "Disciplina removida!",
+      });
+      form.reset();
+      onClose();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao remover disciplina",
+        variant: "destructive",
+      });
+    },
+  });
+
   const onSubmit = (data: InsertSubject) => {
-    createSubjectMutation.mutate(data);
+    if (subject?.id) {
+      updateSubjectMutation.mutate({ ...data, id: subject.id });
+    } else {
+      createSubjectMutation.mutate(data);
+    }
   };
 
   const handleClose = () => {
@@ -72,13 +131,18 @@ export default function SubjectModal({ isOpen, onClose }: SubjectModalProps) {
     onClose();
   };
 
+  const handleDelete = () => {
+    if (subject?.id) {
+      deleteSubjectMutation.mutate(subject.id);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-md w-full mx-4" data-testid="modal-subject">
         <DialogHeader>
-          <DialogTitle>Adicionar Nova Disciplina</DialogTitle>
+          <DialogTitle>{subject?.id ? "Editar Disciplina" : "Adicionar Nova Disciplina"}</DialogTitle>
         </DialogHeader>
-        
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label htmlFor="name">Nome da Disciplina</Label>
@@ -94,7 +158,6 @@ export default function SubjectModal({ isOpen, onClose }: SubjectModalProps) {
               </p>
             )}
           </div>
-
           <div>
             <Label htmlFor="code">Código da Disciplina (Opcional)</Label>
             <Input
@@ -104,7 +167,6 @@ export default function SubjectModal({ isOpen, onClose }: SubjectModalProps) {
               data-testid="input-subject-code"
             />
           </div>
-
           <div>
             <Label htmlFor="semester">Semestre</Label>
             <Input
@@ -121,7 +183,6 @@ export default function SubjectModal({ isOpen, onClose }: SubjectModalProps) {
               </p>
             )}
           </div>
-
           <div>
             <Label>Cor da Disciplina</Label>
             <div className="grid grid-cols-4 gap-2 mt-2">
@@ -139,7 +200,6 @@ export default function SubjectModal({ isOpen, onClose }: SubjectModalProps) {
               ))}
             </div>
           </div>
-
           <div className="flex space-x-3 pt-4">
             <Button 
               type="button" 
@@ -152,12 +212,26 @@ export default function SubjectModal({ isOpen, onClose }: SubjectModalProps) {
             </Button>
             <Button 
               type="submit"
-              disabled={createSubjectMutation.isPending}
+              disabled={createSubjectMutation.isPending || updateSubjectMutation.isPending}
               className="flex-1"
               data-testid="button-save-subject"
             >
-              {createSubjectMutation.isPending ? "Salvando..." : "Salvar Disciplina"}
+              {subject?.id
+                ? (updateSubjectMutation.isPending ? "Salvando..." : "Salvar Alterações")
+                : (createSubjectMutation.isPending ? "Salvando..." : "Salvar Disciplina")}
             </Button>
+            {subject?.id && (
+              <Button 
+                type="button"
+                variant="destructive"
+                onClick={handleDelete}
+                disabled={deleteSubjectMutation.isPending}
+                className="flex-1"
+                data-testid="button-delete-subject"
+              >
+                {deleteSubjectMutation.isPending ? "Removendo..." : "Remover"}
+              </Button>
+            )}
           </div>
         </form>
       </DialogContent>

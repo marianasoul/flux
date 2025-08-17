@@ -1,16 +1,72 @@
-import type { Express } from "express";
-import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { insertSubjectSchema, insertClassSchema, insertTaskSchema, insertGradeSchema } from "@shared/schema";
+import express from "express";
+import type { Express, Request, Response } from "express";
+import { createServer, Server } from "http";
+import { storage } from "./storage.ts";
+import { insertSubjectSchema, insertClassSchema, insertTaskSchema, insertGradeSchema } from "../shared/schema.ts";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Usuários em memória (substituir por banco em produção)
+  const users: any[] = [];
+  // Usuário padrão para acesso inicial
+  users.push({
+    id: '1',
+    name: 'admin',
+    email: 'admin@admin.com',
+    password: await bcrypt.hash('admin123', 10),
+    semester: 1
+  });
+
+  // Cadastro de usuário
+  app.post("/api/register", async (req, res) => {
+    try {
+      const { name, email, password, semester } = req.body;
+      if (!name || !email || !password || !semester) {
+        return res.status(400).json({ error: "Todos os campos são obrigatórios." });
+      }
+      if (users.find(u => u.email === email)) {
+        return res.status(409).json({ error: "E-mail já cadastrado." });
+      }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = { id: Date.now().toString(), name, email, password: hashedPassword, semester };
+      users.push(user);
+      res.status(201).json({ message: "Usuário cadastrado com sucesso." });
+    } catch (error) {
+      console.error('Error registering user:', error);
+      res.status(500).json({ error: "Erro interno do servidor." });
+    }
+  });
+
+  // Login de usuário
+  app.post("/api/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ error: "E-mail e senha são obrigatórios." });
+      }
+      const user = users.find(u => u.email === email);
+      if (!user) {
+        return res.status(401).json({ error: "Usuário não encontrado." });
+      }
+      const valid = await bcrypt.compare(password, user.password);
+      if (!valid) {
+        return res.status(401).json({ error: "Senha incorreta." });
+      }
+      // Simples token (substituir por JWT em produção)
+      res.json({ message: "Login realizado com sucesso.", user: { id: user.id, name: user.name, email: user.email, semester: user.semester } });
+    } catch (error) {
+      console.error('Error during login:', error);
+      res.status(500).json({ error: "Erro interno do servidor." });
+    }
+  });
   // Subjects routes
   app.get("/api/subjects", async (req, res) => {
     try {
       const subjects = await storage.getSubjects();
       res.json(subjects);
     } catch (error) {
+      console.error('Error fetching subjects:', error);
       res.status(500).json({ error: "Failed to fetch subjects" });
     }
   });
@@ -363,6 +419,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(stats);
     } catch (error) {
+      console.error('Error fetching dashboard stats:', error);
       res.status(500).json({ error: "Failed to fetch dashboard stats" });
     }
   });

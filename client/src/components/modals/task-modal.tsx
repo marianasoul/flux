@@ -15,6 +15,7 @@ import { z } from "zod";
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
+  task?: TaskFormData & { id?: string } | null;
 }
 
 const taskFormSchema = insertTaskSchema.extend({
@@ -38,7 +39,15 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
       description: "",
       status: "Pendente",
       dueDate: "",
+      subjectId: "",
     },
+    values: {
+      title: (typeof task?.title === 'string' ? task.title : ""),
+      description: task?.description || "",
+      status: task?.status || "Pendente",
+      dueDate: task?.dueDate ? (typeof task.dueDate === 'string' ? task.dueDate : (task.dueDate instanceof Date ? task.dueDate.toISOString().slice(0,10) : "")) : "",
+      subjectId: task?.subjectId || "",
+    }
   });
 
   const createTaskMutation = useMutation({
@@ -65,6 +74,54 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
     },
   });
 
+  const updateTaskMutation = useMutation({
+    mutationFn: async (data: TaskFormData & { id: string }) => {
+      await apiRequest("PUT", `/api/tasks/${data.id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/tasks/urgent'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dashboard/stats'] });
+      toast({
+        title: "Sucesso",
+        description: "Tarefa atualizada com sucesso!",
+      });
+      form.reset();
+      onClose();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao atualizar tarefa",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteTaskMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/tasks/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/tasks/urgent'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dashboard/stats'] });
+      toast({
+        title: "Sucesso",
+        description: "Tarefa removida!",
+      });
+      form.reset();
+      onClose();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao remover tarefa",
+        variant: "destructive",
+      });
+    },
+  });
+
   const onSubmit = (data: TaskFormData) => {
     const formattedData: InsertTask = {
       ...data,
@@ -72,8 +129,11 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
       classId: null,
       dueDate: data.dueDate ? new Date(data.dueDate) : null,
     };
-    
-    createTaskMutation.mutate(formattedData);
+    if (task?.id) {
+      updateTaskMutation.mutate({ ...formattedData, id: task.id });
+    } else {
+      createTaskMutation.mutate(formattedData);
+    }
   };
 
   const handleClose = () => {
@@ -81,13 +141,18 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
     onClose();
   };
 
+  const handleDelete = () => {
+    if (task?.id) {
+      deleteTaskMutation.mutate(task.id);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-md w-full mx-4" data-testid="modal-task">
         <DialogHeader>
-          <DialogTitle>Adicionar Nova Tarefa</DialogTitle>
+          <DialogTitle>{task?.id ? "Editar Tarefa" : "Adicionar Nova Tarefa"}</DialogTitle>
         </DialogHeader>
-        
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label htmlFor="title">Título da Tarefa</Label>
@@ -103,7 +168,6 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
               </p>
             )}
           </div>
-
           <div>
             <Label htmlFor="description">Descrição (Opcional)</Label>
             <Textarea
@@ -113,10 +177,9 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
               data-testid="input-task-description"
             />
           </div>
-
           <div>
             <Label htmlFor="subjectId">Disciplina</Label>
-            <Select onValueChange={(value) => form.setValue("subjectId", value)} data-testid="select-task-subject">
+            <Select value={form.watch("subjectId")} onValueChange={(value) => form.setValue("subjectId", value)} data-testid="select-task-subject">
               <SelectTrigger>
                 <SelectValue placeholder="Selecione uma disciplina" />
               </SelectTrigger>
@@ -129,7 +192,6 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
               </SelectContent>
             </Select>
           </div>
-
           <div>
             <Label htmlFor="dueDate">Prazo</Label>
             <Input
@@ -139,11 +201,10 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
               data-testid="input-task-due-date"
             />
           </div>
-
           <div>
             <Label htmlFor="status">Status</Label>
             <Select 
-              defaultValue="Pendente" 
+              value={form.watch("status")}
               onValueChange={(value) => form.setValue("status", value as "Pendente" | "Em Andamento" | "Concluído")}
               data-testid="select-task-status"
             >
@@ -157,7 +218,6 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
               </SelectContent>
             </Select>
           </div>
-
           <div className="flex space-x-3 pt-4">
             <Button 
               type="button" 
@@ -170,12 +230,26 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
             </Button>
             <Button 
               type="submit"
-              disabled={createTaskMutation.isPending}
+              disabled={createTaskMutation.isPending || updateTaskMutation.isPending}
               className="flex-1"
               data-testid="button-save-task"
             >
-              {createTaskMutation.isPending ? "Salvando..." : "Salvar Tarefa"}
+              {task?.id
+                ? (updateTaskMutation.isPending ? "Salvando..." : "Salvar Alterações")
+                : (createTaskMutation.isPending ? "Salvando..." : "Salvar Tarefa")}
             </Button>
+            {task?.id && (
+              <Button 
+                type="button"
+                variant="destructive"
+                onClick={handleDelete}
+                disabled={deleteTaskMutation.isPending}
+                className="flex-1"
+                data-testid="button-delete-task"
+              >
+                {deleteTaskMutation.isPending ? "Removendo..." : "Remover"}
+              </Button>
+            )}
           </div>
         </form>
       </DialogContent>

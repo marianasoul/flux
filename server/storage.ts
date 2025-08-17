@@ -1,4 +1,4 @@
-import { type Subject, type Class, type Task, type Grade, type StudyPlan, type InsertSubject, type InsertClass, type InsertTask, type InsertGrade, type InsertStudyPlan, type ClassWithSubject, type TaskWithSubject, type GradeWithSubject, type SubjectWithStats } from "@shared/schema";
+import { type Subject, type Class, type Task, type Grade, type StudyPlan, type InsertSubject, type InsertClass, type InsertTask, type InsertGrade, type InsertStudyPlan, type ClassWithSubject, type TaskWithSubject, type GradeWithSubject, type SubjectWithStats } from "../shared/schema.ts";
 import { randomUUID } from "crypto";
 
 export interface IStorage {

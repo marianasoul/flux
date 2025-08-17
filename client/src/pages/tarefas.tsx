@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Tarefas() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<TaskWithSubject | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -243,7 +244,6 @@ export default function Tarefas() {
               filteredTasks.map(task => {
                 const StatusIcon = getStatusIcon(task.status);
                 const priorityLevel = getPriorityLevel(task.dueDate, task.status);
-                
                 return (
                   <Card 
                     key={task.id} 
@@ -269,7 +269,6 @@ export default function Tarefas() {
                                   {task.description}
                                 </p>
                               )}
-                              
                               <div className="flex items-center gap-4 text-sm">
                                 {task.subject && (
                                   <div className="flex items-center gap-1">
@@ -282,7 +281,6 @@ export default function Tarefas() {
                                     </span>
                                   </div>
                                 )}
-                                
                                 {task.dueDate && (
                                   <div className="flex items-center gap-1">
                                     <Calendar className="h-3 w-3" />
@@ -295,26 +293,34 @@ export default function Tarefas() {
                             </div>
                           </div>
                         </div>
-                        
-                        <div className="flex items-center gap-3">
-                          <Badge className={`${getStatusColor(task.status)}`}>
-                            {task.status}
-                          </Badge>
-                          
-                          <Select 
-                            value={task.status} 
-                            onValueChange={(value) => handleStatusChange(task.id, value)}
-                            disabled={updateTaskMutation.isPending}
-                          >
-                            <SelectTrigger className="w-36">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Pendente">Pendente</SelectItem>
-                              <SelectItem value="Em Andamento">Em Andamento</SelectItem>
-                              <SelectItem value="Concluído">Concluído</SelectItem>
-                            </SelectContent>
-                          </Select>
+                        <div className="flex flex-col items-end gap-2">
+                          <div className="flex items-center gap-3 mb-2">
+                            <Badge className={`${getStatusColor(task.status)}`}>
+                              {task.status}
+                            </Badge>
+                            <Select 
+                              value={task.status} 
+                              onValueChange={(value) => handleStatusChange(task.id, value)}
+                              disabled={updateTaskMutation.isPending}
+                            >
+                              <SelectTrigger className="w-36">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Pendente">Pendente</SelectItem>
+                                <SelectItem value="Em Andamento">Em Andamento</SelectItem>
+                                <SelectItem value="Concluído">Concluído</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="outline" onClick={() => { setSelectedTask(task); setIsModalOpen(true); }}>
+                              Editar
+                            </Button>
+                            <Button size="sm" variant="destructive" onClick={() => { setSelectedTask(task); setIsModalOpen(true); }}>
+                              Remover
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -328,7 +334,8 @@ export default function Tarefas() {
 
       <TaskModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={() => { setIsModalOpen(false); setSelectedTask(null); }} 
+        task={selectedTask}
       />
     </div>
   );

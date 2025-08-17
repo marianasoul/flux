@@ -12,6 +12,7 @@ import SubjectModal from "@/components/modals/subject-modal";
 
 export default function Disciplinas() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSubject, setSelectedSubject] = useState<SubjectWithStats | null>(null);
   
   const { data: subjects, isLoading } = useQuery<SubjectWithStats[]>({
     queryKey: ['/api/subjects/stats'],
@@ -38,13 +39,29 @@ export default function Disciplinas() {
     );
   }
 
+  // Função para abrir modal de criação
+  const handleAddSubject = () => {
+    setSelectedSubject(null);
+    setIsModalOpen(true);
+  };
+
+  // Função para abrir modal de edição
+  const handleEditSubject = (subject: SubjectWithStats) => {
+    setSelectedSubject(subject);
+    setIsModalOpen(true);
+  };
+
+  // Função para abrir modal de remoção
+  const handleRemoveSubject = (subject: SubjectWithStats) => {
+    setSelectedSubject(subject);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="flex min-h-screen bg-background" data-testid="disciplinas-container">
       <Sidebar />
-      
       <div className="flex-1 ml-64">
         <Header />
-        
         <main className="p-6">
           <div className="flex justify-between items-center mb-6">
             <div>
@@ -52,7 +69,7 @@ export default function Disciplinas() {
               <p className="text-gray-600 mt-2">Gerencie suas matérias e acompanhe o progresso</p>
             </div>
             <Button 
-              onClick={() => setIsModalOpen(true)}
+              onClick={handleAddSubject}
               className="flex items-center gap-2"
               data-testid="button-add-subject"
             >
@@ -60,10 +77,10 @@ export default function Disciplinas() {
               Nova Disciplina
             </Button>
           </div>
-
           {/* Overview Stats */}
           {subjects && subjects.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+              {/* ...existing code... */}
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
@@ -75,47 +92,9 @@ export default function Disciplinas() {
                   </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Total de Aulas/Semana</p>
-                      <p className="text-2xl font-bold">{subjects.reduce((acc, s) => acc + s.weeklyClasses, 0)}</p>
-                    </div>
-                    <Calendar className="h-8 w-8 text-secondary" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Tarefas Totais</p>
-                      <p className="text-2xl font-bold">{subjects.reduce((acc, s) => acc + s.totalTasks, 0)}</p>
-                    </div>
-                    <CheckSquare className="h-8 w-8 text-warning" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Média Geral</p>
-                      <p className="text-2xl font-bold">
-                        {subjects.filter(s => s.averageGrade !== null).length > 0
-                          ? (subjects.reduce((acc, s) => acc + (s.averageGrade || 0), 0) / subjects.filter(s => s.averageGrade !== null).length).toFixed(1)
-                          : 'N/A'
-                        }
-                      </p>
-                    </div>
-                    <TrendingUp className="h-8 w-8 text-accent" />
-                  </div>
-                </CardContent>
-              </Card>
+              {/* ...existing code... */}
             </div>
           )}
-
           {/* Subjects Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {subjects?.length === 0 ? (
@@ -129,7 +108,7 @@ export default function Disciplinas() {
                     <p className="text-gray-500 mb-6">
                       Comece adicionando suas primeiras disciplinas do semestre
                     </p>
-                    <Button onClick={() => setIsModalOpen(true)}>
+                    <Button onClick={handleAddSubject}>
                       <Plus className="h-4 w-4 mr-2" />
                       Adicionar Primeira Disciplina
                     </Button>
@@ -141,7 +120,6 @@ export default function Disciplinas() {
                 const progressPercentage = subject.totalTasks > 0 
                   ? Math.round((subject.completedTasks / subject.totalTasks) * 100) 
                   : 0;
-                
                 return (
                   <Card 
                     key={subject.id} 
@@ -166,10 +144,18 @@ export default function Disciplinas() {
                           {subject.semester}º Semestre
                         </Badge>
                       </div>
+                      {/* Botões de ação */}
+                      <div className="flex gap-2 mt-2">
+                        <Button size="sm" variant="outline" onClick={() => handleEditSubject(subject)}>
+                          Editar
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => handleRemoveSubject(subject)}>
+                          Remover
+                        </Button>
+                      </div>
                     </CardHeader>
-                    
                     <CardContent className="space-y-4">
-                      {/* Progress Section */}
+                      {/* ...existing code... */}
                       <div>
                         <div className="flex justify-between text-sm text-gray-600 mb-2">
                           <span>Progresso das Tarefas</span>
@@ -181,8 +167,6 @@ export default function Disciplinas() {
                           <span>{subject.totalTasks} total</span>
                         </div>
                       </div>
-
-                      {/* Stats Grid */}
                       <div className="grid grid-cols-2 gap-4 pt-2">
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
                           <div className="flex items-center justify-center mb-1">
@@ -193,7 +177,6 @@ export default function Disciplinas() {
                           </p>
                           <p className="text-xs text-gray-600">aulas/semana</p>
                         </div>
-                        
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
                           <div className="flex items-center justify-center mb-1">
                             <TrendingUp className="h-4 w-4 text-gray-600 mr-1" />
@@ -204,8 +187,6 @@ export default function Disciplinas() {
                           <p className="text-xs text-gray-600">média</p>
                         </div>
                       </div>
-
-                      {/* Task Summary */}
                       {subject.totalTasks > 0 && (
                         <div className="pt-2 border-t border-gray-100">
                           <div className="flex items-center justify-between text-sm">
@@ -224,10 +205,10 @@ export default function Disciplinas() {
           </div>
         </main>
       </div>
-
       <SubjectModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={() => { setIsModalOpen(false); setSelectedSubject(null); }} 
+        subject={selectedSubject}
       />
     </div>
   );

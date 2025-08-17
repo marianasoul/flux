@@ -21,6 +21,7 @@ const DAYS_OF_WEEK = [
 
 export default function Cronograma() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedClass, setSelectedClass] = useState<ClassWithSubject | null>(null);
   
   const { data: classes, isLoading } = useQuery<ClassWithSubject[]>({
     queryKey: ['/api/classes'],
@@ -110,29 +111,34 @@ export default function Cronograma() {
                             <h4 className="font-semibold text-gray-900">
                               {classItem.subject.name}
                             </h4>
-                            <Badge className={`text-xs ${getTypeColor(classItem.type)}`}>
+                            <Badge className={`text-xs ${getTypeColor(classItem.type)}`}> 
                               {classItem.type}
                             </Badge>
                           </div>
-                          
                           <div className="space-y-1 text-sm text-gray-600">
                             <div className="flex items-center gap-2">
                               <Clock className="h-4 w-4" />
                               <span>{classItem.startTime} - {classItem.endTime}</span>
                             </div>
-                            
                             {classItem.location && (
                               <div className="flex items-center gap-2">
                                 <MapPin className="h-4 w-4" />
                                 <span>{classItem.location}</span>
                               </div>
                             )}
-                            
                             {classItem.subject.code && (
                               <div className="text-xs text-gray-500">
                                 Código: {classItem.subject.code}
                               </div>
                             )}
+                          </div>
+                          <div className="flex gap-2 mt-3">
+                            <Button size="sm" variant="outline" onClick={() => { setSelectedClass(classItem); setIsModalOpen(true); }}>
+                              Editar
+                            </Button>
+                            <Button size="sm" variant="destructive" onClick={() => { setSelectedClass(classItem); setIsModalOpen(true); }}>
+                              Remover
+                            </Button>
                           </div>
                         </div>
                       ))
@@ -147,7 +153,8 @@ export default function Cronograma() {
 
       <ClassModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={() => { setIsModalOpen(false); setSelectedClass(null); }} 
+        classItem={selectedClass}
       />
     </div>
   );
