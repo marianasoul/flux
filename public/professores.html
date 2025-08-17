@@ -113,113 +113,78 @@
     </div>
 
     <script>
-        // Dados dos professores (posteriormente virão do backend)
-        let professorsData = [
-            {
-                id: 1,
-                name: "Dr. João Silva",
-                title: "Doutor em Medicina",
-                discipline: "Anatomia Humana",
-                department: "Ciências Básicas",
-                email: "joao.silva@medstudios.edu",
-                room: "201 - Bloco A",
-                office_hours: "Seg-Qua 14h-16h",
-                avatar: "JS"
-            },
-            {
-                id: 2,
-                name: "Dra. Maria Santos",
-                title: "Doutora em Fisiologia",
-                discipline: "Fisiologia",
-                department: "Ciências Básicas",
-                email: "maria.santos@medstudios.edu",
-                room: "203 - Bloco A",
-                office_hours: "Ter-Qui 15h-17h",
-                avatar: "MS"
-            },
-            {
-                id: 3,
-                name: "Dr. Carlos Oliveira",
-                title: "Doutor em Bioquímica",
-                discipline: "Bioquímica",
-                department: "Ciências Básicas",
-                email: "carlos.oliveira@medstudios.edu",
-                room: "205 - Bloco A",
-                office_hours: "Qua-Sex 13h-15h",
-                avatar: "CO"
-            },
-            {
-                id: 4,
-                name: "Dra. Ana Costa",
-                title: "Doutora em Histologia",
-                discipline: "Histologia",
-                department: "Ciências Básicas",
-                email: "ana.costa@medstudios.edu",
-                room: "207 - Bloco A",
-                office_hours: "Seg-Qua 16h-18h",
-                avatar: "AC"
-            },
-            {
-                id: 5,
-                name: "Dr. Pedro Lima",
-                title: "Doutor em Embriologia",
-                discipline: "Embriologia",
-                department: "Ciências Básicas",
-                email: "pedro.lima@medstudios.edu",
-                room: "209 - Bloco A",
-                office_hours: "Ter-Qui 14h-16h",
-                avatar: "PL"
-            },
-            {
-                id: 6,
-                name: "Dra. Lucia Ferreira",
-                title: "Doutora em Genética Médica",
-                discipline: "Genética",
-                department: "Ciências Básicas",
-                email: "lucia.ferreira@medstudios.edu",
-                room: "211 - Bloco A",
-                office_hours: "Qua-Sex 15h-17h",
-                avatar: "LF"
-            }
-        ];
-
+        // Dados dos professores virão do backend via API
+        let professorsData = [];
         let editingProfessorId = null;
-
+    
+        // Função para carregar professores da API
+        async function loadProfessorsFromAPI() {
+            try {
+                const response = await fetch('/api/professors');
+                if (response.ok) {
+                    professorsData = await response.json();
+                    loadProfessors();
+                } else {
+                    console.error('Erro ao carregar professores:', response.statusText);
+                    // Fallback para dados de exemplo
+                    professorsData = [
+                        {
+                            _id: '1',
+                            name: "Dr. João Silva",
+                            department: "Anatomia",
+                            email: "joao.silva@med.edu",
+                            phone: "(11) 99999-0001"
+                        }
+                    ];
+                    loadProfessors();
+                }
+            } catch (error) {
+                console.error('Erro na conexão com a API:', error);
+                professorsData = [];
+                loadProfessors();
+            }
+        }
+    
         // Função para gerar avatar com iniciais
         function generateAvatar(name) {
             return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
         }
-
+    
         // Função para carregar professores
         function loadProfessors() {
             const grid = document.getElementById('professorsGrid');
             grid.innerHTML = '';
             
+            if (professorsData.length === 0) {
+                grid.innerHTML = '<div class="card text-center"><p>Nenhum professor encontrado. Adicione um novo professor!</p></div>';
+                return;
+            }
+            
             professorsData.forEach(professor => {
                 const card = document.createElement('div');
                 card.className = 'card';
+                const avatar = generateAvatar(professor.name);
+                
                 card.innerHTML = `
                     <div style="display: flex; align-items: center; margin-bottom: 1rem;">
                         <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; margin-right: 1rem;">
-                            ${professor.avatar}
+                            ${avatar}
                         </div>
                         <div>
                             <h4 style="margin: 0; color: var(--text-color);">${professor.name}</h4>
-                            <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem;">${professor.title}</p>
+                            <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem;">${professor.department || 'Departamento não informado'}</p>
                         </div>
                     </div>
                     
                     <div style="margin-bottom: 1rem;">
-                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Disciplina:</strong> ${professor.discipline}</p>
-                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Departamento:</strong> ${professor.department}</p>
-                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Email:</strong> ${professor.email}</p>
-                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Sala:</strong> ${professor.room}</p>
-                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Atendimento:</strong> ${professor.office_hours}</p>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Departamento:</strong> ${professor.department || 'Não informado'}</p>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Email:</strong> ${professor.email || 'Não informado'}</p>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Telefone:</strong> ${professor.phone || 'Não informado'}</p>
                     </div>
                     
                     <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn btn-primary" onclick="editProfessor(${professor.id})" style="flex: 1;">Editar</button>
-                        <button class="btn btn-danger" onclick="deleteProfessor(${professor.id})" style="flex: 1;">Excluir</button>
+                        <button class="btn btn-primary" onclick="editProfessor('${professor._id}')" style="flex: 1;">Editar</button>
+                        <button class="btn btn-danger" onclick="deleteProfessor('${professor._id}')" style="flex: 1;">Excluir</button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -228,7 +193,7 @@
             // Atualizar contador
             document.getElementById('totalProfessors').textContent = professorsData.length;
         }
-
+    
         // Função para mostrar formulário de adicionar
         function showAddForm() {
             editingProfessorId = null;
@@ -236,72 +201,97 @@
             document.getElementById('professorFormElement').reset();
             document.getElementById('professorForm').style.display = 'block';
         }
-
+    
         // Função para esconder formulário
         function hideForm() {
             document.getElementById('professorForm').style.display = 'none';
             editingProfessorId = null;
         }
-
+    
         // Função para editar professor
-        function editProfessor(id) {
-            const professor = professorsData.find(p => p.id === id);
+        async function editProfessor(id) {
+            const professor = professorsData.find(p => p._id === id);
             if (professor) {
                 editingProfessorId = id;
                 document.getElementById('formTitle').textContent = 'Editar Professor';
-                document.getElementById('professorId').value = professor.id;
+                document.getElementById('professorId').value = professor._id;
                 document.getElementById('professorName').value = professor.name;
-                document.getElementById('professorTitle').value = professor.title;
-                document.getElementById('professorDiscipline').value = professor.discipline;
-                document.getElementById('professorDepartment').value = professor.department;
-                document.getElementById('professorEmail').value = professor.email;
-                document.getElementById('professorRoom').value = professor.room;
-                document.getElementById('professorOfficeHours').value = professor.office_hours;
+                document.getElementById('professorDepartment').value = professor.department || '';
+                document.getElementById('professorEmail').value = professor.email || '';
+                document.getElementById('professorPhone').value = professor.phone || '';
                 document.getElementById('professorForm').style.display = 'block';
             }
         }
-
+    
         // Função para excluir professor
-        function deleteProfessor(id) {
+        async function deleteProfessor(id) {
             if (confirm('Tem certeza que deseja excluir este professor?')) {
-                professorsData = professorsData.filter(p => p.id !== id);
-                loadProfessors();
+                try {
+                    const response = await fetch(`/api/professors/${id}`, { 
+                        method: 'DELETE' 
+                    });
+                    
+                    if (response.ok) {
+                        await loadProfessorsFromAPI(); // Recarregar da API
+                    } else {
+                        alert('Erro ao excluir professor');
+                    }
+                } catch (error) {
+                    console.error('Erro ao excluir:', error);
+                    alert('Erro na conexão com o servidor');
+                }
             }
         }
-
+    
         // Manipular envio do formulário
-        document.getElementById('professorFormElement').addEventListener('submit', function(e) {
+        document.getElementById('professorFormElement').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const formData = {
+            const id = document.getElementById('professorId').value;
+            const professorData = {
                 name: document.getElementById('professorName').value,
-                title: document.getElementById('professorTitle').value,
-                discipline: document.getElementById('professorDiscipline').value,
                 department: document.getElementById('professorDepartment').value,
                 email: document.getElementById('professorEmail').value,
-                room: document.getElementById('professorRoom').value,
-                office_hours: document.getElementById('professorOfficeHours').value,
-                avatar: generateAvatar(document.getElementById('professorName').value)
+                phone: document.getElementById('professorPhone').value
             };
             
-            if (editingProfessorId) {
-                // Editar professor existente
-                const index = professorsData.findIndex(p => p.id === editingProfessorId);
-                if (index !== -1) {
-                    professorsData[index] = { ...professorsData[index], ...formData };
+            try {
+                let response;
+                if (id) {
+                    // Editar professor existente
+                    response = await fetch(`/api/professors/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(professorData)
+                    });
+                } else {
+                    // Adicionar novo professor
+                    response = await fetch('/api/professors', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(professorData)
+                    });
                 }
-            } else {
-                // Adicionar novo professor
-                const newId = Math.max(...professorsData.map(p => p.id)) + 1;
-                professorsData.push({ id: newId, ...formData });
+                
+                if (response.ok) {
+                    hideForm();
+                    await loadProfessorsFromAPI(); // Recarregar da API
+                } else {
+                    const error = await response.text();
+                    alert('Erro ao salvar professor: ' + error);
+                }
+            } catch (error) {
+                console.error('Erro ao salvar:', error);
+                alert('Erro na conexão com o servidor');
             }
-            
-            loadProfessors();
-            hideForm();
         });
 
         // Carregar professores quando a página carregar
-        document.addEventListener('DOMContentLoaded', loadProfessors);
+        document.addEventListener('DOMContentLoaded', loadProfessorsFromAPI);
     </script>
 </body>
 </html>

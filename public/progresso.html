@@ -388,3 +388,17 @@
     </script>
 </body>
 </html>
+
+// Substituir dados estáticos por chamadas de API
+async function loadProgressData() {
+    try {
+        const response = await fetch('/api/progress');
+        if (response.ok) {
+            const progressData = await response.json();
+            renderProgressCharts(progressData);
+        }
+    } catch (error) {
+        console.error('Erro ao carregar dados de progresso:', error);
+        // Fallback para dados estáticos
+    }
+}

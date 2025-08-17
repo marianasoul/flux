@@ -33,54 +33,20 @@
         <div class="grid grid--2">
             <!-- Coluna Principal -->
             <div>
-                <!-- Calendário -->
+                <!-- Agenda Semanal -->
                 <div class="card card--success mb-20">
-                    <h3>📅 Calendário - Janeiro 2024</h3>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <button class="btn btn--primary">‹</button>
-                        <span style="font-weight: 500;">Janeiro 2024</span>
-                        <button class="btn btn--primary">›</button>
+                        <h3>📅 Agenda Semanal</h3>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button class="btn btn--primary" onclick="previousWeek()">‹</button>
+                            <span id="weekRange" style="font-weight: 500; min-width: 200px; text-align: center;">Carregando...</span>
+                            <button class="btn btn--primary" onclick="nextWeek()">›</button>
+                        </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center;">
-                        <div style="font-weight: 600; color: var(--text-gray);">D</div>
-                        <div style="font-weight: 600; color: var(--text-gray);">S</div>
-                        <div style="font-weight: 600; color: var(--text-gray);">T</div>
-                        <div style="font-weight: 600; color: var(--text-gray);">Q</div>
-                        <div style="font-weight: 600; color: var(--text-gray);">Q</div>
-                        <div style="font-weight: 600; color: var(--text-gray);">S</div>
-                        <div style="font-weight: 600; color: var(--text-gray);">S</div>
-                        <div></div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">1</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">2</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">3</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">4</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">5</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">6</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">7</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">8</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">9</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">10</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">11</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">12</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">13</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">14</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">15</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">16</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">17</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">18</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">19</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">20</div>
-                        <div style="padding: 8px; background-color: var(--success-green); color: white; border-radius: 4px; font-weight: 600;">21</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">22</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">23</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">24</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">25</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">26</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">27</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">28</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">29</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">30</div>
-                        <div style="padding: 8px; cursor: pointer; border-radius: 4px;">31</div>
+                    
+                    <!-- Container da Agenda Semanal -->
+                    <div id="weeklyAgenda" class="weekly-agenda">
+                        <!-- Dias da semana serão carregados dinamicamente -->
                     </div>
                 </div>
 
@@ -110,26 +76,8 @@
                 <!-- Agenda do Dia -->
                 <div class="card card--warning mb-20">
                     <h3>📋 Agenda de Hoje</h3>
-                    <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; gap: 15px;">
-                        <div style="font-weight: 600; color: #92400e; min-width: 60px;">08:00</div>
-                        <div>
-                            <div style="font-weight: 500; color: #92400e;">Aula de Anatomia</div>
-                            <div style="font-size: 0.9rem; color: #a16207;">Sistema Cardiovascular</div>
-                        </div>
-                    </div>
-                    <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; gap: 15px;">
-                        <div style="font-weight: 600; color: #92400e; min-width: 60px;">14:00</div>
-                        <div>
-                            <div style="font-weight: 500; color: #92400e;">Estudar Fisiologia</div>
-                            <div style="font-size: 0.9rem; color: #a16207;">Revisão para prova</div>
-                        </div>
-                    </div>
-                    <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; gap: 15px;">
-                        <div style="font-weight: 600; color: #92400e; min-width: 60px;">19:00</div>
-                        <div>
-                            <div style="font-weight: 500; color: #92400e;">Entrega de Trabalho</div>
-                            <div style="font-size: 0.9rem; color: #a16207;">Relatório de Histologia</div>
-                        </div>
+                    <div id="todayAgenda">
+                        <!-- Agenda de hoje será carregada dinamicamente -->
                     </div>
                 </div>
 
@@ -175,31 +123,292 @@
     </div>
 
     <script>
-        // Carregar dados dinâmicos
-        document.addEventListener('DOMContentLoaded', function() {
-            loadDashboardData();
-        });
-
-        async function loadDashboardData() {
+        // Variáveis globais
+        let currentWeekStart = new Date();
+        let weeklyLessons = [];
+        
+        // Configurar início da semana (segunda-feira)
+        function getWeekStart(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Ajustar para segunda-feira
+            return new Date(d.setDate(diff));
+        }
+        
+        // Formatar data para exibição
+        function formatDate(date) {
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit'
+            });
+        }
+        
+        // Formatar data para API (YYYY-MM-DD)
+        function formatDateForAPI(date) {
+            return date.toISOString().split('T')[0];
+        }
+        
+        // Obter nome do dia da semana
+        function getDayName(date) {
+            const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+            return days[date.getDay()];
+        }
+        
+        // Carregar aulas da semana da API
+        async function loadWeeklyLessons() {
+            try {
+                const weekStart = formatDateForAPI(currentWeekStart);
+                const weekEnd = new Date(currentWeekStart);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                const weekEndFormatted = formatDateForAPI(weekEnd);
+                
+                // Fazer requisição para a API com filtro de data
+                const response = await fetch(`/api/lessons?startDate=${weekStart}&endDate=${weekEndFormatted}`);
+                
+                if (response.ok) {
+                    weeklyLessons = await response.json();
+                } else {
+                    console.error('Erro ao carregar aulas:', response.statusText);
+                    // Fallback para dados de exemplo
+                    weeklyLessons = [
+                        {
+                            _id: '1',
+                            title: 'Anatomia Humana',
+                            description: 'Sistema Cardiovascular',
+                            date: formatDateForAPI(new Date()),
+                            time: '08:00',
+                            subject: { name: 'Anatomia', color: '#3357FF' },
+                            professor: { name: 'Dr. Silva' }
+                        },
+                        {
+                            _id: '2',
+                            title: 'Fisiologia',
+                            description: 'Sistema Respiratório',
+                            date: formatDateForAPI(new Date()),
+                            time: '14:00',
+                            subject: { name: 'Fisiologia', color: '#33FF57' },
+                            professor: { name: 'Dra. Costa' }
+                        }
+                    ];
+                }
+                
+                renderWeeklyAgenda();
+                renderTodayAgenda();
+                
+            } catch (error) {
+                console.error('Erro na conexão com a API:', error);
+                weeklyLessons = [];
+                renderWeeklyAgenda();
+                renderTodayAgenda();
+            }
+        }
+        
+        // Renderizar agenda semanal
+        function renderWeeklyAgenda() {
+            const container = document.getElementById('weeklyAgenda');
+            container.innerHTML = '';
+            
+            // Atualizar range da semana
+            const weekEnd = new Date(currentWeekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+            document.getElementById('weekRange').textContent = 
+                `${formatDate(currentWeekStart)} - ${formatDate(weekEnd)}`;
+            
+            // Criar containers para cada dia da semana
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(currentWeekStart);
+                dayDate.setDate(dayDate.getDate() + i);
+                
+                const dayContainer = document.createElement('div');
+                dayContainer.className = 'day-container';
+                dayContainer.style.cssText = `
+                    margin-bottom: 15px;
+                    padding: 15px;
+                    border-radius: 8px;
+                    background-color: #f8fafc;
+                    border-left: 4px solid var(--primary-blue);
+                `;
+                
+                // Cabeçalho do dia
+                const dayHeader = document.createElement('div');
+                dayHeader.style.cssText = `
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+                    font-weight: 600;
+                    color: var(--text-color);
+                `;
+                
+                const dayName = getDayName(dayDate);
+                const isToday = dayDate.toDateString() === new Date().toDateString();
+                
+                dayHeader.innerHTML = `
+                    <span style="${isToday ? 'color: var(--success-green);' : ''}">
+                        ${dayName}
+                    </span>
+                    <span style="font-size: 0.9rem; color: var(--text-gray);">
+                        ${formatDate(dayDate)}
+                    </span>
+                `;
+                
+                dayContainer.appendChild(dayHeader);
+                
+                // Filtrar aulas do dia
+                const dayLessons = weeklyLessons.filter(lesson => {
+                    const lessonDate = new Date(lesson.date);
+                    return lessonDate.toDateString() === dayDate.toDateString();
+                });
+                
+                // Renderizar aulas do dia
+                if (dayLessons.length === 0) {
+                    const noLessons = document.createElement('div');
+                    noLessons.style.cssText = `
+                        color: var(--text-gray);
+                        font-style: italic;
+                        font-size: 0.9rem;
+                        text-align: center;
+                        padding: 10px;
+                    `;
+                    noLessons.textContent = 'Nenhuma aula agendada';
+                    dayContainer.appendChild(noLessons);
+                } else {
+                    dayLessons.forEach(lesson => {
+                        const lessonElement = document.createElement('div');
+                        lessonElement.style.cssText = `
+                            background-color: white;
+                            padding: 12px;
+                            border-radius: 6px;
+                            margin-bottom: 8px;
+                            border-left: 3px solid ${lesson.subject?.color || 'var(--primary-blue)'};
+                            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                        `;
+                        
+                        lessonElement.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
+                                <div style="font-weight: 500; color: var(--text-color);">
+                                    ${lesson.title || lesson.subject?.name || 'Aula'}
+                                </div>
+                                <div style="font-size: 0.8rem; color: var(--text-gray); font-weight: 600;">
+                                    ${lesson.time || '00:00'}
+                                </div>
+                            </div>
+                            <div style="font-size: 0.9rem; color: var(--text-gray); margin-bottom: 3px;">
+                                ${lesson.description || 'Sem descrição'}
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-gray);">
+                                Prof. ${lesson.professor?.name || 'Não informado'}
+                            </div>
+                        `;
+                        
+                        dayContainer.appendChild(lessonElement);
+                    });
+                }
+                
+                container.appendChild(dayContainer);
+            }
+        }
+        
+        // Renderizar agenda de hoje
+        function renderTodayAgenda() {
+            const container = document.getElementById('todayAgenda');
+            const today = new Date();
+            
+            const todayLessons = weeklyLessons.filter(lesson => {
+                const lessonDate = new Date(lesson.date);
+                return lessonDate.toDateString() === today.toDateString();
+            });
+            
+            if (todayLessons.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--text-gray); font-style: italic; padding: 20px;">
+                        Nenhuma aula agendada para hoje
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            todayLessons.forEach(lesson => {
+                const lessonElement = document.createElement('div');
+                lessonElement.style.cssText = `
+                    background-color: #fef3c7;
+                    padding: 15px;
+                    border-radius: 8px;
+                    margin-bottom: 10px;
+                    display: flex;
+                    gap: 15px;
+                `;
+                
+                lessonElement.innerHTML = `
+                    <div style="font-weight: 600; color: #92400e; min-width: 60px;">
+                        ${lesson.time || '00:00'}
+                    </div>
+                    <div>
+                        <div style="font-weight: 500; color: #92400e;">
+                            ${lesson.title || lesson.subject?.name || 'Aula'}
+                        </div>
+                        <div style="font-size: 0.9rem; color: #a16207;">
+                            ${lesson.description || 'Sem descrição'}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(lessonElement);
+            });
+        }
+        
+        // Navegar para semana anterior
+        function previousWeek() {
+            currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+            loadWeeklyLessons();
+        }
+        
+        // Navegar para próxima semana
+        function nextWeek() {
+            currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+            loadWeeklyLessons();
+        }
+        
+        // Carregar estatísticas do dashboard
+        async function loadDashboardStats() {
             try {
                 const response = await fetch('/api/dashboard/stats');
                 if (response.ok) {
-                    const data = await response.json();
-                    updateDashboardStats(data);
+                    const stats = await response.json();
+                    
+                    // Atualizar elementos do dashboard
+                    if (document.getElementById('totalSubjects')) {
+                        document.getElementById('totalSubjects').textContent = stats.totalSubjects;
+                    }
+                    if (document.getElementById('completedTasks')) {
+                        document.getElementById('completedTasks').textContent = stats.completedTasks;
+                    }
+                    if (document.getElementById('pendingTasks')) {
+                        document.getElementById('pendingTasks').textContent = stats.pendingTasks;
+                    }
+                    if (document.getElementById('averageGrade')) {
+                        document.getElementById('averageGrade').textContent = stats.averageGrade;
+                    }
                 }
             } catch (error) {
-                console.log('API não disponível, usando dados estáticos');
+                console.error('Erro ao carregar estatísticas:', error);
             }
         }
-
-        function updateDashboardStats(data) {
-            if (data) {
-                document.getElementById('tarefasUrgentes').textContent = data.urgentTasks || '3';
-                document.getElementById('proximasEntregas').textContent = data.upcomingDeadlines || '5';
-                document.getElementById('progressoSemanal').textContent = (data.weeklyProgress || 85) + '%';
-                document.getElementById('mediaGeral').textContent = data.averageGrade || '8.7';
-            }
+        
+        // Inicializar dashboard
+        function initDashboard() {
+            // Configurar semana atual
+            currentWeekStart = getWeekStart(new Date());
+            
+            // Carregar dados
+            loadWeeklyLessons();
+            loadDashboardStats();
         }
+        
+        // Carregar dados quando a página carregar
+        document.addEventListener('DOMContentLoaded', initDashboard);
     </script>
 </body>
 </html>

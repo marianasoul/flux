@@ -3,13 +3,46 @@ import Lesson from '../models/Lesson.js';
 
 const router = express.Router();
 
-// GET /api/lessons - Obter todas as aulas
+// GET /api/lessons - Obter todas as aulas (com filtros opcionais)
 router.get('/', async (req, res) => {
   try {
-    const lessons = await Lesson.find()
+    let query = {};
+    
+    // Filtro por data de início e fim
+    if (req.query.startDate || req.query.endDate) {
+      query.date = {};
+      if (req.query.startDate) {
+        query.date.$gte = new Date(req.query.startDate);
+      }
+      if (req.query.endDate) {
+        query.date.$lte = new Date(req.query.endDate);
+      }
+    }
+    
+    // Filtro para semana atual
+    if (req.query.semana === 'atual') {
+      const now = new Date();
+      const startOfWeek = new Date(now);
+      const day = now.getDay();
+      const diff = now.getDate() - day + (day === 0 ? -6 : 1); // Segunda-feira
+      startOfWeek.setDate(diff);
+      startOfWeek.setHours(0, 0, 0, 0);
+      
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(endOfWeek.getDate() + 6);
+      endOfWeek.setHours(23, 59, 59, 999);
+      
+      query.date = {
+        $gte: startOfWeek,
+        $lte: endOfWeek
+      };
+    }
+    
+    const lessons = await Lesson.find(query)
       .populate('subject', 'name code color')
       .populate('professor', 'name email')
-      .sort({ date: -1 });
+      .sort({ date: 1, time: 1 }); // Ordenar por data e hora
+      
     res.json(lessons);
   } catch (error) {
     res.status(500).json({ error: 'Erro ao buscar aulas', details: error.message });

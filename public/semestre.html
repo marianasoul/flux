@@ -224,65 +224,25 @@
     </div>
 
     <script>
-        // Dados estáticos para demonstração
-        const semesterData = {
-            subjects: [
-                { name: 'Anatomia Humana', grade: 8.7 },
-                { name: 'Fisiologia', grade: 8.2 },
-                { name: 'Bioquímica', grade: 8.9 },
-                { name: 'Histologia', grade: 8.4 },
-                { name: 'Embriologia', grade: 8.6 },
-                { name: 'Genética', grade: 8.1 }
-            ],
-            evaluations: [
-                { subject: 'Anatomia', type: 'P2', date: '15/11/2024' },
-                { subject: 'Fisiologia', type: 'Seminário', date: '18/11/2024' },
-                { subject: 'Bioquímica', type: 'Prática', date: '20/11/2024' },
-                { subject: 'Histologia', type: 'P2', date: '22/11/2024' }
-            ],
-            events: [15, 18, 20, 22] // Dias com eventos em novembro
-        };
-
-        // Carregar disciplinas da API
-        async function loadSubjects() {
+        // Substituir dados estáticos por chamadas de API
+        async function loadSemesterData() {
             try {
-                const response = await fetch('/api/subjects');
-                if (response.ok) {
-                    const subjects = await response.json();
-                    const container = document.getElementById('disciplinas-list');
-                    container.innerHTML = '';
-
-                    if (subjects.length === 0) {
-                        container.innerHTML = '<div class="info-item"><span>Nenhuma disciplina encontrada</span></div>';
-                        return;
-                    }
-
-                    subjects.forEach(subject => {
-                        const grade = (Math.random() * 2 + 7).toFixed(1); // Nota temporária
-                        const item = document.createElement('div');
-                        item.className = 'info-item';
-                        item.innerHTML = `
-                            <span class="info-label">${subject.name}:</span>
-                            <span class="info-value">${grade}</span>
-                        `;
-                        container.appendChild(item);
-                    });
-                } else {
-                    throw new Error('API não disponível');
+                // Carregar disciplinas
+                const subjectsResponse = await fetch('/api/subjects');
+                if (subjectsResponse.ok) {
+                    const subjects = await subjectsResponse.json();
+                    renderSubjects(subjects);
+                }
+                
+                // Carregar cronograma
+                const scheduleResponse = await fetch('/api/schedule');
+                if (scheduleResponse.ok) {
+                    const schedule = await scheduleResponse.json();
+                    renderSchedule(schedule);
                 }
             } catch (error) {
-                console.log('Usando dados estáticos para disciplinas');
-                const container = document.getElementById('disciplinas-list');
-                container.innerHTML = '';
-                semesterData.subjects.forEach(subject => {
-                    const item = document.createElement('div');
-                    item.className = 'info-item';
-                    item.innerHTML = `
-                        <span class="info-label">${subject.name}:</span>
-                        <span class="info-value">${subject.grade}</span>
-                    `;
-                    container.appendChild(item);
-                });
+                console.error('Erro ao carregar dados do semestre:', error);
+                // Fallback para dados estáticos
             }
         }
 

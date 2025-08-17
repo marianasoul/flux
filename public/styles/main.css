@@ -256,3 +256,49 @@ body {
     font-size: 2rem;
   }
 }
+
+/* Estilos para Agenda Semanal */
+.weekly-agenda {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.weekly-agenda::-webkit-scrollbar {
+    width: 6px;
+}
+
+.weekly-agenda::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.weekly-agenda::-webkit-scrollbar-thumb {
+    background: var(--primary-blue);
+    border-radius: 3px;
+}
+
+.weekly-agenda::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-purple);
+}
+
+.day-container {
+    transition: all 0.3s ease;
+}
+
+.day-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Responsividade para agenda semanal */
+@media (max-width: 768px) {
+    .weekly-agenda {
+        max-height: 300px;
+    }
+    
+    .day-container {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+}
