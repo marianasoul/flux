@@ -4,202 +4,539 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedStudios - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #a8c8ec 100%);
             min-height: 100vh;
-            padding: 2rem;
+            padding: 1rem;
         }
+        
         .header {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem 2rem;
             margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
+        
         .logo h1 {
-            color: #2563eb;
-            font-size: 1.8rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            font-weight: 700;
         }
+        
         .nav-links {
             display: flex;
-            gap: 1rem;
+            gap: 0.5rem;
             flex-wrap: wrap;
         }
+        
         .nav-link {
             text-decoration: none;
             color: #64748b;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            transition: all 0.3s;
+            padding: 0.75rem 1.25rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
             font-weight: 500;
+            font-size: 0.9rem;
         }
+        
         .nav-link:hover {
-            background-color: #f1f5f9;
-            color: #2563eb;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
+        
         .nav-link.active {
-            background-color: #2563eb;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
         }
-        .container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
+        
         .welcome-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 3rem 2rem;
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
         }
+        
         .welcome-title {
-            color: #334155;
-            font-size: 2.5rem;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
         }
+        
         .welcome-subtitle {
             color: #64748b;
             font-size: 1.2rem;
+            font-weight: 400;
         }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #334155;
+        }
+        
+        /* Calendário */
+        .calendar {
+            border-left: 4px solid #10b981;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .calendar-day:hover {
+            background: #f1f5f9;
+        }
+        
+        .calendar-day.today {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Agenda do Dia */
+        .agenda-today {
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .agenda-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fef3c7;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .agenda-time {
+            font-weight: 600;
+            color: #92400e;
+            min-width: 60px;
+        }
+        
+        .agenda-content {
+            flex: 1;
+        }
+        
+        .agenda-title {
+            font-weight: 500;
+            color: #92400e;
+        }
+        
+        .agenda-desc {
+            font-size: 0.9rem;
+            color: #a16207;
+        }
+        
+        /* Notas Importantes */
+        .notes {
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .note-item {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            border-left: 3px solid #8b5cf6;
+        }
+        
+        /* Stats Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 3rem;
         }
+        
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             padding: 1.5rem;
-            border-radius: 10px;
+            border-radius: 12px;
             text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .stat-card.urgent {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .stat-card.warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .stat-card.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .stat-card.info {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
         .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
+            font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
+        
         .stat-label {
+            font-size: 1rem;
             opacity: 0.9;
+            font-weight: 500;
         }
+        
+        /* Action Buttons */
         .actions-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
         }
+        
         .action-btn {
             display: block;
-            background-color: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 2rem;
             text-decoration: none;
             color: #334155;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             text-align: center;
+            backdrop-filter: blur(10px);
         }
+        
         .action-btn:hover {
-            border-color: #2563eb;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
         }
-        .icon {
-            font-size: 2rem;
+        
+        .action-btn.purple {
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .action-btn.blue {
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .action-btn.orange {
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .action-btn.green {
+            border-left: 4px solid #10b981;
+        }
+        
+        .action-icon {
+            font-size: 2.5rem;
             margin-bottom: 1rem;
             display: block;
         }
-        .title {
-            font-size: 1.2rem;
+        
+        .action-title {
+            font-size: 1.3rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
-        .description {
+        
+        .action-desc {
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo">
-            <h1>MedStudios</h1>
-        </div>
-        <div class="nav-links">
-            <a href="/" class="nav-link active">🏠 Início</a>
-            <a href="/cronograma.html" class="nav-link">📅 Cronograma</a>
-            <a href="/agenda.html" class="nav-link">📝 Agenda</a>
-            <a href="/planejamento.html" class="nav-link">📚 Planejamento</a>
-            <a href="/progresso.html" class="nav-link">📊 Progresso</a>
-            <a href="/disciplinas.html" class="nav-link">📖 Disciplinas</a>
-            <a href="/professores.html" class="nav-link">👨‍🏫 Professores</a>
-            <a href="/semestre.html" class="nav-link">🗓️ Semestre</a>
+        <div class="nav-container">
+            <div class="logo">
+                <h1>MedStudios</h1>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link active">🏠 Início</a>
+                <a href="/cronograma.html" class="nav-link">📅 Cronograma</a>
+                <a href="/agenda.html" class="nav-link">📝 Agenda</a>
+                <a href="/planejamento.html" class="nav-link">📚 Planejamento</a>
+                <a href="/progresso.html" class="nav-link">📊 Progresso</a>
+                <a href="/disciplinas.html" class="nav-link">📖 Disciplinas</a>
+                <a href="/professores.html" class="nav-link">👨‍🏫 Professores</a>
+                <a href="/semestre.html" class="nav-link">🗓️ Semestre</a>
+            </div>
         </div>
     </div>
 
-    <div class="container">
+    <div class="main-container">
         <div class="welcome-section">
             <h1 class="welcome-title">Bem-vindo ao MedStudios</h1>
-            <p class="welcome-subtitle">Seu painel de controle acadêmico</p>
+            <p class="welcome-subtitle">Seu painel de controle acadêmico inteligente</p>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="totalDisciplinas">8</div>
-                <div class="stat-label">Disciplinas</div>
+        <div class="dashboard-grid">
+            <div class="main-content">
+                <!-- Calendário -->
+                <div class="card calendar">
+                    <h2 class="card-title">📅 Calendário - Janeiro 2024</h2>
+                    <div class="calendar-header">
+                        <button>‹</button>
+                        <span>Janeiro 2024</span>
+                        <button>›</button>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="calendar-day">D</div>
+                        <div class="calendar-day">S</div>
+                        <div class="calendar-day">T</div>
+                        <div class="calendar-day">Q</div>
+                        <div class="calendar-day">Q</div>
+                        <div class="calendar-day">S</div>
+                        <div class="calendar-day">S</div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day">1</div>
+                        <div class="calendar-day">2</div>
+                        <div class="calendar-day">3</div>
+                        <div class="calendar-day">4</div>
+                        <div class="calendar-day">5</div>
+                        <div class="calendar-day">6</div>
+                        <div class="calendar-day">7</div>
+                        <div class="calendar-day">8</div>
+                        <div class="calendar-day">9</div>
+                        <div class="calendar-day">10</div>
+                        <div class="calendar-day">11</div>
+                        <div class="calendar-day">12</div>
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day">14</div>
+                        <div class="calendar-day">15</div>
+                        <div class="calendar-day">16</div>
+                        <div class="calendar-day">17</div>
+                        <div class="calendar-day">18</div>
+                        <div class="calendar-day">19</div>
+                        <div class="calendar-day">20</div>
+                        <div class="calendar-day today">21</div>
+                        <div class="calendar-day">22</div>
+                        <div class="calendar-day">23</div>
+                        <div class="calendar-day">24</div>
+                        <div class="calendar-day">25</div>
+                        <div class="calendar-day">26</div>
+                        <div class="calendar-day">27</div>
+                        <div class="calendar-day">28</div>
+                        <div class="calendar-day">29</div>
+                        <div class="calendar-day">30</div>
+                        <div class="calendar-day">31</div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card urgent">
+                        <div class="stat-number" id="tarefasUrgentes">3</div>
+                        <div class="stat-label">Tarefas Urgentes</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-number" id="proximasEntregas">5</div>
+                        <div class="stat-label">Próximas Entregas</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-number" id="progressoSemanal">85%</div>
+                        <div class="stat-label">Progresso Semanal</div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-number" id="mediaGeral">8.7</div>
+                        <div class="stat-label">Média Geral</div>
+                    </div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="tarefasPendentes">12</div>
-                <div class="stat-label">Tarefas Pendentes</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="proximasAulas">5</div>
-                <div class="stat-label">Próximas Aulas</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="mediaGeral">8.5</div>
-                <div class="stat-label">Média Geral</div>
+
+            <div class="sidebar">
+                <!-- Agenda do Dia -->
+                <div class="card agenda-today">
+                    <h2 class="card-title">📋 Agenda de Hoje</h2>
+                    <div class="agenda-item">
+                        <div class="agenda-time">08:00</div>
+                        <div class="agenda-content">
+                            <div class="agenda-title">Aula de Anatomia</div>
+                            <div class="agenda-desc">Sistema Cardiovascular</div>
+                        </div>
+                    </div>
+                    <div class="agenda-item">
+                        <div class="agenda-time">14:00</div>
+                        <div class="agenda-content">
+                            <div class="agenda-title">Estudar Fisiologia</div>
+                            <div class="agenda-desc">Revisão para prova</div>
+                        </div>
+                    </div>
+                    <div class="agenda-item">
+                        <div class="agenda-time">19:00</div>
+                        <div class="agenda-content">
+                            <div class="agenda-title">Entrega de Trabalho</div>
+                            <div class="agenda-desc">Relatório de Histologia</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notas Importantes -->
+                <div class="card notes">
+                    <h2 class="card-title">📝 Notas Importantes</h2>
+                    <div class="note-item">
+                        <strong>Prova de Bioquímica:</strong> Revisar metabolismo de carboidratos
+                    </div>
+                    <div class="note-item">
+                        <strong>Seminário:</strong> Preparar apresentação sobre sistema nervoso
+                    </div>
+                    <div class="note-item">
+                        <strong>Lembrete:</strong> Renovar matrícula até 30/01
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- Action Buttons -->
         <div class="actions-grid">
-            <a href="/agenda.html" class="action-btn">
-                <span class="icon">📝</span>
-                <div class="title">Nova Tarefa</div>
-                <div class="description">Adicionar item à agenda</div>
+            <a href="/agenda.html" class="action-btn purple">
+                <span class="action-icon">📝</span>
+                <div class="action-title">Nova Tarefa</div>
+                <div class="action-desc">Adicionar item à agenda</div>
             </a>
-            <a href="/cronograma.html" class="action-btn">
-                <span class="icon">📅</span>
-                <div class="title">Ver Cronograma</div>
-                <div class="description">Horários da semana</div>
+            <a href="/disciplinas.html" class="action-btn blue">
+                <span class="action-icon">📖</span>
+                <div class="action-title">Gerenciar Disciplinas</div>
+                <div class="action-desc">Organizar matérias do curso</div>
             </a>
-            <a href="/disciplinas.html" class="action-btn">
-                <span class="icon">📖</span>
-                <div class="title">Disciplinas</div>
-                <div class="description">Gerenciar matérias</div>
+            <a href="/cronograma.html" class="action-btn orange">
+                <span class="action-icon">📅</span>
+                <div class="action-title">Adicionar Aula</div>
+                <div class="action-desc">Programar horários</div>
             </a>
-            <a href="/progresso.html" class="action-btn">
-                <span class="icon">📊</span>
-                <div class="title">Progresso</div>
-                <div class="description">Acompanhar desempenho</div>
+            <a href="/professores.html" class="action-btn green">
+                <span class="action-icon">👨‍🏫</span>
+                <div class="action-title">Gerenciar Professores</div>
+                <div class="action-desc">Contatos e informações</div>
             </a>
         </div>
     </div>
 
     <script>
-        // Carregar estatísticas do dashboard
+        // Carregar dados dinâmicos
         document.addEventListener('DOMContentLoaded', function() {
-            // Aqui você pode fazer chamadas para APIs para carregar dados reais
-            console.log('Dashboard carregado com sucesso!');
+            // Aqui serão feitas as chamadas para a API quando o backend estiver funcionando
+            loadDashboardData();
         });
+
+        async function loadDashboardData() {
+            try {
+                // Tentar carregar dados da API
+                const response = await fetch('/api/dashboard/stats');
+                if (response.ok) {
+                    const data = await response.json();
+                    updateDashboardStats(data);
+                }
+            } catch (error) {
+                console.log('API não disponível, usando dados estáticos');
+            }
+        }
+
+        function updateDashboardStats(data) {
+            if (data) {
+                document.getElementById('tarefasUrgentes').textContent = data.urgentTasks || '3';
+                document.getElementById('proximasEntregas').textContent = data.upcomingDeadlines || '5';
+                document.getElementById('progressoSemanal').textContent = (data.weeklyProgress || 85) + '%';
+                document.getElementById('mediaGeral').textContent = data.averageGrade || '8.7';
+            }
+        }
     </script>
 </body>
 </html>

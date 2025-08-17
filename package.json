@@ -3,6 +3,6 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "build": "echo 'Build completed'"  // ❌ Isso não funciona no Vercel
+    "build": "echo 'Build completed'"
   }
 }
