@@ -3,55 +3,492 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedStudios - Agenda</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/main.css">
+    <title>Agenda - MedStudios</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos da página com guia de estilo */
+        .page-container {
+            background-color: var(--background);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, var(--card-purple) 0%, var(--card-green) 100%);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .stat-card.total::before {
+            background: linear-gradient(90deg, var(--accent-purple), var(--card-purple));
+        }
+
+        .stat-card.pending::before {
+            background: linear-gradient(90deg, #FFB347, #FFA500);
+        }
+
+        .stat-card.urgent::before {
+            background: linear-gradient(90deg, #FF6B6B, #FF4757);
+        }
+
+        .stat-card.completed::before {
+            background: linear-gradient(90deg, var(--accent-green), var(--card-green));
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .filters-section {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .task-card {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .task-card.priority-baixa::before {
+            background: linear-gradient(90deg, var(--card-green), var(--accent-green));
+        }
+
+        .task-card.priority-media::before {
+            background: linear-gradient(90deg, #FFB347, #FFA500);
+        }
+
+        .task-card.priority-alta::before {
+            background: linear-gradient(90deg, #FF6B6B, #FF4757);
+        }
+
+        .task-card.priority-urgente::before {
+            background: linear-gradient(90deg, #8B0000, #DC143C);
+        }
+
+        .task-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .task-form {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            color: var(--foreground);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background-color: var(--background);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-green), var(--card-green));
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #FF6B6B, #FF4757);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--text-gray), #9CA3AF);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-pendente {
+            background: linear-gradient(135deg, #FFB347, #FFA500);
+            color: white;
+        }
+
+        .badge-em-andamento {
+            background: linear-gradient(135deg, var(--accent-purple), var(--card-purple));
+            color: white;
+        }
+
+        .badge-concluida {
+            background: linear-gradient(135deg, var(--accent-green), var(--card-green));
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 64px 32px;
+            color: var(--text-gray);
+        }
+
+        /* Navegação atualizada */
+        .navbar {
+            background: linear-gradient(135deg, var(--background) 0%, var(--card-purple) 100%);
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar a {
+            color: var(--foreground);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover,
+        .navbar a.active {
+            background-color: var(--accent-purple);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 16px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+            
+            .tasks-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .navbar ul {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="page-container">
         <!-- Navegação -->
-        <nav class="nav">
-            <a href="/">🏠 Dashboard</a>
-            <a href="/cronograma.html">📅 Cronograma</a>
-            <a href="/agenda.html" class="active">📋 Agenda</a>
-            <a href="/disciplinas.html">📚 Disciplinas</a>
-            <a href="/professores.html">👨‍🏫 Professores</a>
-            <a href="/semestre.html">🎓 Semestre</a>
-            <a href="/planejamento.html">📊 Planejamento</a>
-            <a href="/progresso.html">📈 Progresso</a>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/index.html">🏠 Dashboard</a></li>
+                <li><a href="/cronograma.html">📅 Cronograma</a></li>
+                <li><a href="/agenda.html" class="active">📋 Agenda</a></li>
+                <li><a href="/disciplinas.html">📚 Disciplinas</a></li>
+                <li><a href="/professores.html">👨‍🏫 Professores</a></li>
+                <li><a href="/semestre.html">🎓 Semestre</a></li>
+                <li><a href="/progresso.html">📊 Progresso</a></li>
+                <li><a href="/planejamento.html">🎯 Planejamento</a></li>
+            </ul>
         </nav>
 
-        <!-- Card de Título -->
-        <div class="card">
-            <h1 class="text-center">📋 Agenda de Tarefas</h1>
-            <p class="text-center text-muted">Organize e acompanhe suas tarefas e compromissos</p>
+        <!-- Cabeçalho -->
+        <div class="header-section">
+            <h1 style="color: var(--foreground); margin-bottom: 8px;">📋 Agenda de Tarefas</h1>
+            <p style="color: var(--text-gray); font-size: 18px;">Organize e acompanhe suas tarefas e compromissos acadêmicos</p>
         </div>
 
-        <!-- Botão Adicionar Tarefa -->
-        <div class="mb-3">
-            <button class="btn btn-primary" onclick="showAddForm()">+ Adicionar Tarefa</button>
+        <!-- Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <h3 style="color: var(--accent-purple); margin-bottom: 8px;">Total</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; color: var(--foreground); margin: 0;" id="totalTarefas">0</p>
+                <p style="color: var(--text-gray); font-size: 14px; margin-top: 8px;">Tarefas cadastradas</p>
+            </div>
+            <div class="stat-card pending">
+                <h3 style="color: #FFA500; margin-bottom: 8px;">Pendentes</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; color: var(--foreground); margin: 0;" id="tarefasPendentes">0</p>
+                <p style="color: var(--text-gray); font-size: 14px; margin-top: 8px;">Aguardando execução</p>
+            </div>
+            <div class="stat-card urgent">
+                <h3 style="color: #FF4757; margin-bottom: 8px;">Urgentes</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; color: var(--foreground); margin: 0;" id="tarefasUrgentes">0</p>
+                <p style="color: var(--text-gray); font-size: 14px; margin-top: 8px;">Prioridade máxima</p>
+            </div>
+            <div class="stat-card completed">
+                <h3 style="color: var(--accent-green); margin-bottom: 8px;">Concluídas</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; color: var(--foreground); margin: 0;" id="tarefasConcluidas">0</p>
+                <p style="color: var(--text-gray); font-size: 14px; margin-top: 8px;">Finalizadas</p>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div style="margin-bottom: 32px;">
+            <button class="btn btn-primary" onclick="showAddForm()">
+                ➕ Adicionar Nova Tarefa
+            </button>
         </div>
 
         <!-- Formulário de Adicionar/Editar Tarefa -->
-        <div id="tarefaForm" class="card" style="display: none;">
-            <h3 id="formTitle">Adicionar Tarefa</h3>
+        <div id="tarefaForm" class="task-form">
+            <h2 id="formTitle" style="color: var(--foreground); margin-bottom: 24px;">Adicionar Tarefa</h2>
             <form id="tarefaFormElement">
                 <input type="hidden" id="tarefaId">
                 
-                <div class="form-group">
-                    <label for="tarefaTitulo">Título da Tarefa:</label>
-                    <input type="text" id="tarefaTitulo" required>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="tarefaTitulo">Título da Tarefa</label>
+                        <input type="text" id="tarefaTitulo" placeholder="Ex: Estudar Sistema Cardiovascular" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tarefaDisciplina">Disciplina</label>
+                        <select id="tarefaDisciplina" required>
+                            <option value="">Selecione uma disciplina</option>
+                            <option value="Anatomia Humana">Anatomia Humana</option>
+                            <option value="Fisiologia">Fisiologia</option>
+                            <option value="Bioquímica">Bioquímica</option>
+                            <option value="Histologia">Histologia</option>
+                            <option value="Embriologia">Embriologia</option>
+                            <option value="Genética">Genética</option>
+                            <option value="Geral">Geral</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tarefaTipo">Tipo de Tarefa</label>
+                        <select id="tarefaTipo" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="Estudo">📖 Estudo</option>
+                            <option value="Prova">📝 Prova</option>
+                            <option value="Trabalho">📄 Trabalho</option>
+                            <option value="Seminário">🎤 Seminário</option>
+                            <option value="Relatório">📊 Relatório</option>
+                            <option value="Pesquisa">🔍 Pesquisa</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tarefaDataVencimento">Data de Vencimento</label>
+                        <input type="date" id="tarefaDataVencimento" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tarefaPrioridade">Prioridade</label>
+                        <select id="tarefaPrioridade" required>
+                            <option value="">Selecione a prioridade</option>
+                            <option value="Baixa">🟢 Baixa</option>
+                            <option value="Média">🟡 Média</option>
+                            <option value="Alta">🟠 Alta</option>
+                            <option value="Urgente">🔴 Urgente</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tarefaStatus">Status</label>
+                        <select id="tarefaStatus" required>
+                            <option value="Pendente">⏳ Pendente</option>
+                            <option value="Em Andamento">🔄 Em Andamento</option>
+                            <option value="Concluída">✅ Concluída</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="tarefaDescricao">Descrição:</label>
-                    <textarea id="tarefaDescricao" rows="3"></textarea>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="tarefaDescricao">Descrição</label>
+                    <textarea id="tarefaDescricao" rows="3" placeholder="Descreva os detalhes da tarefa..."></textarea>
                 </div>
                 
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary" onclick="hideForm()">Cancelar</button>
+                    <button type="submit" class="btn btn-success">💾 Salvar Tarefa</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-section">
+            <h3 style="color: var(--foreground); margin-bottom: 20px;">🔍 Filtros</h3>
+            <div class="filters-grid">
                 <div class="form-group">
-                    <label for="tarefaDisciplina">Disciplina:</label>
-                    <select id="tarefaDisciplina" required>
-                        <option value="">Selecione uma disciplina</option>
+                    <label for="filtroStatus">Status</label>
+                    <select id="filtroStatus" onchange="filtrarTarefas()">
+                        <option value="">Todos os Status</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Concluída">Concluída</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filtroPrioridade">Prioridade</label>
+                    <select id="filtroPrioridade" onchange="filtrarTarefas()">
+                        <option value="">Todas as Prioridades</option>
+                        <option value="Baixa">Baixa</option>
+                        <option value="Média">Média</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Urgente">Urgente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filtroDisciplina">Disciplina</label>
+                    <select id="filtroDisciplina" onchange="filtrarTarefas()">
+                        <option value="">Todas as Disciplinas</option>
                         <option value="Anatomia Humana">Anatomia Humana</option>
                         <option value="Fisiologia">Fisiologia</option>
                         <option value="Bioquímica">Bioquímica</option>
@@ -61,116 +498,35 @@
                         <option value="Geral">Geral</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
-                    <label for="tarefaTipo">Tipo de Tarefa:</label>
-                    <select id="tarefaTipo" required>
-                        <option value="">Selecione o tipo</option>
-                        <option value="Estudo">Estudo</option>
-                        <option value="Prova">Prova</option>
-                        <option value="Trabalho">Trabalho</option>
-                        <option value="Seminário">Seminário</option>
-                        <option value="Relatório">Relatório</option>
-                        <option value="Pesquisa">Pesquisa</option>
-                    </select>
+                    <label>&nbsp;</label>
+                    <button class="btn btn-secondary" onclick="limparFiltros()">🗑️ Limpar Filtros</button>
                 </div>
-                
-                <div class="form-group">
-                    <label for="tarefaDataVencimento">Data de Vencimento:</label>
-                    <input type="date" id="tarefaDataVencimento" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="tarefaPrioridade">Prioridade:</label>
-                    <select id="tarefaPrioridade" required>
-                        <option value="">Selecione a prioridade</option>
-                        <option value="Baixa">Baixa</option>
-                        <option value="Média">Média</option>
-                        <option value="Alta">Alta</option>
-                        <option value="Urgente">Urgente</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="tarefaStatus">Status:</label>
-                    <select id="tarefaStatus" required>
-                        <option value="Pendente">Pendente</option>
-                        <option value="Em Andamento">Em Andamento</option>
-                        <option value="Concluída">Concluída</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Salvar</button>
-                    <button type="button" class="btn btn-secondary" onclick="hideForm()">Cancelar</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Estatísticas -->
-        <div class="grid-4">
-            <div class="card card-success">
-                <h3 id="totalTarefas">12</h3>
-                <p>Total de Tarefas</p>
-            </div>
-            <div class="card card-warning">
-                <h3 id="tarefasPendentes">8</h3>
-                <p>Pendentes</p>
-            </div>
-            <div class="card card-danger">
-                <h3 id="tarefasUrgentes">3</h3>
-                <p>Urgentes</p>
-            </div>
-            <div class="card card-purple">
-                <h3 id="tarefasConcluidas">4</h3>
-                <p>Concluídas</p>
-            </div>
-        </div>
-
-        <!-- Filtros -->
-        <div class="card">
-            <h3>Filtros</h3>
-            <div class="grid-4">
-                <select id="filtroStatus" onchange="filtrarTarefas()">
-                    <option value="">Todos os Status</option>
-                    <option value="Pendente">Pendente</option>
-                    <option value="Em Andamento">Em Andamento</option>
-                    <option value="Concluída">Concluída</option>
-                </select>
-                <select id="filtroPrioridade" onchange="filtrarTarefas()">
-                    <option value="">Todas as Prioridades</option>
-                    <option value="Baixa">Baixa</option>
-                    <option value="Média">Média</option>
-                    <option value="Alta">Alta</option>
-                    <option value="Urgente">Urgente</option>
-                </select>
-                <select id="filtroDisciplina" onchange="filtrarTarefas()">
-                    <option value="">Todas as Disciplinas</option>
-                    <option value="Anatomia Humana">Anatomia Humana</option>
-                    <option value="Fisiologia">Fisiologia</option>
-                    <option value="Bioquímica">Bioquímica</option>
-                    <option value="Histologia">Histologia</option>
-                    <option value="Embriologia">Embriologia</option>
-                    <option value="Genética">Genética</option>
-                    <option value="Geral">Geral</option>
-                </select>
-                <button class="btn btn-secondary" onclick="limparFiltros()">Limpar Filtros</button>
             </div>
         </div>
 
         <!-- Lista de Tarefas -->
-        <div class="grid-2" id="tarefasGrid">
+        <div id="tarefasGrid" class="tasks-grid">
             <!-- Tarefas serão carregadas dinamicamente -->
+        </div>
+
+        <!-- Estado Vazio -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <h3 style="color: var(--text-gray); margin-bottom: 16px;">📋 Nenhuma tarefa encontrada</h3>
+            <p style="color: var(--text-gray); margin-bottom: 24px;">Adicione sua primeira tarefa ou ajuste os filtros para ver resultados.</p>
+            <button class="btn btn-primary" onclick="showAddForm()">
+                ➕ Adicionar Primeira Tarefa
+            </button>
         </div>
     </div>
 
     <script>
-        // Dados das tarefas
+        // Estado da aplicação
         let tarefasData = [
             {
                 id: 1,
                 titulo: "Estudar Sistema Cardiovascular",
-                descricao: "Revisar anatomia e fisiologia do coração",
+                descricao: "Revisar anatomia e fisiologia do coração, incluindo estruturas e funcionamento",
                 disciplina: "Anatomia Humana",
                 tipo: "Estudo",
                 dataVencimento: "2024-01-25",
@@ -180,7 +536,7 @@
             {
                 id: 2,
                 titulo: "Prova de Fisiologia",
-                descricao: "Prova sobre sistema respiratório",
+                descricao: "Prova sobre sistema respiratório e circulatório",
                 disciplina: "Fisiologia",
                 tipo: "Prova",
                 dataVencimento: "2024-01-30",
@@ -190,7 +546,7 @@
             {
                 id: 3,
                 titulo: "Relatório de Laboratório",
-                descricao: "Relatório sobre experimento de bioquímica",
+                descricao: "Relatório sobre experimento de bioquímica enzimática",
                 disciplina: "Bioquímica",
                 tipo: "Relatório",
                 dataVencimento: "2024-01-28",
@@ -200,7 +556,7 @@
             {
                 id: 4,
                 titulo: "Seminário sobre Genética",
-                descricao: "Apresentação sobre hereditariedade",
+                descricao: "Apresentação sobre hereditariedade e mutações genéticas",
                 disciplina: "Genética",
                 tipo: "Seminário",
                 dataVencimento: "2024-02-05",
@@ -215,40 +571,67 @@
         // Função para carregar tarefas
         function loadTarefas() {
             const grid = document.getElementById('tarefasGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (tarefasFiltradas.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            emptyState.style.display = 'none';
             grid.innerHTML = '';
             
             tarefasFiltradas.forEach(tarefa => {
                 const card = document.createElement('div');
-                card.className = `card card-${getPrioridadeClass(tarefa.prioridade)}`;
+                card.className = `task-card priority-${tarefa.prioridade.toLowerCase()}`;
                 
                 const dataFormatada = new Date(tarefa.dataVencimento).toLocaleDateString('pt-BR');
                 const diasRestantes = Math.ceil((new Date(tarefa.dataVencimento) - new Date()) / (1000 * 60 * 60 * 24));
                 
                 card.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                        <h4 style="color: var(--text-color); margin: 0;">${tarefa.titulo}</h4>
-                        <span class="badge badge-${getStatusClass(tarefa.status)}">${tarefa.status}</span>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                        <h4 style="color: var(--foreground); margin: 0; font-size: 18px; font-weight: 600;">${tarefa.titulo}</h4>
+                        <span class="badge badge-${tarefa.status.toLowerCase().replace(' ', '-')}">${tarefa.status}</span>
                     </div>
                     
-                    <p style="margin: 0.5rem 0; color: var(--text-muted); font-size: 0.9rem;">${tarefa.descricao}</p>
+                    <p style="margin: 0 0 16px 0; color: var(--text-gray); font-size: 14px; line-height: 1.5;">${tarefa.descricao}</p>
                     
-                    <div style="margin: 1rem 0;">
-                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Disciplina:</strong> ${tarefa.disciplina}</p>
-                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Tipo:</strong> ${tarefa.tipo}</p>
-                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Vencimento:</strong> ${dataFormatada}</p>
-                        <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Prioridade:</strong> ${tarefa.prioridade}</p>
-                        ${diasRestantes >= 0 ? 
-                            `<p style="margin: 0.25rem 0; font-size: 0.9rem; color: ${diasRestantes <= 3 ? 'var(--danger-color)' : 'var(--text-muted)'}"><strong>Dias restantes:</strong> ${diasRestantes}</p>` :
-                            `<p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--danger-color)"><strong>Atrasada por:</strong> ${Math.abs(diasRestantes)} dias</p>`
-                        }
+                    <div style="margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 14px;">
+                        <div>
+                            <strong style="color: var(--foreground);">Disciplina:</strong><br>
+                            <span style="color: var(--text-gray);">${tarefa.disciplina}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--foreground);">Tipo:</strong><br>
+                            <span style="color: var(--text-gray);">${tarefa.tipo}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--foreground);">Vencimento:</strong><br>
+                            <span style="color: var(--text-gray);">${dataFormatada}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--foreground);">Prioridade:</strong><br>
+                            <span style="color: ${getPrioridadeColor(tarefa.prioridade)};">${tarefa.prioridade}</span>
+                        </div>
                     </div>
                     
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn btn-primary" onclick="editTarefa(${tarefa.id})" style="flex: 1;">Editar</button>
-                        <button class="btn btn-success" onclick="toggleStatus(${tarefa.id})" style="flex: 1;">
-                            ${tarefa.status === 'Concluída' ? 'Reabrir' : 'Concluir'}
+                    ${diasRestantes >= 0 ? 
+                        `<div style="margin-bottom: 20px; padding: 8px 12px; border-radius: 6px; background-color: ${diasRestantes <= 3 ? 'rgba(255, 107, 107, 0.1)' : 'rgba(32, 178, 170, 0.1)'}; font-size: 14px;">
+                            <strong style="color: ${diasRestantes <= 3 ? '#FF4757' : 'var(--accent-green)'};">Dias restantes:</strong> ${diasRestantes}
+                        </div>` :
+                        `<div style="margin-bottom: 20px; padding: 8px 12px; border-radius: 6px; background-color: rgba(255, 107, 107, 0.1); font-size: 14px;">
+                            <strong style="color: #FF4757;">Atrasada por:</strong> ${Math.abs(diasRestantes)} dias
+                        </div>`
+                    }
+                    
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" onclick="editTarefa(${tarefa.id})" style="flex: 1; font-size: 12px; padding: 8px 12px;">✏️ Editar</button>
+                        <button class="btn btn-success" onclick="toggleStatus(${tarefa.id})" style="flex: 1; font-size: 12px; padding: 8px 12px;">
+                            ${tarefa.status === 'Concluída' ? '🔄 Reabrir' : '✅ Concluir'}
                         </button>
-                        <button class="btn btn-danger" onclick="deleteTarefa(${tarefa.id})" style="flex: 1;">Excluir</button>
+                        <button class="btn btn-danger" onclick="deleteTarefa(${tarefa.id})" style="flex: 1; font-size: 12px; padding: 8px 12px;">🗑️ Excluir</button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -257,21 +640,14 @@
             updateStats();
         }
 
-        // Funções auxiliares para classes CSS
-        function getPrioridadeClass(prioridade) {
+        // Funções auxiliares
+        function getPrioridadeColor(prioridade) {
             switch(prioridade) {
-                case 'Urgente': return 'danger';
-                case 'Alta': return 'warning';
-                case 'Média': return 'purple';
-                default: return '';
-            }
-        }
-
-        function getStatusClass(status) {
-            switch(status) {
-                case 'Concluída': return 'success';
-                case 'Em Andamento': return 'warning';
-                default: return 'secondary';
+                case 'Urgente': return '#FF4757';
+                case 'Alta': return '#FFA500';
+                case 'Média': return 'var(--accent-purple)';
+                case 'Baixa': return 'var(--accent-green)';
+                default: return 'var(--text-gray)';
             }
         }
 
@@ -310,10 +686,11 @@
         // Função para mostrar formulário
         function showAddForm() {
             editingTarefaId = null;
-            document.getElementById('formTitle').textContent = 'Adicionar Tarefa';
+            document.getElementById('formTitle').textContent = 'Adicionar Nova Tarefa';
             document.getElementById('tarefaFormElement').reset();
             document.getElementById('tarefaStatus').value = 'Pendente';
             document.getElementById('tarefaForm').style.display = 'block';
+            document.getElementById('tarefaForm').scrollIntoView({ behavior: 'smooth' });
         }
 
         // Função para esconder formulário
@@ -337,6 +714,7 @@
                 document.getElementById('tarefaPrioridade').value = tarefa.prioridade;
                 document.getElementById('tarefaStatus').value = tarefa.status;
                 document.getElementById('tarefaForm').style.display = 'block';
+                document.getElementById('tarefaForm').scrollIntoView({ behavior: 'smooth' });
             }
         }
 
@@ -385,35 +763,10 @@
             hideForm();
         });
 
-        // Carregar dados quando a página carregar
+        // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
             loadTarefas();
         });
     </script>
-
-    <style>
-        .badge {
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        .badge-success {
-            background: var(--success-color);
-            color: white;
-        }
-        
-        .badge-warning {
-            background: var(--warning-color);
-            color: white;
-        }
-        
-        .badge-secondary {
-            background: var(--text-muted);
-            color: white;
-        }
-    </style>
 </body>
 </html>

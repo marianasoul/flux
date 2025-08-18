@@ -1,10 +1,511 @@
-<div class="nav-links">
-    <a href="/">Dashboard</a>
-    <a href="/cronograma.html">Cronograma</a>
-    <a href="/agenda.html">Agenda</a>
-    <a href="/disciplinas.html">Disciplinas</a>
-    <a href="/professores.html">Professores</a>
-    <a href="/semestre.html">Semestre</a>
-    <a href="/progresso.html" class="active">Progresso</a>
-    <a href="/planejamento.html">Planejamento</a>
-</div>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progresso - MedStudios</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos da página com guia de estilo */
+        .page-container {
+            background-color: var(--background);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, var(--card-purple) 0%, var(--card-green) 100%);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .progress-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .overview-card {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .overview-card.green::before {
+            background: linear-gradient(90deg, var(--accent-green), var(--card-green));
+        }
+
+        .overview-card.purple::before {
+            background: linear-gradient(90deg, var(--accent-purple), var(--card-purple));
+        }
+
+        .overview-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .progress-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .progress-section {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .subjects-progress {
+            background: linear-gradient(135deg, var(--card-green) 0%, rgba(240, 255, 240, 0.7) 100%);
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .achievements-section {
+            background: linear-gradient(135deg, var(--card-purple) 0%, rgba(230, 230, 250, 0.7) 100%);
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .subject-progress-item {
+            background-color: var(--background);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .subject-progress-item:hover {
+            box-shadow: var(--shadow-medium);
+            transform: translateX(4px);
+        }
+
+        .progress-bar {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            height: 8px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .achievement-item {
+            background-color: var(--background);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-left: 3px solid var(--accent-purple);
+            transition: all 0.3s ease;
+        }
+
+        .achievement-item:hover {
+            box-shadow: var(--shadow-medium);
+            transform: translateX(4px);
+        }
+
+        .achievement-item.completed {
+            background: linear-gradient(135deg, var(--card-green) 0%, rgba(240, 255, 240, 0.8) 100%);
+            border-left-color: var(--accent-green);
+        }
+
+        .chart-container {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(135deg, var(--card-purple) 0%, var(--card-green) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--foreground);
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Navegação atualizada */
+        .navbar {
+            background: linear-gradient(135deg, var(--background) 0%, var(--card-purple) 100%);
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: var(--foreground);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover,
+        .navbar a.active {
+            background-color: var(--accent-purple);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 16px;
+            }
+            
+            .progress-overview {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .progress-sections {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .navbar ul {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Navegação -->
+        <nav class="navbar">
+            <ul>
+                <li><a href="/index.html">🏠 Dashboard</a></li>
+                <li><a href="/cronograma.html">📅 Cronograma</a></li>
+                <li><a href="/agenda.html">📋 Agenda</a></li>
+                <li><a href="/disciplinas.html">📚 Disciplinas</a></li>
+                <li><a href="/professores.html">👨‍🏫 Professores</a></li>
+                <li><a href="/semestre.html">🎓 Semestre</a></li>
+                <li><a href="/progresso.html" class="active">📊 Progresso</a></li>
+                <li><a href="/planejamento.html">🎯 Planejamento</a></li>
+            </ul>
+        </nav>
+
+        <!-- Cabeçalho -->
+        <div class="header-section">
+            <h1 style="color: var(--foreground); margin-bottom: 8px;">📊 Acompanhamento de Progresso</h1>
+            <p style="color: var(--text-gray); font-size: 18px;">Monitore seu desempenho acadêmico e conquistas</p>
+        </div>
+
+        <!-- Visão Geral do Progresso -->
+        <div class="progress-overview">
+            <div class="overview-card green">
+                <h3 style="color: var(--accent-green); margin-bottom: 8px;">Progresso Geral</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; color: var(--foreground); margin: 0;" id="overallProgress">72%</p>
+                <p style="color: var(--text-gray); font-size: 14px; margin-top: 8px;">Do semestre concluído</p>
+            </div>
+            <div class="overview-card purple">
+                <h3 style="color: var(--accent-purple); margin-bottom: 8px;">Média Geral</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; color: var(--foreground); margin: 0;" id="overallGrade">8.4</p>
+                <p style="color: var(--text-gray); font-size: 14px; margin-top: 8px;">Nota média atual</p>
+            </div>
+            <div class="overview-card green">
+                <h3 style="color: var(--accent-green); margin-bottom: 8px;">Conquistas</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; color: var(--foreground); margin: 0;" id="achievementsCount">12</p>
+                <p style="color: var(--text-gray); font-size: 14px; margin-top: 8px;">Objetivos alcançados</p>
+            </div>
+            <div class="overview-card purple">
+                <h3 style="color: var(--accent-purple); margin-bottom: 8px;">Horas de Estudo</h3>
+                <p style="font-size: 2.5rem; font-weight: 700; color: var(--foreground); margin: 0;" id="studyHours">156h</p>
+                <p style="color: var(--text-gray); font-size: 14px; margin-top: 8px;">Neste semestre</p>
+            </div>
+        </div>
+
+        <!-- Gráfico de Progresso -->
+        <div class="chart-container">
+            <h2 style="color: var(--foreground); margin-bottom: 20px;">📈 Evolução das Notas</h2>
+            <div class="chart-placeholder">
+                📊 Gráfico de evolução das notas por disciplina
+                <br>
+                <small style="opacity: 0.7;">(Integração com biblioteca de gráficos)</small>
+            </div>
+        </div>
+
+        <!-- Seções de Progresso -->
+        <div class="progress-sections">
+            <!-- Progresso por Disciplina -->
+            <div class="progress-section subjects-progress">
+                <h2 style="color: var(--accent-green); margin-bottom: 20px;">📚 Progresso por Disciplina</h2>
+                <div id="subjectsProgressContainer">
+                    <!-- Progresso das disciplinas será carregado aqui -->
+                </div>
+            </div>
+
+            <!-- Conquistas e Objetivos -->
+            <div class="progress-section achievements-section">
+                <h2 style="color: var(--accent-purple); margin-bottom: 20px;">🏆 Conquistas</h2>
+                <div id="achievementsContainer">
+                    <!-- Conquistas serão carregadas aqui -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div style="text-align: center; margin-top: 32px;">
+            <button class="btn btn-primary" onclick="loadProgressData()">
+                🔄 Atualizar Dados de Progresso
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Estado da aplicação
+        let progressData = {
+            subjects: [],
+            achievements: [],
+            stats: {}
+        };
+
+        // Dados de exemplo para fallback
+        const sampleProgressData = {
+            subjects: [
+                {
+                    id: 1,
+                    name: "Anatomia Humana",
+                    progress: 85,
+                    grade: 8.7,
+                    color: "#8A2BE2",
+                    trend: "up"
+                },
+                {
+                    id: 2,
+                    name: "Fisiologia",
+                    progress: 70,
+                    grade: 9.1,
+                    color: "#20B2AA",
+                    trend: "up"
+                },
+                {
+                    id: 3,
+                    name: "Bioquímica",
+                    progress: 90,
+                    grade: 8.3,
+                    color: "#FF6B6B",
+                    trend: "stable"
+                },
+                {
+                    id: 4,
+                    name: "Histologia",
+                    progress: 55,
+                    grade: 7.8,
+                    color: "#4ECDC4",
+                    trend: "down"
+                }
+            ],
+            achievements: [
+                {
+                    id: 1,
+                    title: "Primeira Nota 10",
+                    description: "Conquistou a primeira nota máxima",
+                    date: "2024-02-15",
+                    completed: true
+                },
+                {
+                    id: 2,
+                    title: "Sequência de Estudos",
+                    description: "7 dias consecutivos de estudo",
+                    date: "2024-02-20",
+                    completed: true
+                },
+                {
+                    id: 3,
+                    title: "Meta de Horas",
+                    description: "100 horas de estudo no semestre",
+                    date: "2024-03-01",
+                    completed: true
+                },
+                {
+                    id: 4,
+                    title: "Média 9+",
+                    description: "Manter média acima de 9.0",
+                    date: null,
+                    completed: false
+                }
+            ],
+            stats: {
+                overallProgress: 72,
+                overallGrade: 8.4,
+                achievementsCount: 12,
+                studyHours: 156
+            }
+        };
+
+        // Carregar dados de progresso
+        async function loadProgressData() {
+            try {
+                const response = await fetch('/api/progress');
+                if (response.ok) {
+                    progressData = await response.json();
+                } else {
+                    throw new Error('Falha ao carregar da API');
+                }
+            } catch (error) {
+                console.warn('Usando dados de exemplo:', error);
+                progressData = { ...sampleProgressData };
+            }
+            
+            renderOverview();
+            renderSubjectsProgress();
+            renderAchievements();
+        }
+
+        // Renderizar visão geral
+        function renderOverview() {
+            const stats = progressData.stats;
+            document.getElementById('overallProgress').textContent = `${stats.overallProgress}%`;
+            document.getElementById('overallGrade').textContent = stats.overallGrade.toFixed(1);
+            document.getElementById('achievementsCount').textContent = stats.achievementsCount;
+            document.getElementById('studyHours').textContent = `${stats.studyHours}h`;
+        }
+
+        // Renderizar progresso das disciplinas
+        function renderSubjectsProgress() {
+            const container = document.getElementById('subjectsProgressContainer');
+            
+            if (!progressData.subjects || progressData.subjects.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 32px; color: var(--text-gray);">
+                        <p>Nenhuma disciplina encontrada.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = progressData.subjects.map(subject => `
+                <div class="subject-progress-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <h4 style="color: var(--foreground); margin: 0;">${subject.name}</h4>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="color: var(--foreground); font-weight: 600;">${subject.grade.toFixed(1)}</span>
+                            <span style="font-size: 12px;">${getTrendIcon(subject.trend)}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="color: var(--text-gray); font-size: 14px;">Progresso</span>
+                        <span style="color: var(--foreground); font-weight: 600; font-size: 14px;">${subject.progress}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${subject.progress}%; background-color: ${subject.color};"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Renderizar conquistas
+        function renderAchievements() {
+            const container = document.getElementById('achievementsContainer');
+            
+            if (!progressData.achievements || progressData.achievements.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 32px; color: var(--text-gray);">
+                        <p>Nenhuma conquista registrada.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = progressData.achievements.map(achievement => `
+                <div class="achievement-item ${achievement.completed ? 'completed' : ''}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                        <h4 style="color: var(--foreground); margin: 0;">${achievement.title}</h4>
+                        <span style="font-size: 16px;">${achievement.completed ? '🏆' : '⏳'}</span>
+                    </div>
+                    <p style="color: var(--text-gray); font-size: 14px; margin-bottom: 8px;">${achievement.description}</p>
+                    ${achievement.date ? `<span style="color: var(--text-gray); font-size: 12px;">Conquistado em: ${formatDate(achievement.date)}</span>` : '<span style="color: var(--text-gray); font-size: 12px;">Em progresso</span>'}
+                </div>
+            `).join('');
+        }
+
+        // Funções auxiliares
+        function getTrendIcon(trend) {
+            const trends = {
+                up: '📈',
+                down: '📉',
+                stable: '➡️'
+            };
+            return trends[trend] || '➡️';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgressData();
+        });
+    </script>
+</body>
+</html>

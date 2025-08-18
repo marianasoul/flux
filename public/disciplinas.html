@@ -1,25 +1,675 @@
-// Função para carregar disciplinas da API
-async function loadDisciplinesFromAPI() {
-    try {
-        const response = await fetch('/api/subjects');
-        if (response.ok) {
-            disciplinesData = await response.json();
-            loadDisciplines();
-        } else {
-            console.error('Erro ao carregar disciplinas:', response.statusText);
-            // Fallback para dados de exemplo se a API falhar
-            disciplinesData = [/* dados de exemplo */];
-            loadDisciplines();
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disciplinas - MedStudios</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons-sprite.svg">
+    <style>
+        /* Estilos específicos da página com guia de estilo */
+        .page-container {
+            background-color: var(--background);
+            min-height: 100vh;
+            padding: 24px;
         }
-    } catch (error) {
-        console.error('Erro na conexão com a API:', error);
-        disciplinesData = [];
-        loadDisciplines();
-    }
-}
 
-// CRUD completo implementado:
-// ✅ CREATE - POST /api/subjects
-// ✅ READ - GET /api/subjects  
-// ✅ UPDATE - PUT /api/subjects/:id
-// ✅ DELETE - DELETE /api/subjects/:id
+        .header-section {
+            background: linear-gradient(135deg, var(--card-purple) 0%, var(--card-green) 100%);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .stat-card.green {
+            background: linear-gradient(135deg, var(--card-green) 0%, rgba(240, 255, 240, 0.7) 100%);
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .stat-card.purple {
+            background: linear-gradient(135deg, var(--card-purple) 0%, rgba(230, 230, 250, 0.7) 100%);
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .disciplines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .discipline-card {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discipline-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-green));
+        }
+
+        .discipline-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-secondary {
+            background-color: var(--card-green);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .btn-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-red);
+            border: 1px solid var(--danger-red);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: var(--background);
+            margin: 5% auto;
+            padding: 32px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--foreground);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            background-color: var(--background);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
+        }
+
+        .color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            margin-left: 12px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 64px 24px;
+            color: var(--text-gray);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .progress-bar {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            height: 8px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-purple));
+            border-radius: 8px;
+            transition: width 0.3s ease;
+        }
+
+        /* Navegação atualizada */
+        .navbar {
+            background: linear-gradient(135deg, var(--background) 0%, var(--card-purple) 100%);
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: var(--foreground);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover,
+        .navbar a.active {
+            background-color: var(--accent-purple);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 16px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .disciplines-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .navbar ul {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Navegação -->
+        <nav class="navbar">
+            <ul>
+                <li><a href="/index.html">🏠 Dashboard</a></li>
+                <li><a href="/cronograma.html">📅 Cronograma</a></li>
+                <li><a href="/agenda.html">📋 Agenda</a></li>
+                <li><a href="/disciplinas.html" class="active">📚 Disciplinas</a></li>
+                <li><a href="/professores.html">👨‍🏫 Professores</a></li>
+                <li><a href="/semestre.html">🎓 Semestre</a></li>
+                <li><a href="/progresso.html">📊 Progresso</a></li>
+                <li><a href="/planejamento.html">🎯 Planejamento</a></li>
+            </ul>
+        </nav>
+
+        <!-- Cabeçalho -->
+        <div class="header-section">
+            <h1 style="color: var(--foreground); margin-bottom: 8px;">📚 Gestão de Disciplinas</h1>
+            <p style="color: var(--text-gray); font-size: 18px;">Organize e acompanhe o progresso das suas matérias</p>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-card green">
+                <h3 style="color: var(--accent-green); margin-bottom: 8px;">Total de Disciplinas</h3>
+                <p style="font-size: 2rem; font-weight: 700; color: var(--foreground); margin: 0;" id="totalDisciplines">0</p>
+            </div>
+            <div class="stat-card purple">
+                <h3 style="color: var(--accent-purple); margin-bottom: 8px;">Média Geral</h3>
+                <p style="font-size: 2rem; font-weight: 700; color: var(--foreground); margin: 0;" id="averageGrade">0.0</p>
+            </div>
+            <div class="stat-card green">
+                <h3 style="color: var(--accent-green); margin-bottom: 8px;">Disciplinas Concluídas</h3>
+                <p style="font-size: 2rem; font-weight: 700; color: var(--foreground); margin: 0;" id="completedDisciplines">0</p>
+            </div>
+            <div class="stat-card purple">
+                <h3 style="color: var(--accent-purple); margin-bottom: 8px;">Em Andamento</h3>
+                <p style="font-size: 2rem; font-weight: 700; color: var(--foreground); margin: 0;" id="activeDisciplines">0</p>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="color: var(--foreground);">Suas Disciplinas</h2>
+            <button class="btn btn-primary" onclick="openAddModal()">
+                ➕ Adicionar Disciplina
+            </button>
+        </div>
+
+        <!-- Lista de Disciplinas -->
+        <div id="disciplinesContainer">
+            <div class="disciplines-grid" id="disciplinesGrid">
+                <!-- Disciplinas serão carregadas aqui -->
+            </div>
+            
+            <!-- Estado vazio -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+                <h3>Nenhuma disciplina cadastrada</h3>
+                <p>Comece adicionando suas primeiras disciplinas para organizar seus estudos.</p>
+                <button class="btn btn-primary" onclick="openAddModal()" style="margin-top: 16px;">
+                    ➕ Adicionar Primeira Disciplina
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Adicionar/Editar -->
+    <div id="disciplineModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Adicionar Disciplina</h2>
+            <form id="disciplineForm">
+                <div class="form-group">
+                    <label for="disciplineName">Nome da Disciplina</label>
+                    <input type="text" id="disciplineName" required>
+                </div>
+                <div class="form-group">
+                    <label for="disciplineCode">Código</label>
+                    <input type="text" id="disciplineCode" placeholder="Ex: MED101">
+                </div>
+                <div class="form-group">
+                    <label for="disciplineCredits">Créditos</label>
+                    <input type="number" id="disciplineCredits" min="1" max="10" value="4">
+                </div>
+                <div class="form-group">
+                    <label for="disciplineColor">Cor 
+                        <span class="color-preview" id="colorPreview" style="background-color: #8A2BE2;"></span>
+                    </label>
+                    <input type="color" id="disciplineColor" value="#8A2BE2">
+                </div>
+                <div class="form-group">
+                    <label for="disciplineDescription">Descrição</label>
+                    <textarea id="disciplineDescription" rows="3" placeholder="Descrição opcional da disciplina"></textarea>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Confirmação -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirmar Exclusão</h2>
+            <p>Tem certeza que deseja excluir esta disciplina? Esta ação não pode ser desfeita.</p>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                <button type="button" class="btn btn-secondary" onclick="closeConfirmModal()">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado da aplicação
+        let disciplines = [];
+        let editingId = null;
+        let deletingId = null;
+
+        // Dados de exemplo para fallback
+        const sampleDisciplines = [
+            {
+                id: 1,
+                name: "Anatomia Humana",
+                code: "MED101",
+                credits: 6,
+                color: "#8A2BE2",
+                description: "Estudo da estrutura do corpo humano",
+                progress: 75,
+                grade: 8.5,
+                status: "active"
+            },
+            {
+                id: 2,
+                name: "Fisiologia",
+                code: "MED102",
+                credits: 4,
+                color: "#20B2AA",
+                description: "Funcionamento dos sistemas corporais",
+                progress: 60,
+                grade: 9.0,
+                status: "active"
+            },
+            {
+                id: 3,
+                name: "Bioquímica",
+                code: "MED103",
+                credits: 4,
+                color: "#FF6B6B",
+                description: "Processos químicos nos organismos vivos",
+                progress: 100,
+                grade: 8.8,
+                status: "completed"
+            }
+        ];
+
+        // Carregar disciplinas da API
+        async function loadDisciplinesFromAPI() {
+            try {
+                const response = await fetch('/api/subjects');
+                if (response.ok) {
+                    const data = await response.json();
+                    disciplines = data.map(subject => ({
+                        id: subject.id,
+                        name: subject.name,
+                        code: subject.code || '',
+                        credits: subject.credits || 4,
+                        color: subject.color || '#8A2BE2',
+                        description: subject.description || '',
+                        progress: subject.progress || 0,
+                        grade: subject.grade || 0,
+                        status: subject.status || 'active'
+                    }));
+                } else {
+                    throw new Error('Falha ao carregar da API');
+                }
+            } catch (error) {
+                console.warn('Usando dados de exemplo:', error);
+                disciplines = [...sampleDisciplines];
+            }
+            
+            renderDisciplines();
+            updateStats();
+        }
+
+        // Renderizar disciplinas
+        function renderDisciplines() {
+            const container = document.getElementById('disciplinesGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (disciplines.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            container.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            container.innerHTML = disciplines.map(discipline => `
+                <div class="discipline-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="color: var(--foreground); margin-bottom: 4px;">${discipline.name}</h3>
+                            <p style="color: var(--text-gray); font-size: 14px;">${discipline.code} • ${discipline.credits} créditos</p>
+                        </div>
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background-color: ${discipline.color};"></div>
+                    </div>
+                    
+                    ${discipline.description ? `<p style="color: var(--text-gray); margin-bottom: 16px; font-size: 14px;">${discipline.description}</p>` : ''}
+                    
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="color: var(--text-gray); font-size: 14px;">Progresso</span>
+                            <span style="color: var(--foreground); font-weight: 600;">${discipline.progress}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${discipline.progress}%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <span style="color: var(--text-gray); font-size: 14px;">Nota Atual</span>
+                        <span style="color: var(--foreground); font-weight: 700; font-size: 18px;">${discipline.grade.toFixed(1)}</span>
+                    </div>
+                    
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-secondary" onclick="editDiscipline(${discipline.id})" style="flex: 1;">
+                            ✏️ Editar
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteDiscipline(${discipline.id})">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            const total = disciplines.length;
+            const completed = disciplines.filter(d => d.status === 'completed').length;
+            const active = disciplines.filter(d => d.status === 'active').length;
+            const average = total > 0 ? disciplines.reduce((sum, d) => sum + d.grade, 0) / total : 0;
+            
+            document.getElementById('totalDisciplines').textContent = total;
+            document.getElementById('completedDisciplines').textContent = completed;
+            document.getElementById('activeDisciplines').textContent = active;
+            document.getElementById('averageGrade').textContent = average.toFixed(1);
+        }
+
+        // Abrir modal de adição
+        function openAddModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = 'Adicionar Disciplina';
+            document.getElementById('disciplineForm').reset();
+            document.getElementById('disciplineColor').value = '#8A2BE2';
+            document.getElementById('colorPreview').style.backgroundColor = '#8A2BE2';
+            document.getElementById('disciplineModal').style.display = 'block';
+        }
+
+        // Editar disciplina
+        function editDiscipline(id) {
+            const discipline = disciplines.find(d => d.id === id);
+            if (!discipline) return;
+            
+            editingId = id;
+            document.getElementById('modalTitle').textContent = 'Editar Disciplina';
+            document.getElementById('disciplineName').value = discipline.name;
+            document.getElementById('disciplineCode').value = discipline.code;
+            document.getElementById('disciplineCredits').value = discipline.credits;
+            document.getElementById('disciplineColor').value = discipline.color;
+            document.getElementById('disciplineDescription').value = discipline.description;
+            document.getElementById('colorPreview').style.backgroundColor = discipline.color;
+            document.getElementById('disciplineModal').style.display = 'block';
+        }
+
+        // Excluir disciplina
+        function deleteDiscipline(id) {
+            deletingId = id;
+            document.getElementById('confirmModal').style.display = 'block';
+        }
+
+        // Confirmar exclusão
+        async function confirmDelete() {
+            if (!deletingId) return;
+            
+            try {
+                const response = await fetch(`/api/subjects/${deletingId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    disciplines = disciplines.filter(d => d.id !== deletingId);
+                    renderDisciplines();
+                    updateStats();
+                }
+            } catch (error) {
+                // Fallback: remover localmente
+                disciplines = disciplines.filter(d => d.id !== deletingId);
+                renderDisciplines();
+                updateStats();
+            }
+            
+            closeConfirmModal();
+        }
+
+        // Fechar modais
+        function closeModal() {
+            document.getElementById('disciplineModal').style.display = 'none';
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+            deletingId = null;
+        }
+
+        // Preview da cor
+        document.getElementById('disciplineColor').addEventListener('input', function(e) {
+            document.getElementById('colorPreview').style.backgroundColor = e.target.value;
+        });
+
+        // Submissão do formulário
+        document.getElementById('disciplineForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('disciplineName').value,
+                code: document.getElementById('disciplineCode').value,
+                credits: parseInt(document.getElementById('disciplineCredits').value),
+                color: document.getElementById('disciplineColor').value,
+                description: document.getElementById('disciplineDescription').value,
+                progress: editingId ? disciplines.find(d => d.id === editingId).progress : 0,
+                grade: editingId ? disciplines.find(d => d.id === editingId).grade : 0,
+                status: 'active'
+            };
+            
+            try {
+                let response;
+                if (editingId) {
+                    response = await fetch(`/api/subjects/${editingId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    response = await fetch('/api/subjects', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                }
+                
+                if (response.ok) {
+                    const savedDiscipline = await response.json();
+                    
+                    if (editingId) {
+                        const index = disciplines.findIndex(d => d.id === editingId);
+                        disciplines[index] = { ...formData, id: editingId };
+                    } else {
+                        disciplines.push({ ...formData, id: savedDiscipline.id || Date.now() });
+                    }
+                } else {
+                    throw new Error('Falha na API');
+                }
+            } catch (error) {
+                // Fallback: salvar localmente
+                if (editingId) {
+                    const index = disciplines.findIndex(d => d.id === editingId);
+                    disciplines[index] = { ...formData, id: editingId };
+                } else {
+                    disciplines.push({ ...formData, id: Date.now() });
+                }
+            }
+            
+            renderDisciplines();
+            updateStats();
+            closeModal();
+        });
+
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(e) {
+            const disciplineModal = document.getElementById('disciplineModal');
+            const confirmModal = document.getElementById('confirmModal');
+            
+            if (e.target === disciplineModal) {
+                closeModal();
+            }
+            if (e.target === confirmModal) {
+                closeConfirmModal();
+            }
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDisciplinesFromAPI();
+        });
+    </script>
+</body>
+</html>

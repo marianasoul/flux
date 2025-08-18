@@ -4,206 +4,465 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedStudios - Cronograma</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
     <div class="container">
         <!-- Navegação -->
         <nav class="nav">
-            <a href="/">🏠 Dashboard</a>
-            <a href="/cronograma.html" class="active">📅 Cronograma</a>
-            <a href="/agenda.html">📋 Agenda</a>
-            <a href="/disciplinas.html">📚 Disciplinas</a>
-            <a href="/professores.html">👨‍🏫 Professores</a>
-            <a href="/semestre.html">🎓 Semestre</a>
-            <a href="/planejamento.html">📊 Planejamento</a>
-            <a href="/progresso.html">📈 Progresso</a>
+            <ul>
+                <li><a href="/index.html">🏠 Dashboard</a></li>
+                <li><a href="/cronograma.html" class="active">📅 Cronograma</a></li>
+                <li><a href="/agenda.html">📋 Agenda</a></li>
+                <li><a href="/disciplinas.html">📚 Disciplinas</a></li>
+                <li><a href="/professores.html">👨‍🏫 Professores</a></li>
+                <li><a href="/semestre.html">🎓 Semestre</a></li>
+                <li><a href="/planejamento.html">📊 Planejamento</a></li>
+                <li><a href="/progresso.html">📈 Progresso</a></li>
+            </ul>
         </nav>
 
-        <!-- Card de Título -->
-        <div class="card">
-            <h1 class="text-center">📅 Cronograma de Aulas</h1>
-            <p class="text-center text-muted">Visualize e gerencie seus horários de aula semanais</p>
-        </div>
-
-        <!-- Botão Adicionar Aula -->
-        <div class="mb-3">
-            <button class="btn btn-primary" onclick="showAddForm()">+ Adicionar Aula</button>
+        <!-- Cabeçalho da Página -->
+        <div class="header">
+            <h1>📅 Cronograma de Aulas</h1>
+            <p style="text-align: center; color: var(--text-gray); margin-bottom: 20px;">Visualize e gerencie seus horários de aula semanais</p>
+            <div style="text-align: center;">
+                <button class="btn btn--primary" onclick="showAddForm()">+ Adicionar Aula</button>
+            </div>
         </div>
 
         <!-- Formulário de Adicionar/Editar Aula -->
-        <div id="aulaForm" class="card" style="display: none;">
-            <h3 id="formTitle">Adicionar Aula</h3>
-            <form id="aulaFormElement">
-                <input type="hidden" id="aulaId">
-                
-                <div class="form-group">
-                    <label for="aulaDisciplina">Disciplina:</label>
-                    <select id="aulaDisciplina" required>
-                        <option value="">Selecione uma disciplina</option>
-                        <option value="Anatomia Humana">Anatomia Humana</option>
-                        <option value="Fisiologia">Fisiologia</option>
-                        <option value="Bioquímica">Bioquímica</option>
-                        <option value="Histologia">Histologia</option>
-                        <option value="Embriologia">Embriologia</option>
-                        <option value="Genética">Genética</option>
-                    </select>
+        <div id="aulaForm" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="formTitle">Adicionar Aula</h3>
+                    <button class="modal-close" onclick="hideForm()">×</button>
                 </div>
-                
-                <div class="form-group">
-                    <label for="aulaProfessor">Professor:</label>
-                    <input type="text" id="aulaProfessor" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="aulaDiaSemana">Dia da Semana:</label>
-                    <select id="aulaDiaSemana" required>
-                        <option value="">Selecione o dia</option>
-                        <option value="Segunda">Segunda-feira</option>
-                        <option value="Terça">Terça-feira</option>
-                        <option value="Quarta">Quarta-feira</option>
-                        <option value="Quinta">Quinta-feira</option>
-                        <option value="Sexta">Sexta-feira</option>
-                        <option value="Sábado">Sábado</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="aulaHorarioInicio">Horário de Início:</label>
-                    <input type="time" id="aulaHorarioInicio" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="aulaHorarioFim">Horário de Fim:</label>
-                    <input type="time" id="aulaHorarioFim" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="aulaSala">Sala:</label>
-                    <input type="text" id="aulaSala" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="aulaTipo">Tipo de Aula:</label>
-                    <select id="aulaTipo" required>
-                        <option value="">Selecione o tipo</option>
-                        <option value="Teórica">Teórica</option>
-                        <option value="Prática">Prática</option>
-                        <option value="Laboratório">Laboratório</option>
-                        <option value="Seminário">Seminário</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Salvar</button>
-                    <button type="button" class="btn btn-secondary" onclick="hideForm()">Cancelar</button>
-                </div>
-            </form>
+                <form id="aulaFormElement" class="form">
+                    <input type="hidden" id="aulaId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="aulaDisciplina">Disciplina</label>
+                            <select id="aulaDisciplina" required>
+                                <option value="">Selecione uma disciplina</option>
+                                <option value="Anatomia Humana">Anatomia Humana</option>
+                                <option value="Fisiologia">Fisiologia</option>
+                                <option value="Bioquímica">Bioquímica</option>
+                                <option value="Histologia">Histologia</option>
+                                <option value="Embriologia">Embriologia</option>
+                                <option value="Genética">Genética</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="aulaProfessor">Professor</label>
+                            <input type="text" id="aulaProfessor" placeholder="Nome do professor" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="aulaDiaSemana">Dia da Semana</label>
+                            <select id="aulaDiaSemana" required>
+                                <option value="">Selecione o dia</option>
+                                <option value="Segunda">Segunda-feira</option>
+                                <option value="Terça">Terça-feira</option>
+                                <option value="Quarta">Quarta-feira</option>
+                                <option value="Quinta">Quinta-feira</option>
+                                <option value="Sexta">Sexta-feira</option>
+                                <option value="Sábado">Sábado</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="aulaTipo">Tipo de Aula</label>
+                            <select id="aulaTipo" required>
+                                <option value="">Selecione o tipo</option>
+                                <option value="Teórica">Teórica</option>
+                                <option value="Prática">Prática</option>
+                                <option value="Laboratório">Laboratório</option>
+                                <option value="Seminário">Seminário</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="aulaHorarioInicio">Horário de Início</label>
+                            <input type="time" id="aulaHorarioInicio" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="aulaHorarioFim">Horário de Fim</label>
+                            <input type="time" id="aulaHorarioFim" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aulaSala">Sala</label>
+                        <input type="text" id="aulaSala" placeholder="Ex: Lab 101, Sala 201" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--success">Salvar Aula</button>
+                        <button type="button" class="btn btn--secondary" onclick="hideForm()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- Estatísticas -->
-        <div class="grid-4">
-            <div class="card card-success">
-                <h3 id="totalAulas">24</h3>
-                <p>Total de Aulas</p>
-            </div>
-            <div class="card card-warning">
-                <h3 id="aulasSemana">8</h3>
-                <p>Aulas esta Semana</p>
+        <div class="grid grid--4 mb-30">
+            <div class="card card-green">
+                <div class="stat-content">
+                    <h3 id="totalAulas" style="color: var(--accent-green); font-size: 2rem; margin-bottom: 8px;">24</h3>
+                    <p style="color: var(--text-gray); margin: 0;">📚 Total de Aulas</p>
+                </div>
             </div>
             <div class="card card-purple">
-                <h3 id="disciplinasAtivas">6</h3>
-                <p>Disciplinas Ativas</p>
+                <div class="stat-content">
+                    <h3 id="aulasSemana" style="color: var(--accent-purple); font-size: 2rem; margin-bottom: 8px;">8</h3>
+                    <p style="color: var(--text-gray); margin: 0;">📅 Aulas esta Semana</p>
+                </div>
             </div>
-            <div class="card">
-                <h3 id="cargaHoraria">32h</h3>
-                <p>Carga Horária Semanal</p>
+            <div class="card card-green">
+                <div class="stat-content">
+                    <h3 id="disciplinasAtivas" style="color: var(--accent-green); font-size: 2rem; margin-bottom: 8px;">6</h3>
+                    <p style="color: var(--text-gray); margin: 0;">🎓 Disciplinas Ativas</p>
+                </div>
+            </div>
+            <div class="card card-purple">
+                <div class="stat-content">
+                    <h3 id="cargaHoraria" style="color: var(--accent-purple); font-size: 2rem; margin-bottom: 8px;">32h</h3>
+                    <p style="color: var(--text-gray); margin: 0;">⏰ Carga Horária Semanal</p>
+                </div>
             </div>
         </div>
 
         <!-- Cronograma Semanal -->
-        <div class="card">
-            <h3>Cronograma Semanal</h3>
-            <div class="cronograma-grid" id="cronogramaGrid">
-                <!-- Cronograma será carregado dinamicamente -->
+        <div class="card mb-30">
+            <h2 style="color: var(--primary-blue); margin-bottom: 8px;">📅 Cronograma Semanal</h2>
+            <p style="color: var(--text-gray); margin-bottom: 20px;">Visualização em grade dos horários de aula</p>
+            <div class="cronograma-container">
+                <div class="cronograma-grid" id="cronogramaGrid">
+                    <!-- Cronograma será carregado dinamicamente -->
+                </div>
             </div>
         </div>
 
         <!-- Lista de Aulas -->
         <div class="card">
-            <h3>Todas as Aulas</h3>
-            <div class="grid-2" id="aulasGrid">
+            <h2 style="color: var(--primary-blue); margin-bottom: 8px;">📋 Todas as Aulas</h2>
+            <p style="color: var(--text-gray); margin-bottom: 20px;">Lista completa de aulas cadastradas</p>
+            <div class="aulas-grid" id="aulasGrid">
                 <!-- Aulas serão carregadas dinamicamente -->
+            </div>
+            
+            <!-- Estado Vazio -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 4rem; margin-bottom: 16px;">📅</div>
+                    <h3 style="color: var(--text-dark); margin-bottom: 8px;">Nenhuma aula cadastrada</h3>
+                    <p style="color: var(--text-gray); margin-bottom: 20px;">Comece adicionando sua primeira aula ao cronograma</p>
+                    <button class="btn btn--primary" onclick="showAddForm()">+ Adicionar Primeira Aula</button>
+                </div>
             </div>
         </div>
     </div>
 
     <style>
+        /* Estilos específicos da página de cronograma */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .modal-header h3 {
+            color: var(--primary-blue);
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-gray);
+            padding: 4px;
+        }
+        
+        .modal-close:hover {
+            color: var(--danger-red);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .btn--secondary {
+            background-color: #f3f4f6;
+            color: var(--text-dark);
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn--secondary:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .cronograma-container {
+            background: var(--background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow-light);
+            overflow-x: auto;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
         .cronograma-grid {
             display: grid;
-            grid-template-columns: 80px repeat(6, 1fr);
-            gap: 1px;
-            background: var(--border-color);
+            grid-template-columns: 100px repeat(6, 1fr);
+            gap: 2px;
+            background: #f8f9fa;
             border-radius: 8px;
             overflow: hidden;
-            margin-top: 1rem;
+            min-width: 800px;
         }
         
         .cronograma-header {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
             color: white;
-            padding: 0.75rem;
+            padding: 12px;
             text-align: center;
             font-weight: 600;
             font-size: 0.9rem;
-        }
-        
-        .cronograma-hora {
-            background: var(--bg-secondary);
-            padding: 0.5rem;
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: 500;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
+        .cronograma-hora {
+            background: var(--card-green);
+            padding: 12px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #e5e7eb;
+        }
+        
         .cronograma-slot {
-            background: white;
-            padding: 0.25rem;
-            min-height: 60px;
+            background: var(--background);
+            padding: 8px;
+            min-height: 80px;
             position: relative;
-            border: 1px solid var(--border-color);
+            transition: background-color 0.2s ease;
+        }
+        
+        .cronograma-slot:hover {
+            background: var(--card-green);
         }
         
         .aula-item {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
             color: white;
-            padding: 0.25rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+            margin-bottom: 4px;
         }
         
         .aula-item:hover {
-            background: var(--primary-dark);
-            transform: scale(1.02);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
         }
         
-        .aula-item.pratica {
-            background: var(--success-color);
+        .aula-item.teórica {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
         }
         
-        .aula-item.laboratorio {
-            background: var(--warning-color);
+        .aula-item.prática {
+            background: linear-gradient(135deg, var(--success-green), var(--accent-green));
         }
         
-        .aula-item.seminario {
-            background: var(--purple-color);
+        .aula-item.laboratório {
+            background: linear-gradient(135deg, var(--warning-orange), #f59e0b);
+        }
+        
+        .aula-item.seminário {
+            background: linear-gradient(135deg, var(--accent-purple), var(--secondary-purple));
+        }
+        
+        .aulas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .aula-card {
+            background: var(--background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .aula-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .aula-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .aula-title {
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .aula-tipo {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .tipo-teorica {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-blue);
+        }
+        
+        .tipo-pratica {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+        }
+        
+        .tipo-laboratorio {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-orange);
+        }
+        
+        .tipo-seminario {
+            background: rgba(138, 43, 226, 0.1);
+            color: var(--accent-purple);
+        }
+        
+        .aula-info {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .aula-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+        
+        .aula-info-icon {
+            width: 16px;
+            text-align: center;
+        }
+        
+        .aula-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .aula-actions .btn {
+            flex: 1;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .cronograma-grid {
+                grid-template-columns: 80px repeat(6, 1fr);
+                font-size: 0.8rem;
+            }
+            
+            .cronograma-header,
+            .cronograma-hora {
+                padding: 8px;
+                font-size: 0.75rem;
+            }
+            
+            .aula-item {
+                font-size: 0.7rem;
+                padding: 4px;
+            }
+            
+            .aulas-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 20px;
+            }
         }
     </style>
 
@@ -301,7 +560,7 @@
                     
                     aulasHorario.forEach(aula => {
                         const aulaElement = createDiv(`aula-item ${aula.tipo.toLowerCase()}`, 
-                            `${aula.disciplina}<br>${aula.sala}`);
+                            `${aula.disciplina}<br><small>${aula.sala}</small>`);
                         aulaElement.onclick = () => editAula(aula.id);
                         slot.appendChild(aulaElement);
                     });
@@ -314,21 +573,48 @@
         // Função para carregar lista de aulas
         function loadAulas() {
             const grid = document.getElementById('aulasGrid');
+            const emptyState = document.getElementById('emptyState');
+            
             grid.innerHTML = '';
+            
+            if (aulasData.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
             
             aulasData.forEach(aula => {
                 const card = document.createElement('div');
-                card.className = 'card';
+                card.className = 'aula-card';
                 card.innerHTML = `
-                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">${aula.disciplina}</h4>
-                    <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Professor:</strong> ${aula.professor}</p>
-                    <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Horário:</strong> ${aula.diaSemana} ${aula.horarioInicio} - ${aula.horarioFim}</p>
-                    <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Sala:</strong> ${aula.sala}</p>
-                    <p style="margin: 0.25rem 0; font-size: 0.9rem;"><strong>Tipo:</strong> ${aula.tipo}</p>
+                    <div class="aula-header">
+                        <h4 class="aula-title">${aula.disciplina}</h4>
+                        <span class="aula-tipo tipo-${aula.tipo.toLowerCase()}">${aula.tipo}</span>
+                    </div>
                     
-                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
-                        <button class="btn btn-primary" onclick="editAula(${aula.id})" style="flex: 1;">Editar</button>
-                        <button class="btn btn-danger" onclick="deleteAula(${aula.id})" style="flex: 1;">Excluir</button>
+                    <div class="aula-info">
+                        <div class="aula-info-item">
+                            <span class="aula-info-icon">👨‍🏫</span>
+                            <span>${aula.professor}</span>
+                        </div>
+                        <div class="aula-info-item">
+                            <span class="aula-info-icon">📅</span>
+                            <span>${aula.diaSemana} • ${aula.horarioInicio} - ${aula.horarioFim}</span>
+                        </div>
+                        <div class="aula-info-item">
+                            <span class="aula-info-icon">📍</span>
+                            <span>${aula.sala}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="aula-actions">
+                        <button class="btn btn--primary" onclick="editAula(${aula.id})">
+                            ✏️ Editar
+                        </button>
+                        <button class="btn btn--danger" onclick="deleteAula(${aula.id})">
+                            🗑️ Excluir
+                        </button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -366,12 +652,14 @@
             editingAulaId = null;
             document.getElementById('formTitle').textContent = 'Adicionar Aula';
             document.getElementById('aulaFormElement').reset();
-            document.getElementById('aulaForm').style.display = 'block';
+            document.getElementById('aulaForm').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
 
         // Função para esconder formulário
         function hideForm() {
             document.getElementById('aulaForm').style.display = 'none';
+            document.body.style.overflow = 'auto';
             editingAulaId = null;
         }
 
@@ -389,7 +677,8 @@
                 document.getElementById('aulaHorarioFim').value = aula.horarioFim;
                 document.getElementById('aulaSala').value = aula.sala;
                 document.getElementById('aulaTipo').value = aula.tipo;
-                document.getElementById('aulaForm').style.display = 'block';
+                document.getElementById('aulaForm').style.display = 'flex';
+                document.body.style.overflow = 'hidden';
             }
         }
 
@@ -422,13 +711,20 @@
                     aulasData[index] = { ...aulasData[index], ...formData };
                 }
             } else {
-                const newId = Math.max(...aulasData.map(a => a.id)) + 1;
+                const newId = aulasData.length > 0 ? Math.max(...aulasData.map(a => a.id)) + 1 : 1;
                 aulasData.push({ id: newId, ...formData });
             }
             
             loadCronograma();
             loadAulas();
             hideForm();
+        });
+
+        // Fechar modal ao clicar fora
+        document.getElementById('aulaForm').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideForm();
+            }
         });
 
         // Carregar dados quando a página carregar

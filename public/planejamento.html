@@ -1,2 +1,681 @@
-<a href="/cronograma.html" class="btn-secondary">📅 Ver Cronograma</a>
-<a href="/agenda.html" class="btn-secondary">📋 Ver Agenda</a>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planejamento - MedStudios</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos da página com guia de estilo */
+        .page-container {
+            background-color: var(--background);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, var(--card-purple) 0%, var(--card-green) 100%);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .planning-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .planning-section {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .goals-section {
+            background: linear-gradient(135deg, var(--card-green) 0%, rgba(240, 255, 240, 0.7) 100%);
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .tasks-section {
+            background: linear-gradient(135deg, var(--card-purple) 0%, rgba(230, 230, 250, 0.7) 100%);
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .action-card {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .action-card.green {
+            background: linear-gradient(135deg, var(--card-green) 0%, rgba(240, 255, 240, 0.8) 100%);
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .action-card.purple {
+            background: linear-gradient(135deg, var(--card-purple) 0%, rgba(230, 230, 250, 0.8) 100%);
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .goal-item, .task-item {
+            background-color: var(--background);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .goal-item:hover, .task-item:hover {
+            box-shadow: var(--shadow-medium);
+            transform: translateX(4px);
+        }
+
+        .goal-item {
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .task-item {
+            border-left: 3px solid var(--accent-purple);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--card-green);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: var(--background);
+            margin: 5% auto;
+            padding: 32px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--foreground);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            background-color: var(--background);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
+        }
+
+        .priority-high { border-left-color: var(--danger-red) !important; }
+        .priority-medium { border-left-color: var(--warning-orange) !important; }
+        .priority-low { border-left-color: var(--accent-green) !important; }
+
+        /* Navegação atualizada */
+        .navbar {
+            background: linear-gradient(135deg, var(--background) 0%, var(--card-purple) 100%);
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: var(--foreground);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover,
+        .navbar a.active {
+            background-color: var(--accent-purple);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 16px;
+            }
+            
+            .planning-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .navbar ul {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Navegação -->
+        <nav class="navbar">
+            <ul>
+                <li><a href="/index.html">🏠 Dashboard</a></li>
+                <li><a href="/cronograma.html">📅 Cronograma</a></li>
+                <li><a href="/agenda.html">📋 Agenda</a></li>
+                <li><a href="/disciplinas.html">📚 Disciplinas</a></li>
+                <li><a href="/professores.html">👨‍🏫 Professores</a></li>
+                <li><a href="/semestre.html">🎓 Semestre</a></li>
+                <li><a href="/progresso.html">📊 Progresso</a></li>
+                <li><a href="/planejamento.html" class="active">🎯 Planejamento</a></li>
+            </ul>
+        </nav>
+
+        <!-- Cabeçalho -->
+        <div class="header-section">
+            <h1 style="color: var(--foreground); margin-bottom: 8px;">🎯 Planejamento de Estudos</h1>
+            <p style="color: var(--text-gray); font-size: 18px;">Organize suas metas e tarefas para um semestre produtivo</p>
+        </div>
+
+        <!-- Ações Rápidas -->
+        <div class="quick-actions">
+            <div class="action-card green" onclick="openGoalModal()">
+                <h3 style="color: var(--accent-green); margin-bottom: 8px;">🎯 Nova Meta</h3>
+                <p style="color: var(--text-gray); font-size: 14px;">Definir objetivo de estudo</p>
+            </div>
+            <div class="action-card purple" onclick="openTaskModal()">
+                <h3 style="color: var(--accent-purple); margin-bottom: 8px;">📝 Nova Tarefa</h3>
+                <p style="color: var(--text-gray); font-size: 14px;">Adicionar atividade</p>
+            </div>
+            <a href="/cronograma.html" class="action-card green" style="text-decoration: none;">
+                <h3 style="color: var(--accent-green); margin-bottom: 8px;">📅 Cronograma</h3>
+                <p style="color: var(--text-gray); font-size: 14px;">Ver horários</p>
+            </a>
+            <a href="/agenda.html" class="action-card purple" style="text-decoration: none;">
+                <h3 style="color: var(--accent-purple); margin-bottom: 8px;">📋 Agenda</h3>
+                <p style="color: var(--text-gray); font-size: 14px;">Compromissos</p>
+            </a>
+        </div>
+
+        <!-- Grid Principal -->
+        <div class="planning-grid">
+            <!-- Seção de Metas -->
+            <div class="planning-section goals-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="color: var(--accent-green);">🎯 Metas do Semestre</h2>
+                    <button class="btn btn-secondary" onclick="openGoalModal()">
+                        ➕ Adicionar
+                    </button>
+                </div>
+                
+                <div id="goalsContainer">
+                    <!-- Metas serão carregadas aqui -->
+                </div>
+            </div>
+
+            <!-- Seção de Tarefas -->
+            <div class="planning-section tasks-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="color: var(--accent-purple);">📝 Tarefas Pendentes</h2>
+                    <button class="btn btn-secondary" onclick="openTaskModal()">
+                        ➕ Adicionar
+                    </button>
+                </div>
+                
+                <div id="tasksContainer">
+                    <!-- Tarefas serão carregadas aqui -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Meta -->
+    <div id="goalModal" class="modal">
+        <div class="modal-content">
+            <h2 id="goalModalTitle">Nova Meta</h2>
+            <form id="goalForm">
+                <div class="form-group">
+                    <label for="goalTitle">Título da Meta</label>
+                    <input type="text" id="goalTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalDescription">Descrição</label>
+                    <textarea id="goalDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="goalDeadline">Prazo</label>
+                    <input type="date" id="goalDeadline">
+                </div>
+                <div class="form-group">
+                    <label for="goalPriority">Prioridade</label>
+                    <select id="goalPriority">
+                        <option value="low">Baixa</option>
+                        <option value="medium">Média</option>
+                        <option value="high">Alta</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeGoalModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Tarefa -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <h2 id="taskModalTitle">Nova Tarefa</h2>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskTitle">Título da Tarefa</label>
+                    <input type="text" id="taskTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">Descrição</label>
+                    <textarea id="taskDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="taskDueDate">Data de Vencimento</label>
+                    <input type="date" id="taskDueDate">
+                </div>
+                <div class="form-group">
+                    <label for="taskPriority">Prioridade</label>
+                    <select id="taskPriority">
+                        <option value="low">Baixa</option>
+                        <option value="medium">Média</option>
+                        <option value="high">Alta</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeTaskModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Estado da aplicação
+        let goals = [];
+        let tasks = [];
+        let editingGoalId = null;
+        let editingTaskId = null;
+
+        // Dados de exemplo para fallback
+        const sampleGoals = [
+            {
+                id: 1,
+                title: "Concluir Anatomia com nota 9+",
+                description: "Focar nos estudos de anatomia para alcançar excelência",
+                deadline: "2024-06-30",
+                priority: "high",
+                completed: false
+            },
+            {
+                id: 2,
+                title: "Participar de projeto de pesquisa",
+                description: "Buscar oportunidades de iniciação científica",
+                deadline: "2024-05-15",
+                priority: "medium",
+                completed: false
+            }
+        ];
+
+        const sampleTasks = [
+            {
+                id: 1,
+                title: "Estudar sistema cardiovascular",
+                description: "Revisar anatomia e fisiologia do coração",
+                dueDate: "2024-03-15",
+                priority: "high",
+                completed: false
+            },
+            {
+                id: 2,
+                title: "Fazer resumo de bioquímica",
+                description: "Resumir capítulos 5-8 do livro",
+                dueDate: "2024-03-12",
+                priority: "medium",
+                completed: false
+            },
+            {
+                id: 3,
+                title: "Preparar apresentação",
+                description: "Slides sobre sistema nervoso",
+                dueDate: "2024-03-20",
+                priority: "low",
+                completed: false
+            }
+        ];
+
+        // Carregar dados
+        async function loadPlanningData() {
+            try {
+                // Carregar metas
+                const goalsResponse = await fetch('/api/goals');
+                if (goalsResponse.ok) {
+                    goals = await goalsResponse.json();
+                } else {
+                    throw new Error('Falha ao carregar metas');
+                }
+
+                // Carregar tarefas
+                const tasksResponse = await fetch('/api/tasks');
+                if (tasksResponse.ok) {
+                    tasks = await tasksResponse.json();
+                } else {
+                    throw new Error('Falha ao carregar tarefas');
+                }
+            } catch (error) {
+                console.warn('Usando dados de exemplo:', error);
+                goals = [...sampleGoals];
+                tasks = [...sampleTasks];
+            }
+            
+            renderGoals();
+            renderTasks();
+        }
+
+        // Renderizar metas
+        function renderGoals() {
+            const container = document.getElementById('goalsContainer');
+            
+            if (goals.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 32px; color: var(--text-gray);">
+                        <p>Nenhuma meta definida ainda.</p>
+                        <button class="btn btn-secondary" onclick="openGoalModal()" style="margin-top: 12px;">
+                            🎯 Criar primeira meta
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = goals.map(goal => `
+                <div class="goal-item priority-${goal.priority}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                        <h4 style="color: var(--foreground); margin: 0;">${goal.title}</h4>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="editGoal(${goal.id})" style="background: none; border: none; cursor: pointer; color: var(--accent-green);">✏️</button>
+                            <button onclick="deleteGoal(${goal.id})" style="background: none; border: none; cursor: pointer; color: var(--danger-red);">🗑️</button>
+                        </div>
+                    </div>
+                    ${goal.description ? `<p style="color: var(--text-gray); font-size: 14px; margin-bottom: 8px;">${goal.description}</p>` : ''}
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-gray); font-size: 12px;">Prazo: ${formatDate(goal.deadline)}</span>
+                        <span class="priority-badge priority-${goal.priority}" style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background-color: var(--card-${goal.priority === 'high' ? 'purple' : goal.priority === 'medium' ? 'green' : 'green'});">${getPriorityText(goal.priority)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Renderizar tarefas
+        function renderTasks() {
+            const container = document.getElementById('tasksContainer');
+            
+            if (tasks.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 32px; color: var(--text-gray);">
+                        <p>Nenhuma tarefa pendente.</p>
+                        <button class="btn btn-secondary" onclick="openTaskModal()" style="margin-top: 12px;">
+                            📝 Criar primeira tarefa
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = tasks.filter(task => !task.completed).map(task => `
+                <div class="task-item priority-${task.priority}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                        <h4 style="color: var(--foreground); margin: 0;">${task.title}</h4>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="completeTask(${task.id})" style="background: none; border: none; cursor: pointer; color: var(--accent-green);">✅</button>
+                            <button onclick="editTask(${task.id})" style="background: none; border: none; cursor: pointer; color: var(--accent-purple);">✏️</button>
+                            <button onclick="deleteTask(${task.id})" style="background: none; border: none; cursor: pointer; color: var(--danger-red);">🗑️</button>
+                        </div>
+                    </div>
+                    ${task.description ? `<p style="color: var(--text-gray); font-size: 14px; margin-bottom: 8px;">${task.description}</p>` : ''}
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-gray); font-size: 12px;">Vencimento: ${formatDate(task.dueDate)}</span>
+                        <span class="priority-badge priority-${task.priority}" style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background-color: var(--card-${task.priority === 'high' ? 'purple' : task.priority === 'medium' ? 'green' : 'green'});">${getPriorityText(task.priority)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Funções auxiliares
+        function formatDate(dateString) {
+            if (!dateString) return 'Sem prazo';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function getPriorityText(priority) {
+            const priorities = { high: 'Alta', medium: 'Média', low: 'Baixa' };
+            return priorities[priority] || 'Baixa';
+        }
+
+        // Modais
+        function openGoalModal() {
+            editingGoalId = null;
+            document.getElementById('goalModalTitle').textContent = 'Nova Meta';
+            document.getElementById('goalForm').reset();
+            document.getElementById('goalModal').style.display = 'block';
+        }
+
+        function openTaskModal() {
+            editingTaskId = null;
+            document.getElementById('taskModalTitle').textContent = 'Nova Tarefa';
+            document.getElementById('taskForm').reset();
+            document.getElementById('taskModal').style.display = 'block';
+        }
+
+        function closeGoalModal() {
+            document.getElementById('goalModal').style.display = 'none';
+        }
+
+        function closeTaskModal() {
+            document.getElementById('taskModal').style.display = 'none';
+        }
+
+        // Editar
+        function editGoal(id) {
+            const goal = goals.find(g => g.id === id);
+            if (!goal) return;
+            
+            editingGoalId = id;
+            document.getElementById('goalModalTitle').textContent = 'Editar Meta';
+            document.getElementById('goalTitle').value = goal.title;
+            document.getElementById('goalDescription').value = goal.description;
+            document.getElementById('goalDeadline').value = goal.deadline;
+            document.getElementById('goalPriority').value = goal.priority;
+            document.getElementById('goalModal').style.display = 'block';
+        }
+
+        function editTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+            
+            editingTaskId = id;
+            document.getElementById('taskModalTitle').textContent = 'Editar Tarefa';
+            document.getElementById('taskTitle').value = task.title;
+            document.getElementById('taskDescription').value = task.description;
+            document.getElementById('taskDueDate').value = task.dueDate;
+            document.getElementById('taskPriority').value = task.priority;
+            document.getElementById('taskModal').style.display = 'block';
+        }
+
+        // Completar/Excluir
+        function completeTask(id) {
+            const taskIndex = tasks.findIndex(t => t.id === id);
+            if (taskIndex !== -1) {
+                tasks[taskIndex].completed = true;
+                renderTasks();
+            }
+        }
+
+        function deleteGoal(id) {
+            goals = goals.filter(g => g.id !== id);
+            renderGoals();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            renderTasks();
+        }
+
+        // Formulários
+        document.getElementById('goalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                title: document.getElementById('goalTitle').value,
+                description: document.getElementById('goalDescription').value,
+                deadline: document.getElementById('goalDeadline').value,
+                priority: document.getElementById('goalPriority').value,
+                completed: false
+            };
+            
+            if (editingGoalId) {
+                const index = goals.findIndex(g => g.id === editingGoalId);
+                goals[index] = { ...formData, id: editingGoalId };
+            } else {
+                goals.push({ ...formData, id: Date.now() });
+            }
+            
+            renderGoals();
+            closeGoalModal();
+        });
+
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                title: document.getElementById('taskTitle').value,
+                description: document.getElementById('taskDescription').value,
+                dueDate: document.getElementById('taskDueDate').value,
+                priority: document.getElementById('taskPriority').value,
+                completed: false
+            };
+            
+            if (editingTaskId) {
+                const index = tasks.findIndex(t => t.id === editingTaskId);
+                tasks[index] = { ...formData, id: editingTaskId };
+            } else {
+                tasks.push({ ...formData, id: Date.now() });
+            }
+            
+            renderTasks();
+            closeTaskModal();
+        });
+
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(e) {
+            const goalModal = document.getElementById('goalModal');
+            const taskModal = document.getElementById('taskModal');
+            
+            if (e.target === goalModal) closeGoalModal();
+            if (e.target === taskModal) closeTaskModal();
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPlanningData();
+        });
+    </script>
+</body>
+</html>
