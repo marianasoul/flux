@@ -360,36 +360,49 @@
 
         /* Responsividade */
         @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
+            .page-container {
+                padding: 16px;
             }
-
-            .nav {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .nav a {
-                text-align: center;
-            }
-
-            .grid-3,
+            
             .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+            
+            .grid-3 {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
-
-            .professor-header {
-                flex-direction: column;
-                text-align: center;
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
             }
-
-            .professor-avatar {
-                margin-right: 0;
-                margin-bottom: 1rem;
+            
+            .navbar ul {
+                flex-wrap: wrap;
+                gap: 12px;
             }
-
-            .professor-actions {
-                flex-direction: column;
+            
+            /* Botões responsivos em formulários */
+            .form-actions {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+            }
+            
+            .form-actions .btn {
+                width: 100% !important;
+                max-width: none !important;
+                justify-content: center;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            /* Botões em desktop mantêm largura automática */
+            .form-actions .btn {
+                width: auto;
+                min-width: 120px;
             }
         }
 

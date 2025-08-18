@@ -4,43 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedStudios - Dashboard</title>
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#8A2BE2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MedStudios">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM4QTJCRTIiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxwYXRoIGQ9Ik0xNCAySDZhMiAyIDAgMCAwLTIgMnYxNmEyIDIgMCAwIDAgMiAyaDEyYTIgMiAwIDAgMCAyLTJWOHoiLz4KPHN0cm9rZSBkPSJtMTQsMi02LDYiLz4KPHN0cm9rZSBkPSJNMTYsMTNhNiA2IDAgMCAxLTYgNiA2IDYgMCAwIDEtNi02IDYgNiAwIDAgMSA2LTYgNiA2IDAgMCAxIDYgNnoiLz4KPHN0cm9rZSBkPSJtOSwxMiAyLDIgNC00Ii8+Cjwvc3ZnPgo8L3N2Zz4K">
+    
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons-sprite.svg">
     <style>
         :root {
-            /* Cores principais */
-            --background: #ffffff;
-            --foreground: #1a1a1a;
-            --card-background: #ffffff;
-            --border: #e5e7eb;
+            /* Paleta de Cores Consistente - MedStudios */
+            --background: #FFFFFF;           /* Fundo principal branco */
+            --foreground: #333333;           /* Texto principal */
+            --card-green: #F0FFF0;          /* Cards verde-claro */
+            --card-purple: #E6E6FA;         /* Cards roxo-claro */
+            --accent-purple: #8A2BE2;       /* Destaque roxo vibrante */
+            --accent-green: #20B2AA;        /* Destaque verde-azulado */
             
-            /* Cores pastéis */
-            --pastel-blue: #dbeafe;
-            --pastel-green: #dcfce7;
-            --pastel-yellow: #fef3c7;
-            --pastel-purple: #f3e8ff;
-            --pastel-pink: #fce7f3;
-            --pastel-orange: #fed7aa;
-            --pastel-red: #fee2e2;
-            --pastel-cyan: #cffafe;
-            
-            /* Cores de acento */
-            --accent-blue: #3b82f6;
-            --accent-green: #10b981;
-            --accent-yellow: #f59e0b;
-            --accent-purple: #8b5cf6;
-            --accent-pink: #ec4899;
-            --accent-orange: #f97316;
-            --accent-red: #ef4444;
-            --accent-cyan: #06b6d4;
+            /* Cores funcionais */
+            --primary-blue: #3b82f6;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --danger-red: #ef4444;
             
             /* Cores de texto */
-            --text-primary: #1f2937;
+            --text-primary: #333333;
             --text-secondary: #6b7280;
             --text-muted: #9ca3af;
+            --border: #e5e7eb;
             
             /* Sombras */
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --border-radius: 12px;
         }
         
         * {
@@ -62,14 +62,29 @@
             background: var(--background);
         }
         
+        /* Ícones Tabler */
+        .tabler-icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .tabler-icon-lg {
+            width: 48px;
+            height: 48px;
+        }
+        
         /* Navegação */
         .navbar {
-            background: linear-gradient(135deg, var(--pastel-blue) 0%, var(--pastel-purple) 100%);
-            padding: 1rem 0;
+            background: var(--background);
+            padding: 1.5rem 0;
             box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid var(--border);
         }
         
         .navbar ul {
@@ -77,10 +92,10 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 1rem;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 2rem;
         }
         
         .navbar a {
@@ -88,23 +103,24 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.75rem 1.25rem;
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--background);
             color: var(--text-primary);
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             font-weight: 500;
             transition: all 0.3s ease;
             border: 1px solid var(--border);
         }
         
         .navbar a:hover {
-            background: var(--card-background);
+            background: var(--card-green);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
+            color: var(--accent-green);
         }
         
         .navbar a.active {
-            background: var(--accent-blue);
+            background: var(--accent-purple);
             color: white;
             box-shadow: var(--shadow-md);
         }
@@ -113,24 +129,29 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 2rem;
         }
         
         /* Cabeçalho */
         .header-section {
             text-align: center;
             margin-bottom: 3rem;
-            padding: 2rem;
-            background: linear-gradient(135deg, var(--pastel-blue) 0%, var(--pastel-cyan) 100%);
-            border-radius: 20px;
+            padding: 3rem 2rem;
+            background: var(--card-green);
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--accent-green);
         }
         
         .header-section h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--accent-purple);
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
         }
         
         .header-section p {
@@ -140,13 +161,13 @@
         
         /* Cards */
         .card {
-            background: var(--card-background);
-            border-radius: 16px;
-            padding: 1.5rem;
+            background: var(--background);
+            border-radius: var(--border-radius);
+            padding: 2rem;
             box-shadow: var(--shadow-md);
             border: 1px solid var(--border);
             transition: all 0.3s ease;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
         
         .card:hover {
@@ -157,40 +178,43 @@
         .card h3 {
             font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         /* Cards coloridos */
-        .card-blue {
-            background: linear-gradient(135deg, var(--pastel-blue) 0%, rgba(59, 130, 246, 0.1) 100%);
-            border-left: 4px solid var(--accent-blue);
+        .card-green {
+            background: var(--card-green);
+            border-left: 4px solid var(--accent-green);
         }
         
-        .card-green {
-            background: linear-gradient(135deg, var(--pastel-green) 0%, rgba(16, 185, 129, 0.1) 100%);
+        .card-purple {
+            background: var(--card-purple);
+            border-left: 4px solid var(--accent-purple);
+        }
+        
+        .card-blue {
+            background: var(--card-green);
             border-left: 4px solid var(--accent-green);
         }
         
         .card-yellow {
-            background: linear-gradient(135deg, var(--pastel-yellow) 0%, rgba(245, 158, 11, 0.1) 100%);
-            border-left: 4px solid var(--accent-yellow);
-        }
-        
-        .card-purple {
-            background: linear-gradient(135deg, var(--pastel-purple) 0%, rgba(139, 92, 246, 0.1) 100%);
+            background: var(--card-purple);
             border-left: 4px solid var(--accent-purple);
         }
         
         .card-red {
-            background: linear-gradient(135deg, var(--pastel-red) 0%, rgba(239, 68, 68, 0.1) 100%);
-            border-left: 4px solid var(--accent-red);
+            background: var(--card-purple);
+            border-left: 4px solid var(--accent-purple);
         }
         
         /* Grid */
         .grid {
             display: grid;
-            gap: 1.5rem;
+            gap: 2rem;
         }
         
         .grid-2 {
@@ -201,10 +225,12 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         }
         
-        /* Estatísticas */
+        /* Estatísticas com informações dinâmicas */
         .stats-card {
             text-align: center;
             padding: 2rem 1.5rem;
+            background: var(--card-green);
+            border-left: 4px solid var(--accent-green);
         }
         
         .stats-card .number {
@@ -212,6 +238,7 @@
             font-weight: 700;
             margin-bottom: 0.5rem;
             display: block;
+            color: var(--accent-green);
         }
         
         .stats-card .label {
@@ -220,33 +247,47 @@
             font-weight: 500;
         }
         
-        .stats-card.urgent .number { color: var(--accent-red); }
-        .stats-card.warning .number { color: var(--accent-yellow); }
-        .stats-card.success .number { color: var(--accent-green); }
-        .stats-card.info .number { color: var(--accent-blue); }
+        .stats-card.urgent {
+            background: var(--card-purple);
+            border-left-color: var(--accent-purple);
+        }
         
-        /* Botões */
+        .stats-card.urgent .number { color: var(--accent-purple); }
+        .stats-card.warning .number { color: var(--accent-green); }
+        .stats-card.success .number { color: var(--accent-green); }
+        .stats-card.info .number { color: var(--accent-purple); }
+        
+        /* Botões responsivos */
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             font-weight: 500;
             text-decoration: none;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.9rem;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        @media (min-width: 768px) {
+            .btn {
+                width: auto;
+                max-width: 200px;
+            }
         }
         
         .btn-primary {
-            background: var(--accent-blue);
+            background: var(--accent-purple);
             color: white;
         }
         
         .btn-primary:hover {
-            background: #2563eb;
+            background: #7B1FA2;
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
@@ -256,33 +297,41 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: var(--pastel-blue);
-            border-radius: 12px;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card-green);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-green);
         }
         
         .week-range {
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--accent-green);
             min-width: 200px;
             text-align: center;
         }
         
         .day-container {
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: var(--pastel-cyan);
-            border-radius: 12px;
-            border-left: 4px solid var(--accent-cyan);
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--card-purple);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-purple);
+            transition: all 0.3s ease;
+        }
+        
+        .day-container:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
         
         .day-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             font-weight: 600;
+            color: var(--accent-purple);
         }
         
         .day-header.today {
@@ -290,12 +339,18 @@
         }
         
         .lesson-item {
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            border-left: 3px solid var(--accent-blue);
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--accent-green);
             box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .lesson-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
         
         .lesson-header {
@@ -307,13 +362,16 @@
         
         .lesson-title {
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--accent-green);
         }
         
         .lesson-time {
             font-size: 0.8rem;
-            color: var(--text-secondary);
+            color: var(--accent-purple);
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
         
         .lesson-description {
@@ -325,43 +383,63 @@
         .lesson-professor {
             font-size: 0.8rem;
             color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
         
         /* Agenda de hoje */
         .today-lesson {
-            background: var(--pastel-yellow);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 0.75rem;
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
             display: flex;
             gap: 1rem;
-            border-left: 3px solid var(--accent-yellow);
+            border-left: 3px solid var(--accent-purple);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .today-lesson:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
         
         .today-lesson-time {
             font-weight: 600;
-            color: var(--accent-yellow);
+            color: var(--accent-purple);
             min-width: 60px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
         
         .today-lesson-content .title {
             font-weight: 600;
-            color: var(--accent-yellow);
+            color: var(--accent-purple);
             margin-bottom: 0.25rem;
         }
         
         .today-lesson-content .description {
             font-size: 0.9rem;
-            color: #92400e;
+            color: var(--text-secondary);
         }
         
         /* Notas importantes */
         .note-item {
-            background: var(--pastel-purple);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 0.75rem;
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
             border-left: 3px solid var(--accent-purple);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .note-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
         
         .note-item strong {
@@ -375,6 +453,8 @@
             text-decoration: none;
             color: inherit;
             transition: all 0.3s ease;
+            background: var(--card-green);
+            border-left: 4px solid var(--accent-green);
         }
         
         .action-card:hover {
@@ -382,10 +462,19 @@
             box-shadow: var(--shadow-lg);
         }
         
+        .action-card.card-purple {
+            background: var(--card-purple);
+            border-left-color: var(--accent-purple);
+        }
+        
         .action-icon {
-            font-size: 3rem;
             margin-bottom: 1rem;
             display: block;
+            color: var(--accent-green);
+        }
+        
+        .card-purple .action-icon {
+            color: var(--accent-purple);
         }
         
         .action-card h4 {
@@ -400,12 +489,57 @@
             color: var(--text-secondary);
         }
         
-        /* Estados vazios */
+        /* Estados vazios motivadores */
         .empty-state {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem 2rem;
             color: var(--text-muted);
-            font-style: italic;
+            background: var(--card-green);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-green);
+        }
+        
+        .empty-state h3 {
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .empty-state p {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-green);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.error {
+            background: var(--danger-red);
+        }
+        
+        .toast.warning {
+            background: var(--warning-orange);
         }
         
         /* Responsividade */
@@ -413,6 +547,7 @@
             .navbar ul {
                 flex-direction: column;
                 gap: 0.5rem;
+                padding: 0 1rem;
             }
             
             .grid-2 {
@@ -425,6 +560,8 @@
             
             .header-section h1 {
                 font-size: 2rem;
+                flex-direction: column;
+                gap: 0.5rem;
             }
             
             .weekly-controls {
@@ -435,15 +572,15 @@
             .container {
                 padding: 1rem;
             }
+            
+            .card {
+                padding: 1.5rem;
+            }
         }
         
         @media (max-width: 480px) {
             .stats-card .number {
                 font-size: 2rem;
-            }
-            
-            .action-icon {
-                font-size: 2.5rem;
             }
             
             .card {
@@ -457,21 +594,40 @@
         <!-- Navegação -->
         <nav class="navbar">
             <ul>
-                <li><a href="/index.html" class="active">🏠 Dashboard</a></li>
-                <li><a href="/cronograma.html">📅 Cronograma</a></li>
-                <li><a href="/agenda.html">📋 Agenda</a></li>
-                <li><a href="/disciplinas.html">📚 Disciplinas</a></li>
-                <li><a href="/professores.html">👨‍🏫 Professores</a></li>
-                <li><a href="/semestre.html">🎓 Semestre</a></li>
-                <li><a href="/progresso.html">📊 Progresso</a></li>
-                <li><a href="/planejamento.html">🎯 Planejamento</a></li>
+                <li><a href="/index.html" class="active">
+                    <i class="ti ti-home tabler-icon"></i> Dashboard
+                </a></li>
+                <li><a href="/cronograma.html">
+                    <i class="ti ti-calendar tabler-icon"></i> Cronograma
+                </a></li>
+                <li><a href="/agenda.html">
+                    <i class="ti ti-clipboard-list tabler-icon"></i> Agenda
+                </a></li>
+                <li><a href="/disciplinas.html">
+                    <i class="ti ti-books tabler-icon"></i> Disciplinas
+                </a></li>
+                <li><a href="/professores.html">
+                    <i class="ti ti-user-check tabler-icon"></i> Professores
+                </a></li>
+                <li><a href="/semestre.html">
+                    <i class="ti ti-school tabler-icon"></i> Semestre
+                </a></li>
+                <li><a href="/progresso.html">
+                    <i class="ti ti-chart-line tabler-icon"></i> Progresso
+                </a></li>
+                <li><a href="/planejamento.html">
+                    <i class="ti ti-target tabler-icon"></i> Planejamento
+                </a></li>
             </ul>
         </nav>
 
         <div class="container">
             <!-- Cabeçalho -->
             <div class="header-section">
-                <h1>🏠 Dashboard MedStudios</h1>
+                <h1>
+                    <i class="ti ti-dashboard tabler-icon-lg"></i>
+                    Dashboard MedStudios
+                </h1>
                 <p>Seu painel de controle acadêmico inteligente</p>
             </div>
 
@@ -479,13 +635,20 @@
                 <!-- Coluna Principal -->
                 <div>
                     <!-- Agenda Semanal -->
-                    <div class="card card-blue">
+                    <div class="card card-green">
                         <div class="weekly-controls">
-                            <h3>📅 Agenda Semanal</h3>
+                            <h3>
+                                <i class="ti ti-calendar-week tabler-icon"></i>
+                                Agenda Semanal
+                            </h3>
                             <div style="display: flex; gap: 10px; align-items: center;">
-                                <button class="btn btn-primary" onclick="previousWeek()">‹</button>
+                                <button class="btn btn-primary" onclick="previousWeek()">
+                                    <i class="ti ti-chevron-left tabler-icon"></i>
+                                </button>
                                 <span id="weekRange" class="week-range">Carregando...</span>
-                                <button class="btn btn-primary" onclick="nextWeek()">›</button>
+                                <button class="btn btn-primary" onclick="nextWeek()">
+                                    <i class="ti ti-chevron-right tabler-icon"></i>
+                                </button>
                             </div>
                         </div>
                         
@@ -495,22 +658,22 @@
                         </div>
                     </div>
 
-                    <!-- Cards de Estatísticas -->
+                    <!-- Cards de Estatísticas com informações dinâmicas -->
                     <div class="grid grid-4">
-                        <div class="card card-red stats-card urgent">
-                            <span class="number" id="tarefasUrgentes">3</span>
+                        <div class="card stats-card urgent">
+                            <span class="number" id="tarefasUrgentes">0</span>
                             <span class="label">Tarefas Urgentes</span>
                         </div>
-                        <div class="card card-yellow stats-card warning">
-                            <span class="number" id="proximasEntregas">5</span>
+                        <div class="card stats-card warning">
+                            <span class="number" id="proximasEntregas">0</span>
                             <span class="label">Próximas Entregas</span>
                         </div>
-                        <div class="card card-green stats-card success">
-                            <span class="number" id="progressoSemanal">85%</span>
+                        <div class="card stats-card success">
+                            <span class="number" id="progressoSemanal">0%</span>
                             <span class="label">Progresso Semanal</span>
                         </div>
                         <div class="card stats-card info">
-                            <span class="number" id="mediaGeral">8.7</span>
+                            <span class="number" id="mediaGeral">0.0</span>
                             <span class="label">Média Geral</span>
                         </div>
                     </div>
@@ -519,8 +682,11 @@
                 <!-- Sidebar -->
                 <div>
                     <!-- Agenda do Dia -->
-                    <div class="card card-yellow">
-                        <h3>📋 Agenda de Hoje</h3>
+                    <div class="card card-purple">
+                        <h3>
+                            <i class="ti ti-clipboard-check tabler-icon"></i>
+                            Agenda de Hoje
+                        </h3>
                         <div id="todayAgenda">
                             <!-- Agenda de hoje será carregada dinamicamente -->
                         </div>
@@ -528,7 +694,10 @@
 
                     <!-- Notas Importantes -->
                     <div class="card card-purple">
-                        <h3>📝 Notas Importantes</h3>
+                        <h3>
+                            <i class="ti ti-note tabler-icon"></i>
+                            Notas Importantes
+                        </h3>
                         <div class="note-item">
                             <strong>Prova de Bioquímica:</strong> Revisar metabolismo de carboidratos
                         </div>
@@ -542,27 +711,27 @@
                 </div>
             </div>
 
-            <!-- Botões de Ação -->
+            <!-- Botões de Ação com cards dinâmicos -->
             <div class="grid grid-4" style="margin-top: 2rem;">
                 <a href="/agenda.html" class="card card-purple action-card">
-                    <span class="action-icon">📝</span>
+                    <i class="ti ti-plus tabler-icon-lg action-icon"></i>
                     <h4>Nova Tarefa</h4>
-                    <p>Adicionar item à agenda</p>
+                    <p id="pendingTasksCount">Adicionar item à agenda</p>
                 </a>
                 <a href="/disciplinas.html" class="card action-card">
-                    <span class="action-icon">📖</span>
+                    <i class="ti ti-book-2 tabler-icon-lg action-icon"></i>
                     <h4>Gerenciar Disciplinas</h4>
-                    <p>Organizar matérias do curso</p>
+                    <p id="activeSubjectsCount">Organizar matérias do curso</p>
                 </a>
-                <a href="/cronograma.html" class="card card-yellow action-card">
-                    <span class="action-icon">📅</span>
-                    <h4>Adicionar Aula</h4>
-                    <p>Programar horários</p>
+                <a href="/cronograma.html" class="card card-green action-card">
+                    <i class="ti ti-calendar-plus tabler-icon-lg action-icon"></i>
+                    <h4>Próxima Aula</h4>
+                    <p id="nextClassInfo">Programar horários</p>
                 </a>
                 <a href="/professores.html" class="card card-green action-card">
-                    <span class="action-icon">👨‍🏫</span>
+                    <i class="ti ti-users tabler-icon-lg action-icon"></i>
                     <h4>Gerenciar Professores</h4>
-                    <p>Contatos e informações</p>
+                    <p id="professorsCount">Contatos e informações</p>
                 </a>
             </div>
         </div>
@@ -577,7 +746,7 @@
         function getWeekStart(date) {
             const d = new Date(date);
             const day = d.getDay();
-            const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Ajustar para segunda-feira
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
             return new Date(d.setDate(diff));
         }
         
@@ -600,6 +769,29 @@
             return days[date.getDay()];
         }
         
+        // Sistema de notificações toast
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'ti-check' : 
+                        type === 'error' ? 'ti-x' : 
+                        type === 'warning' ? 'ti-alert-triangle' : 'ti-info-circle';
+            
+            toast.innerHTML = `
+                <i class="ti ${icon} tabler-icon"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+        
         // Carregar aulas da semana da API
         async function loadWeeklyLessons() {
             try {
@@ -608,14 +800,12 @@
                 weekEnd.setDate(weekEnd.getDate() + 6);
                 const weekEndFormatted = formatDateForAPI(weekEnd);
                 
-                // Fazer requisição para a API com filtro de data
                 const response = await fetch(`/api/lessons?startDate=${weekStart}&endDate=${weekEndFormatted}`);
                 
                 if (response.ok) {
                     weeklyLessons = await response.json();
                 } else {
                     console.error('Erro ao carregar aulas:', response.statusText);
-                    // Fallback para dados de exemplo
                     weeklyLessons = [
                         {
                             _id: '1',
@@ -654,13 +844,11 @@
             const container = document.getElementById('weeklyAgenda');
             container.innerHTML = '';
             
-            // Atualizar range da semana
             const weekEnd = new Date(currentWeekStart);
             weekEnd.setDate(weekEnd.getDate() + 6);
             document.getElementById('weekRange').textContent = 
                 `${formatDate(currentWeekStart)} - ${formatDate(weekEnd)}`;
             
-            // Criar containers para cada dia da semana
             for (let i = 0; i < 7; i++) {
                 const dayDate = new Date(currentWeekStart);
                 dayDate.setDate(dayDate.getDate() + i);
@@ -668,7 +856,6 @@
                 const dayContainer = document.createElement('div');
                 dayContainer.className = 'day-container';
                 
-                // Cabeçalho do dia
                 const dayHeader = document.createElement('div');
                 dayHeader.className = 'day-header';
                 
@@ -688,23 +875,31 @@
                 
                 dayContainer.appendChild(dayHeader);
                 
-                // Filtrar aulas do dia
                 const dayLessons = weeklyLessons.filter(lesson => {
                     const lessonDate = new Date(lesson.date);
                     return lessonDate.toDateString() === dayDate.toDateString();
                 });
                 
-                // Renderizar aulas do dia
                 if (dayLessons.length === 0) {
                     const noLessons = document.createElement('div');
                     noLessons.className = 'empty-state';
-                    noLessons.textContent = 'Nenhuma aula agendada';
+                    noLessons.innerHTML = `
+                        <h3>
+                            <i class="ti ti-calendar-off tabler-icon"></i>
+                            Nenhuma aula agendada
+                        </h3>
+                        <p>Que tal aproveitar para estudar?</p>
+                        <a href="/cronograma.html" class="btn btn-primary">
+                            <i class="ti ti-plus tabler-icon"></i>
+                            Adicionar Aula
+                        </a>
+                    `;
                     dayContainer.appendChild(noLessons);
                 } else {
                     dayLessons.forEach(lesson => {
                         const lessonElement = document.createElement('div');
                         lessonElement.className = 'lesson-item';
-                        lessonElement.style.borderLeftColor = lesson.subject?.color || 'var(--accent-blue)';
+                        lessonElement.style.borderLeftColor = lesson.subject?.color || 'var(--accent-green)';
                         
                         lessonElement.innerHTML = `
                             <div class="lesson-header">
@@ -712,6 +907,7 @@
                                     ${lesson.title || lesson.subject?.name || 'Aula'}
                                 </div>
                                 <div class="lesson-time">
+                                    <i class="ti ti-clock tabler-icon"></i>
                                     ${lesson.time || '00:00'}
                                 </div>
                             </div>
@@ -719,6 +915,7 @@
                                 ${lesson.description || 'Sem descrição'}
                             </div>
                             <div class="lesson-professor">
+                                <i class="ti ti-user tabler-icon"></i>
                                 Prof. ${lesson.professor?.name || 'Não informado'}
                             </div>
                         `;
@@ -744,7 +941,15 @@
             if (todayLessons.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        Nenhuma aula agendada para hoje
+                        <h3>
+                            <i class="ti ti-calendar-off tabler-icon"></i>
+                            Nenhuma aula hoje
+                        </h3>
+                        <p>Aproveite para revisar o conteúdo!</p>
+                        <a href="/agenda.html" class="btn btn-primary">
+                            <i class="ti ti-plus tabler-icon"></i>
+                            Adicionar Tarefa
+                        </a>
                     </div>
                 `;
                 return;
@@ -758,6 +963,7 @@
                 
                 lessonElement.innerHTML = `
                     <div class="today-lesson-time">
+                        <i class="ti ti-clock tabler-icon"></i>
                         ${lesson.time || '00:00'}
                     </div>
                     <div class="today-lesson-content">
@@ -772,6 +978,75 @@
                 
                 container.appendChild(lessonElement);
             });
+        }
+        
+        // Carregar informações dinâmicas dos cards
+        async function loadDynamicCardInfo() {
+            try {
+                const nextClass = await getNextClass();
+                if (nextClass) {
+                    document.getElementById('nextClassInfo').textContent = 
+                        `${nextClass.subject} - ${nextClass.time}`;
+                } else {
+                    document.getElementById('nextClassInfo').textContent = 
+                        'Nenhuma aula agendada';
+                }
+                
+                const pendingTasks = await getPendingTasksCount();
+                document.getElementById('pendingTasksCount').textContent = 
+                    `${pendingTasks} tarefas pendentes`;
+                
+                const activeSubjects = await getActiveSubjectsCount();
+                document.getElementById('activeSubjectsCount').textContent = 
+                    `${activeSubjects} disciplinas ativas`;
+                
+                const professorsCount = await getProfessorsCount();
+                document.getElementById('professorsCount').textContent = 
+                    `${professorsCount} professores cadastrados`;
+                    
+            } catch (error) {
+                console.error('Erro ao carregar informações dinâmicas:', error);
+            }
+        }
+        
+        // Funções auxiliares para dados dinâmicos
+        async function getNextClass() {
+            try {
+                const response = await fetch('/api/lessons/next');
+                return response.ok ? await response.json() : null;
+            } catch (error) {
+                return null;
+            }
+        }
+        
+        async function getPendingTasksCount() {
+            try {
+                const response = await fetch('/api/tasks?status=pending');
+                const tasks = response.ok ? await response.json() : [];
+                return tasks.length;
+            } catch (error) {
+                return 0;
+            }
+        }
+        
+        async function getActiveSubjectsCount() {
+            try {
+                const response = await fetch('/api/subjects?active=true');
+                const subjects = response.ok ? await response.json() : [];
+                return subjects.length;
+            } catch (error) {
+                return 0;
+            }
+        }
+        
+        async function getProfessorsCount() {
+            try {
+                const response = await fetch('/api/professors');
+                const professors = response.ok ? await response.json() : [];
+                return professors.length;
+            } catch (error) {
+                return 0;
+            }
         }
         
         // Navegar para semana anterior
@@ -793,37 +1068,155 @@
                 if (response.ok) {
                     const stats = await response.json();
                     
-                    // Atualizar elementos do dashboard
-                    if (document.getElementById('totalSubjects')) {
-                        document.getElementById('totalSubjects').textContent = stats.totalSubjects;
+                    if (document.getElementById('tarefasUrgentes')) {
+                        document.getElementById('tarefasUrgentes').textContent = stats.urgentTasks || 0;
                     }
-                    if (document.getElementById('completedTasks')) {
-                        document.getElementById('completedTasks').textContent = stats.completedTasks;
+                    if (document.getElementById('proximasEntregas')) {
+                        document.getElementById('proximasEntregas').textContent = stats.upcomingDeadlines || 0;
                     }
-                    if (document.getElementById('pendingTasks')) {
-                        document.getElementById('pendingTasks').textContent = stats.pendingTasks;
+                    if (document.getElementById('progressoSemanal')) {
+                        document.getElementById('progressoSemanal').textContent = `${stats.weeklyProgress || 0}%`;
                     }
-                    if (document.getElementById('averageGrade')) {
-                        document.getElementById('averageGrade').textContent = stats.averageGrade;
+                    if (document.getElementById('mediaGeral')) {
+                        document.getElementById('mediaGeral').textContent = (stats.averageGrade || 0).toFixed(1);
                     }
+                } else {
+                    // Dados de exemplo se a API não estiver disponível
+                    document.getElementById('tarefasUrgentes').textContent = '3';
+                    document.getElementById('proximasEntregas').textContent = '5';
+                    document.getElementById('progressoSemanal').textContent = '85%';
+                    document.getElementById('mediaGeral').textContent = '8.7';
                 }
             } catch (error) {
                 console.error('Erro ao carregar estatísticas:', error);
+                // Dados de exemplo em caso de erro
+                document.getElementById('tarefasUrgentes').textContent = '3';
+                document.getElementById('proximasEntregas').textContent = '5';
+                document.getElementById('progressoSemanal').textContent = '85%';
+                document.getElementById('mediaGeral').textContent = '8.7';
             }
         }
         
-        // Inicializar dashboard
+        // Atualizar função de inicialização
         function initDashboard() {
-            // Configurar semana atual
             currentWeekStart = getWeekStart(new Date());
-            
-            // Carregar dados
             loadWeeklyLessons();
             loadDashboardStats();
+            loadDynamicCardInfo();
         }
         
-        // Carregar dados quando a página carregar
+        // Inicializar quando a página carregar
         document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker registrado com sucesso:', registration.scope);
+                        
+                        // Verificar se há atualizações
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // Nova versão disponível
+                                    if (confirm('Nova versão disponível! Deseja atualizar?')) {
+                                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Erro ao registrar Service Worker:', error);
+                    });
+            });
+            
+            // Lidar com atualizações do service worker
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                window.location.reload();
+            });
+        }
+        
+        // Solicitar permissão para notificações
+        if ('Notification' in window && 'serviceWorker' in navigator) {
+            if (Notification.permission === 'default') {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === 'granted') {
+                        console.log('Permissão para notificações concedida');
+                    }
+                });
+            }
+        }
+        
+        // Detectar quando o app está offline/online
+        window.addEventListener('online', () => {
+            console.log('Aplicação online');
+            // Mostrar toast de conexão restaurada
+            showToast('Conexão restaurada!', 'success');
+        });
+        
+        window.addEventListener('offline', () => {
+            console.log('Aplicação offline');
+            // Mostrar toast de modo offline
+            showToast('Modo offline ativado', 'info');
+        });
+        
+        // Função para mostrar toast (se não existir)
+        function showToast(message, type = 'info') {
+            // Criar elemento toast se não existir
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                `;
+                document.body.appendChild(toastContainer);
+            }
+            
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
+            toast.textContent = message;
+            
+            toastContainer.appendChild(toast);
+            
+            // Animar entrada
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
     </script>
 </body>
 </html>

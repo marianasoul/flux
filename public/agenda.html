@@ -329,6 +329,28 @@
                 flex-wrap: wrap;
                 gap: 12px;
             }
+            
+            /* Botões responsivos em formulários - seletor corrigido */
+            .task-form div[style*="display: flex"] {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+            }
+            
+            .task-form .btn {
+                width: 100% !important;
+                max-width: none !important;
+                justify-content: center;
+                min-width: auto !important;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            /* Botões em desktop mantêm largura automática */
+            .task-form .btn {
+                width: auto;
+                min-width: 120px;
+            }
         }
     </style>
 </head>

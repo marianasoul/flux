@@ -253,7 +253,7 @@
             }
             
             .stats-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
                 gap: 16px;
             }
             
@@ -262,9 +262,35 @@
                 gap: 16px;
             }
             
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
             .navbar ul {
                 flex-wrap: wrap;
                 gap: 12px;
+            }
+            
+            /* Botões responsivos em formulários */
+            .modal-content div[style*="flex"] {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+            }
+            
+            .modal-content .btn {
+                width: 100% !important;
+                max-width: none !important;
+                justify-content: center;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            /* Botões em desktop mantêm largura automática */
+            .modal-content .btn {
+                width: auto;
+                min-width: 120px;
             }
         }
     </style>
