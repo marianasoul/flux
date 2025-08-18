@@ -79,7 +79,7 @@
         /* Navegação */
         .navbar {
             background: var(--background);
-            padding: 1.5rem 0;
+            padding: 0.75rem 0;
             box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
@@ -92,7 +92,7 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.75rem;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
@@ -102,7 +102,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 1.25rem;
+            padding: 0.5rem 1rem;
             background: var(--background);
             color: var(--text-primary);
             text-decoration: none;
@@ -110,6 +110,7 @@
             font-weight: 500;
             transition: all 0.3s ease;
             border: 1px solid var(--border);
+            font-size: 0.9rem;
         }
         
         .navbar a:hover {
@@ -222,40 +223,76 @@
         }
         
         .grid-4 {
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
         }
         
         /* Estatísticas com informações dinâmicas */
         .stats-card {
             text-align: center;
-            padding: 2rem 1.5rem;
-            background: var(--card-green);
-            border-left: 4px solid var(--accent-green);
+            padding: 1.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .stats-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-blue);
+        }
+
         .stats-card .number {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
             display: block;
-            color: var(--accent-green);
+            color: var(--accent-blue);
+            line-height: 1;
         }
-        
+
         .stats-card .label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
             font-weight: 500;
+            line-height: 1.2;
         }
-        
-        .stats-card.urgent {
-            background: var(--card-purple);
-            border-left-color: var(--accent-purple);
+
+        /* Indicadores visuais compactos */
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-blue);
         }
-        
-        .stats-card.urgent .number { color: var(--accent-purple); }
-        .stats-card.warning .number { color: var(--accent-green); }
+
+        .stats-card.urgent::before {
+            background: #EF4444;
+        }
+
+        .stats-card.warning::before {
+            background: #F59E0B;
+        }
+
+        .stats-card.success::before {
+            background: var(--accent-green);
+        }
+
+        .stats-card.info::before {
+            background: var(--accent-blue);
+        }
+
+        /* Cores dos números para diferentes tipos */
+        .stats-card.urgent .number { color: #EF4444; }
+        .stats-card.warning .number { color: #F59E0B; }
         .stats-card.success .number { color: var(--accent-green); }
-        .stats-card.info .number { color: var(--accent-purple); }
+        .stats-card.info .number { color: var(--accent-blue); }
         
         /* Botões responsivos */
         .btn {
@@ -292,50 +329,100 @@
             box-shadow: var(--shadow-md);
         }
         
-        /* Agenda semanal */
-        .weekly-controls {
+        /* Agenda semanal consolidada */
+        .weekly-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: var(--card-green);
-            border-radius: var(--border-radius);
-            border-left: 4px solid var(--accent-green);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
         }
-        
+
+        .weekly-navigation {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .week-range {
             font-weight: 600;
-            color: var(--accent-green);
+            color: var(--primary-color);
             min-width: 200px;
             text-align: center;
+            font-size: 14px;
         }
-        
-        .day-container {
-            margin-bottom: 1.5rem;
-            padding: 1.5rem;
-            background: var(--card-purple);
+
+        .weekly-agenda-consolidated {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .day-item {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
-            border-left: 4px solid var(--accent-purple);
-            transition: all 0.3s ease;
+            padding: 16px;
+            transition: all 0.2s ease;
         }
-        
-        .day-container:hover {
-            transform: translateY(-2px);
+
+        .day-item:hover {
             box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
         }
-        
+
+        .day-item.today {
+            border-left: 4px solid var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
         .day-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 12px;
             font-weight: 600;
-            color: var(--accent-purple);
+            color: var(--text-primary);
         }
-        
-        .day-header.today {
-            color: var(--accent-green);
+
+        .day-lessons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .lesson-compact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: var(--background);
+            border-radius: var(--border-radius-sm);
+            border-left: 3px solid var(--primary-color);
+            font-size: 14px;
+        }
+
+        .lesson-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .lesson-title {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .lesson-professor {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .lesson-time {
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 12px;
         }
         
         .lesson-item {
@@ -634,31 +721,31 @@
             <div class="grid grid-2">
                 <!-- Coluna Principal -->
                 <div>
-                    <!-- Agenda Semanal -->
-                    <div class="card card-green">
-                        <div class="weekly-controls">
+                    <!-- Agenda Semanal Consolidada -->
+                    <div class="card">
+                        <div class="weekly-header">
                             <h3>
                                 <i class="ti ti-calendar-week tabler-icon"></i>
                                 Agenda Semanal
                             </h3>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <button class="btn btn-primary" onclick="previousWeek()">
+                            <div class="weekly-navigation">
+                                <button class="btn btn-secondary" onclick="previousWeek()">
                                     <i class="ti ti-chevron-left tabler-icon"></i>
                                 </button>
                                 <span id="weekRange" class="week-range">Carregando...</span>
-                                <button class="btn btn-primary" onclick="nextWeek()">
+                                <button class="btn btn-secondary" onclick="nextWeek()">
                                     <i class="ti ti-chevron-right tabler-icon"></i>
                                 </button>
                             </div>
                         </div>
                         
-                        <!-- Container da Agenda Semanal -->
-                        <div id="weeklyAgenda" class="weekly-agenda">
-                            <!-- Dias da semana serão carregados dinamicamente -->
+                        <!-- Container Consolidado da Agenda -->
+                        <div id="weeklyAgenda" class="weekly-agenda-consolidated">
+                            <!-- Agenda será renderizada em formato de lista sequencial -->
                         </div>
                     </div>
 
-                    <!-- Cards de Estatísticas com informações dinâmicas -->
+                    <!-- Cards de Estatísticas Compactos -->
                     <div class="grid grid-4">
                         <div class="card stats-card urgent">
                             <span class="number" id="tarefasUrgentes">0</span>
@@ -840,93 +927,85 @@
         }
         
         // Renderizar agenda semanal
-        function renderWeeklyAgenda() {
-            const container = document.getElementById('weeklyAgenda');
-            container.innerHTML = '';
-            
-            const weekEnd = new Date(currentWeekStart);
-            weekEnd.setDate(weekEnd.getDate() + 6);
-            document.getElementById('weekRange').textContent = 
-                `${formatDate(currentWeekStart)} - ${formatDate(weekEnd)}`;
-            
-            for (let i = 0; i < 7; i++) {
-                const dayDate = new Date(currentWeekStart);
-                dayDate.setDate(dayDate.getDate() + i);
+function renderWeeklyAgenda() {
+    const container = document.getElementById('weeklyAgenda');
+    container.innerHTML = '';
+    
+    const weekEnd = new Date(currentWeekStart);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+    document.getElementById('weekRange').textContent = 
+        `${formatDate(currentWeekStart)} - ${formatDate(weekEnd)}`;
+    
+    for (let i = 0; i < 7; i++) {
+        const dayDate = new Date(currentWeekStart);
+        dayDate.setDate(dayDate.getDate() + i);
+        
+        const dayItem = document.createElement('div');
+        dayItem.className = 'day-item';
+        
+        const dayName = getDayName(dayDate);
+        const isToday = dayDate.toDateString() === new Date().toDateString();
+        
+        if (isToday) {
+            dayItem.classList.add('today');
+        }
+        
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'day-header';
+        dayHeader.innerHTML = `
+            <span>${dayName}</span>
+            <span style="font-size: 0.9rem; color: var(--text-secondary);">
+                ${formatDate(dayDate)}
+            </span>
+        `;
+        
+        dayItem.appendChild(dayHeader);
+        
+        const dayLessons = weeklyLessons.filter(lesson => {
+            const lessonDate = new Date(lesson.date);
+            return lessonDate.toDateString() === dayDate.toDateString();
+        });
+        
+        const dayLessonsContainer = document.createElement('div');
+        dayLessonsContainer.className = 'day-lessons';
+        
+        if (dayLessons.length === 0) {
+            dayLessonsContainer.innerHTML = `
+                <div class="empty-state">
+                    <p>Nenhuma aula agendada</p>
+                    <a href="/cronograma.html" class="btn btn-primary btn-sm">
+                        <i class="ti ti-plus tabler-icon"></i>
+                        Adicionar
+                    </a>
+                </div>
+            `;
+        } else {
+            dayLessons.forEach(lesson => {
+                const lessonElement = document.createElement('div');
+                lessonElement.className = 'lesson-compact';
                 
-                const dayContainer = document.createElement('div');
-                dayContainer.className = 'day-container';
-                
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'day-header';
-                
-                const dayName = getDayName(dayDate);
-                const isToday = dayDate.toDateString() === new Date().toDateString();
-                
-                if (isToday) {
-                    dayHeader.classList.add('today');
-                }
-                
-                dayHeader.innerHTML = `
-                    <span>${dayName}</span>
-                    <span style="font-size: 0.9rem; color: var(--text-secondary);">
-                        ${formatDate(dayDate)}
-                    </span>
+                lessonElement.innerHTML = `
+                    <div class="lesson-info">
+                        <div class="lesson-title">
+                            ${lesson.title || lesson.subject?.name || 'Aula'}
+                        </div>
+                        <div class="lesson-professor">
+                            Prof. ${lesson.professor?.name || 'Não informado'}
+                        </div>
+                    </div>
+                    <div class="lesson-time">
+                        ${lesson.time || '00:00'}
+                    </div>
                 `;
                 
-                dayContainer.appendChild(dayHeader);
-                
-                const dayLessons = weeklyLessons.filter(lesson => {
-                    const lessonDate = new Date(lesson.date);
-                    return lessonDate.toDateString() === dayDate.toDateString();
-                });
-                
-                if (dayLessons.length === 0) {
-                    const noLessons = document.createElement('div');
-                    noLessons.className = 'empty-state';
-                    noLessons.innerHTML = `
-                        <h3>
-                            <i class="ti ti-calendar-off tabler-icon"></i>
-                            Nenhuma aula agendada
-                        </h3>
-                        <p>Que tal aproveitar para estudar?</p>
-                        <a href="/cronograma.html" class="btn btn-primary">
-                            <i class="ti ti-plus tabler-icon"></i>
-                            Adicionar Aula
-                        </a>
-                    `;
-                    dayContainer.appendChild(noLessons);
-                } else {
-                    dayLessons.forEach(lesson => {
-                        const lessonElement = document.createElement('div');
-                        lessonElement.className = 'lesson-item';
-                        lessonElement.style.borderLeftColor = lesson.subject?.color || 'var(--accent-green)';
-                        
-                        lessonElement.innerHTML = `
-                            <div class="lesson-header">
-                                <div class="lesson-title">
-                                    ${lesson.title || lesson.subject?.name || 'Aula'}
-                                </div>
-                                <div class="lesson-time">
-                                    <i class="ti ti-clock tabler-icon"></i>
-                                    ${lesson.time || '00:00'}
-                                </div>
-                            </div>
-                            <div class="lesson-description">
-                                ${lesson.description || 'Sem descrição'}
-                            </div>
-                            <div class="lesson-professor">
-                                <i class="ti ti-user tabler-icon"></i>
-                                Prof. ${lesson.professor?.name || 'Não informado'}
-                            </div>
-                        `;
-                        
-                        dayContainer.appendChild(lessonElement);
-                    });
-                }
-                
-                container.appendChild(dayContainer);
-            }
+                dayLessonsContainer.appendChild(lessonElement);
+            });
         }
+        
+        dayItem.appendChild(dayLessonsContainer);
+        container.appendChild(dayItem);
+    }
+}
         
         // Renderizar agenda de hoje
         function renderTodayAgenda() {
